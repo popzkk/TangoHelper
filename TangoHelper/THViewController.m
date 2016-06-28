@@ -1,4 +1,5 @@
 #import "THViewController.h"
+#import "THView.h"
 
 @interface THViewController ()
 
@@ -6,14 +7,9 @@
 
 @implementation THViewController
 
-- (void)viewDidLoad {
-  [super viewDidLoad];
-  // Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)didReceiveMemoryWarning {
-  [super didReceiveMemoryWarning];
-  // Dispose of any resources that can be recreated.
+- (void)loadView {
+  self.title = @"Tango Helper";
+  self.view = [[THView alloc] initWithFrame:[UIScreen mainScreen].bounds];
 }
 
 @end
