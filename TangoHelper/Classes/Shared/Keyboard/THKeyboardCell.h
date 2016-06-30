@@ -7,7 +7,7 @@
 
 @property(nonatomic, copy) NSString *arrow;
 
-// if nil, [THKeyboardCellConfig defaultInstance] will be used.
+// if nil, no config will be made.
 @property(nonatomic) THKeyboardCellConfig *config;
 
 - (THKeyboardCellState)state;

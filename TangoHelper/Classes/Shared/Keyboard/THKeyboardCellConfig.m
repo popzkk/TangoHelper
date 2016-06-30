@@ -59,16 +59,25 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
   return instance;
 }
 
-+ (instancetype)katakanaCharCellConfig {
-  return [[self class] hiraganaCharCellConfig];
-}
-
 + (instancetype)hiraganaLeftCellConfig {
   return [[self class] defaultInstance];
 }
 
++ (instancetype)hiraganaRightCellConfig {
+  return [[self class] hiraganaLeftCellConfig];
+}
+
+// currently katakana has the style as hiragana.
++ (instancetype)katakanaCharCellConfig {
+  return [[self class] hiraganaCharCellConfig];
+}
+
 + (instancetype)katakanaLeftCellConfig {
   return [[self class] hiraganaLeftCellConfig];
+}
+
++ (instancetype)katakanaRightCellConfig {
+  return [[self class] hiraganaRightCellConfig];
 }
 
 - (UIFont *)fontForState:(THKeyboardCellState)state {

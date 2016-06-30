@@ -63,25 +63,29 @@ static NSUInteger rightCellCoreIndex = 11;
 
 - (void)loadKeyboardWithType:(THKeyboardType)type {
   THKeyboardConfig *keyboardConfig;
-  THKeyboardCellConfig *charCellConfig, *leftCellContig;
+  THKeyboardCellConfig *charCellConfig, *leftCellConfig, *rightCellConfig;
   switch (type) {
     case kTHKeyboardHiragana:
       keyboardConfig = [THKeyboardConfig hiraganaConfig];
       charCellConfig = [THKeyboardCellConfig hiraganaCharCellConfig];
-      leftCellContig = [THKeyboardCellConfig hiraganaLeftCellConfig];
+      leftCellConfig = [THKeyboardCellConfig hiraganaLeftCellConfig];
+      rightCellConfig = [THKeyboardCellConfig hiraganaRightCellConfig];
       break;
     case kTHKeyboardKatakana:
       keyboardConfig = [THKeyboardConfig katakanaConfig];
       charCellConfig = [THKeyboardCellConfig katakanaCharCellConfig];
-      leftCellContig = [THKeyboardCellConfig katakanaLeftCellConfig];
+      leftCellConfig = [THKeyboardCellConfig katakanaLeftCellConfig];
+      rightCellConfig = [THKeyboardCellConfig katakanaRightCellConfig];
       break;
     default:
       NSLog(@"WARNING: unknown keyboard type!");
       charCellConfig = [THKeyboardCellConfig defaultInstance];
-      leftCellContig = [THKeyboardCellConfig defaultInstance];
+      leftCellConfig = [THKeyboardCellConfig defaultInstance];
+      rightCellConfig = [THKeyboardCellConfig defaultInstance];
       break;
   }
-  [self leftCell].config = leftCellContig;
+  [self leftCell].config = leftCellConfig;
+  [self rightCell].config = rightCellConfig;
   for (NSUInteger i = 0; i < 12; ++i) {
     THKeyboardCell *cell = [self cellAtCoreIndex:i];
     cell.text = keyboardConfig.texts[i];
@@ -92,16 +96,19 @@ static NSUInteger rightCellCoreIndex = 11;
 }
 
 - (void)initAll {
-  // Init all the cells.
-  for (NSUInteger i = 0; i < 25; ++i) {
-    THKeyboardCell *cell = [[THKeyboardCell alloc] initWithFrame:CGRectZero];
-    _cells[i] = cell;
-    [self addSubview:cell];
-    cell.textAlignment = NSTextAlignmentCenter;
-  }
+  // Add _actionCell first so other cells can cover it when necessary
   _actionCell = [[THKeyboardCell alloc] initWithFrame:CGRectZero];
   _actionCell.textAlignment = NSTextAlignmentCenter;
   [self addSubview:_actionCell];
+
+  // Init all the cells.
+  for (NSUInteger i = 0; i < 25; ++i) {
+    THKeyboardCell *cell = [[THKeyboardCell alloc] initWithFrame:CGRectZero];
+    cell.textAlignment = NSTextAlignmentCenter;
+    cell.numberOfLines = 0;
+    _cells[i] = cell;
+    [self addSubview:cell];
+  }
 
   // Hide cells in the first row and cells for actionCell
   for (NSUInteger i = 0; i < 5; ++i) {

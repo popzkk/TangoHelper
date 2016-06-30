@@ -31,8 +31,10 @@
     self.font = [config fontForState:state];
     self.textColor = [config textColorForState:state];
     self.backgroundColor = [config backgroundColorForState:state];
+    self.layer.borderWidth = 0.5;
+    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
   } else {
-    NSLog(@"WARNING: empty config!");
+    NSLog(@"WARNING: empty cell config!");
   }
 }
 

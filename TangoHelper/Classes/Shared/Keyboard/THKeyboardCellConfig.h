@@ -21,11 +21,11 @@ typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
 
 + (instancetype)hiraganaCharCellConfig;
 + (instancetype)hiraganaLeftCellConfig;
-// + (instancetype)hiraganaRightCellConfig;
++ (instancetype)hiraganaRightCellConfig;
 
 + (instancetype)katakanaCharCellConfig;
 + (instancetype)katakanaLeftCellConfig;
-// + (instancetype)katakanaRightCellConfig;
++ (instancetype)katakanaRightCellConfig;
 
 // Add config for english and number...
 
