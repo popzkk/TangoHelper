@@ -16,7 +16,7 @@
 }
 
 - (void)setConfig:(THKeyboardCellConfig *)config {
-  // No need to do deep comparasion...
+  // no need to do deep comparasion...
   if (_config != config) {
     _config = config;
     [self configSelf];
@@ -31,10 +31,8 @@
     self.font = [config fontForState:state];
     self.textColor = [config textColorForState:state];
     self.backgroundColor = [config backgroundColorForState:state];
-    self.layer.borderWidth = 0.5;
-    self.layer.borderColor = [UIColor lightGrayColor].CGColor;
   } else {
-    NSLog(@"WARNING: empty cell config!");
+    NSLog(@"WARNING: cell config is nil!");
   }
 }
 

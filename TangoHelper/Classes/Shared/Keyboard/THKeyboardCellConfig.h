@@ -27,7 +27,7 @@ typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
 + (instancetype)katakanaLeftCellConfig;
 + (instancetype)katakanaRightCellConfig;
 
-// Add config for english and number...
+// add config for english and number...
 
 - (UIFont *)fontForState:(THKeyboardCellState)state;
 - (UIColor *)textColorForState:(THKeyboardCellState)state;

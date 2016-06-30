@@ -67,7 +67,7 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
   return [[self class] hiraganaLeftCellConfig];
 }
 
-// currently katakana has the style as hiragana.
+// currently katakana has the same style as hiragana.
 + (instancetype)katakanaCharCellConfig {
   return [[self class] hiraganaCharCellConfig];
 }

@@ -96,28 +96,32 @@ static NSUInteger rightCellCoreIndex = 11;
 }
 
 - (void)initAll {
-  // Add _actionCell first so other cells can cover it when necessary
+  // add the action cell first so that other cells can cover it when necessary
   _actionCell = [[THKeyboardCell alloc] initWithFrame:CGRectZero];
   _actionCell.textAlignment = NSTextAlignmentCenter;
+  _actionCell.layer.borderWidth = 0.5;
+  _actionCell.layer.borderColor = [UIColor lightGrayColor].CGColor;
   [self addSubview:_actionCell];
 
-  // Init all the cells.
+  // init all the cells.
   for (NSUInteger i = 0; i < 25; ++i) {
     THKeyboardCell *cell = [[THKeyboardCell alloc] initWithFrame:CGRectZero];
     cell.textAlignment = NSTextAlignmentCenter;
     cell.numberOfLines = 0;
+    cell.layer.borderWidth = 0.5;
+    cell.layer.borderColor = [UIColor lightGrayColor].CGColor;
     _cells[i] = cell;
     [self addSubview:cell];
   }
 
-  // Hide cells in the first row and cells for actionCell
+  // hide cells in the first row and cells for actionCell
   for (NSUInteger i = 0; i < 5; ++i) {
     _cells[i].hidden = YES;
   }
   _cells[19].hidden = YES;
   _cells[24].hidden = YES;
 
-  // Set texts and styles for constant cells
+  // set texts and styles for constant cells
   [self numberCell].text = @"１２３";
   [self numberCell].config = [THKeyboardCellConfig numberCellConfig];
   [self englishCell].text = @"ＡＢＣ";
@@ -130,7 +134,7 @@ static NSUInteger rightCellCoreIndex = 11;
   [self backCell].config = [THKeyboardCellConfig backCellConfig];
   [self spaceCell].text = @"空白";
   [self spaceCell].config = [THKeyboardCellConfig spaceCellConfig];
-  // action cell's text is set after init.
+  // the action cell's text is set after init.
   _actionCell.config = [THKeyboardCellConfig actionCellConfig];
 }
 
