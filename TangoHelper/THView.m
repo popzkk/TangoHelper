@@ -1,8 +1,11 @@
 #import "THView.h"
 
+#import "Classes/Shared/Keyboard/THKeyboard.h"
+
 @implementation THView {
   UIButton *_depot;
   UIButton *_lists;
+  THKeyboard *_keyboard;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
@@ -16,16 +19,21 @@
     _lists.titleLabel.font = [UIFont fontWithName:@"Roboto-Regular" size:20];
     [self addSubview:_depot];
     [self addSubview:_lists];
+    _keyboard = [THKeyboard sharedInstance];
+    _keyboard.keyboardType = kTHKeyboardHiragana;
+    _keyboard.actionText = @"確認";
+    [self addSubview:_keyboard];
   }
   return self;
 }
 
 - (void)layoutSubviews {
-  CGFloat kPadding = 10;
+  CGFloat padding = 20;
   CGRect frame = self.bounds;
-  CGFloat kWidth = (frame.size.width - 3 * kPadding) / 2;
-  _depot.frame = CGRectMake(kPadding, 200 + kPadding, kWidth, [_depot sizeThatFits:CGSizeMake(kWidth, 0)].height);
-  _lists.frame = CGRectMake(kPadding + _depot.frame.size.width + kPadding / 2, 200 + kPadding, kWidth, [_lists sizeThatFits:CGSizeMake(kWidth, 0)].height);
+  CGFloat width = (frame.size.width - 3 * padding) / 2;
+  _depot.frame = CGRectMake(padding, 320 + padding, width, [_depot sizeThatFits:CGSizeMake(width, 0)].height);
+  _lists.frame = CGRectMake(padding + _depot.frame.size.width + padding / 2, 320 + padding, width, [_lists sizeThatFits:CGSizeMake(width, 0)].height);
+  _keyboard.frame = CGRectMake(padding, frame.size.height - frame.size.width + padding, frame.size.width - 2 * padding, frame.size.width - 2 * padding);
 }
 
 @end

@@ -1,10 +1,6 @@
 #import "THAppDelegate.h"
 #import "THViewController.h"
 
-@interface THAppDelegate ()
-
-@end
-
 @implementation THAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
