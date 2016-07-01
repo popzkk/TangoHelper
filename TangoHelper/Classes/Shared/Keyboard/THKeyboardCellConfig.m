@@ -15,56 +15,57 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
   THKeyboardCellConfig *copy = [[THKeyboardCellConfig alloc] init];
   memccpy(copy->_font, self->_font, numberOfKeyboardCellStates, sizeof(UIFont *));
   memccpy(copy->_textColor, self->_textColor, numberOfKeyboardCellStates, sizeof(UIColor *));
-  memccpy(copy->_backgroundColor, self->_backgroundColor, numberOfKeyboardCellStates, sizeof(UIColor *));
+  memccpy(copy->_backgroundColor, self->_backgroundColor, numberOfKeyboardCellStates,
+          sizeof(UIColor *));
   return copy;
 }
 
 #pragma mark - public
 
 + (instancetype)numberCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)englishCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)hiraganaCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)katakanaCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)backCellConfig {
-  THKeyboardCellConfig *instance = [[[self class] defaultInstance] copy];
+  THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
   instance->_font[kTHKeyboardCellStateNormal] = [UIFont fontWithName:ja_font_normal size:17];
   instance->_font[kTHKeyboardCellStateFocused] = [UIFont fontWithName:ja_font_bold size:17];
   return instance;
 }
 
 + (instancetype)spaceCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)actionCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)hiraganaCharCellConfig {
-  THKeyboardCellConfig *instance = [[[self class] defaultInstance] copy];
+  THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
   instance->_font[kTHKeyboardCellStateNormal] = [UIFont fontWithName:ja_font_normal size:20];
   instance->_font[kTHKeyboardCellStateFocused] = [UIFont fontWithName:ja_font_bold size:20];
   return instance;
 }
 
 + (instancetype)hiraganaLeftCellConfig {
-  return [[self class] defaultInstance];
+  return [[self class] defaultJaInstance];
 }
 
 + (instancetype)hiraganaRightCellConfig {
-  return [[self class] hiraganaLeftCellConfig];
+  return [[self class] defaultInstance];
 }
 
 // currently katakana has the same style as hiragana.
@@ -92,15 +93,22 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
   return _backgroundColor[state];
 }
 
-#pragma mark - private
-
-+ (instancetype)defaultInstance {
++ (instancetype)defaultJaInstance {
   static dispatch_once_t once;
   static THKeyboardCellConfig *instance = nil;
   dispatch_once(&once, ^{
     instance = [[self alloc] init];
     instance->_font[kTHKeyboardCellStateNormal] = [UIFont fontWithName:ja_font_normal size:16];
     instance->_font[kTHKeyboardCellStateFocused] = [UIFont fontWithName:ja_font_bold size:16];
+  });
+  return instance;
+}
+
++ (instancetype)defaultInstance {
+  static dispatch_once_t once;
+  static THKeyboardCellConfig *instance = nil;
+  dispatch_once(&once, ^{
+    instance = [[self alloc] init];
   });
   return instance;
 }

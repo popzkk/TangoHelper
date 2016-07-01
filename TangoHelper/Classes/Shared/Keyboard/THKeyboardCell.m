@@ -28,9 +28,18 @@
 - (void)configSelfWithCellConfig:(THKeyboardCellConfig *)config
                        cellState:(THKeyboardCellState)state {
   if (config) {
-    self.font = [config fontForState:state];
-    self.textColor = [config textColorForState:state];
-    self.backgroundColor = [config backgroundColorForState:state];
+    UIFont *font = [config fontForState:state];
+    if (font) {
+      self.font = font;
+    }
+    UIColor *textColor = [config textColorForState:state];
+    if (textColor) {
+      self.textColor = textColor;
+    }
+    UIColor *backgroundColor = [config backgroundColorForState:state];
+    if (backgroundColor) {
+      self.backgroundColor = backgroundColor;
+    }
   } else {
     NSLog(@"WARNING: cell config is nil!");
   }

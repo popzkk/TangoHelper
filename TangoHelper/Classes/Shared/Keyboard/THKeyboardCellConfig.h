@@ -10,13 +10,19 @@ typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
 @interface THKeyboardCellConfig : NSObject
 
 + (instancetype)defaultInstance;
++ (instancetype)defaultJaInstance;
 
+/*
 + (instancetype)numberCellConfig;
 + (instancetype)englishCellConfig;
 + (instancetype)hiraganaCellConfig;
 + (instancetype)katakanaCellConfig;
 + (instancetype)backCellConfig;
 + (instancetype)spaceCellConfig;
+ */
+
++ (instancetype)specialCellConfig;
+
 + (instancetype)actionCellConfig;
 
 + (instancetype)hiraganaCharCellConfig;

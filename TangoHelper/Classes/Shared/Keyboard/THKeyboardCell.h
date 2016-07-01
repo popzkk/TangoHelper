@@ -7,11 +7,9 @@
 
 @property(nonatomic, copy) NSString *arrow;
 
+@property(nonatomic) THKeyboardCellState state;
+
 // if nil, no config will be made.
 @property(nonatomic) THKeyboardCellConfig *config;
-
-- (THKeyboardCellState)state;
-
-- (void)setState:(THKeyboardCellState)state;
 
 @end

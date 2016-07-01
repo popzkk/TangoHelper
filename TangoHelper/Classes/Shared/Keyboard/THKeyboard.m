@@ -4,12 +4,17 @@
 
 static CGFloat kPadding = 3;
 
+static NSUInteger numberOfSpecialCells = 6;
+static NSString* specialCells_names[] = { @"１２３", @"ＡＢＣ", @"あいう", @"アイウ", @"⌫", @"空白" };
+static NSUInteger specialCells_indexes[] = { 5, 10, 15, 20, 9, 14};
+/*
 static NSUInteger numberCellIndex = 5;
 static NSUInteger englishCellIndex = 10;
 static NSUInteger hiraganaCellIndex = 15;
 static NSUInteger katakanaCellIndex = 20;
 static NSUInteger backCellIndex = 9;
 static NSUInteger spaceCellIndex = 14;
+ */
 static NSUInteger core[12] = {6, 7, 8, 11, 12, 13, 16, 17, 18, 21, 22, 23};
 static NSUInteger leftCellCoreIndex = 9;
 static NSUInteger rightCellCoreIndex = 11;
@@ -17,21 +22,6 @@ static NSUInteger rightCellCoreIndex = 11;
 @implementation THKeyboard {
   THKeyboardCell *_cells[25];
   THKeyboardCell *_actionCell; // overlap with cells 19 and 24.
-}
-
-#pragma mark - UIView
-
-- (void)layoutSubviews {
-  CGRect frame = self.bounds;
-  CGFloat width = (frame.size.width - 2 * kPadding) / 5;
-  CGFloat height = (frame.size.height - 2 * kPadding) / 5;
-  for (NSUInteger i = 0; i < 25; ++i) {
-    NSUInteger r = i / 5, c = i % 5;
-    _cells[i].frame =
-        CGRectMake(kPadding + width * c, kPadding + height * r, width, height);
-  }
-  _actionCell.frame = CGRectMake(_cells[19].frame.origin.x,
-                                 _cells[19].frame.origin.y, width, height * 2);
 }
 
 #pragma mark - public
@@ -122,6 +112,7 @@ static NSUInteger rightCellCoreIndex = 11;
   _cells[24].hidden = YES;
 
   // set texts and styles for constant cells
+  /*
   [self numberCell].text = @"１２３";
   [self numberCell].config = [THKeyboardCellConfig numberCellConfig];
   [self englishCell].text = @"ＡＢＣ";
@@ -134,12 +125,55 @@ static NSUInteger rightCellCoreIndex = 11;
   [self backCell].config = [THKeyboardCellConfig backCellConfig];
   [self spaceCell].text = @"空白";
   [self spaceCell].config = [THKeyboardCellConfig spaceCellConfig];
+   */
+
   // the action cell's text is set after init.
   _actionCell.config = [THKeyboardCellConfig actionCellConfig];
 }
 
+#pragma mark - UIView
+
+- (void)layoutSubviews {
+  CGRect frame = self.bounds;
+  CGFloat width = (frame.size.width - 2 * kPadding) / 5;
+  CGFloat height = (frame.size.height - 2 * kPadding) / 5;
+  for (NSUInteger i = 0; i < 25; ++i) {
+    NSUInteger r = i / 5, c = i % 5;
+    _cells[i].frame =
+    CGRectMake(kPadding + width * c, kPadding + height * r, width, height);
+  }
+  _actionCell.frame = CGRectMake(_cells[19].frame.origin.x,
+                                 _cells[19].frame.origin.y, width, height * 2);
+}
+
+#pragma mark - UIResponder
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+  UITouch *touch = [touches anyObject];
+  if (touches.count != 1) {
+    NSLog(@"WARNING: multiple touches detected in |touchesBegin:| - a ramdom one will be used");
+  }
+  NSLog(@"touchesBegin: %@", [NSValue valueWithCGPoint:[touch locationInView:self]]);
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+}
+
+// this is only available after iOS 9.1
+- (void)touchesEstimatedPropertiesUpdated:(NSSet *)touches {
+}
+
 #pragma mark - helpers
 
+/*
 - (THKeyboardCell *)numberCell {
   return _cells[numberCellIndex];
 }
@@ -163,6 +197,7 @@ static NSUInteger rightCellCoreIndex = 11;
 - (THKeyboardCell *)spaceCell {
   return _cells[spaceCellIndex];
 }
+*/
 
 - (THKeyboardCell *)cellAtCoreIndex:(NSUInteger)coreIndex {
   return _cells[core[coreIndex]];

@@ -1,5 +1,5 @@
 #import "THKeyboardConfig.h"
-#import "THKeyboardJaChar.h"
+#import "THKeyboardJaConstants.h"
 
 typedef void (^onceBlock)(NSMutableArray *, NSMutableArray *);
 
@@ -23,7 +23,7 @@ typedef void (^onceBlock)(NSMutableArray *, NSMutableArray *);
     instance = [[[self class] alloc] init];
     NSMutableArray *texts = [NSMutableArray array];
     NSMutableArray *arrows = [NSMutableArray array];
-    [self blockWithSource:hiragana](texts, arrows);
+    [self blockWithSource:hiragana_original](texts, arrows);
     instance->_texts = texts;
     instance->_arrows = arrows;
   });
@@ -37,7 +37,7 @@ typedef void (^onceBlock)(NSMutableArray *, NSMutableArray *);
     instance = [[[self class] alloc] init];
     NSMutableArray *texts = [NSMutableArray array];
     NSMutableArray *arrows = [NSMutableArray array];
-    [self blockWithSource:katakana](texts, arrows);
+    [self blockWithSource:katakana_original](texts, arrows);
     instance->_texts = texts;
     instance->_arrows = arrows;
   });
