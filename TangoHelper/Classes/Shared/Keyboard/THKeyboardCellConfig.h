@@ -3,6 +3,9 @@
 typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
   kTHKeyboardCellStateNormal = 0,
   kTHKeyboardCellStateFocused,
+  // not used...
+  kTHKeyboardCellStateFaded,
+  kTHKeyboardCellStatePopped,
   // count the number of states.
   numberOfKeyboardCellStates
 };
@@ -11,15 +14,6 @@ typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
 
 + (instancetype)defaultInstance;
 + (instancetype)defaultJaInstance;
-
-/*
-+ (instancetype)numberCellConfig;
-+ (instancetype)englishCellConfig;
-+ (instancetype)hiraganaCellConfig;
-+ (instancetype)katakanaCellConfig;
-+ (instancetype)backCellConfig;
-+ (instancetype)spaceCellConfig;
- */
 
 + (instancetype)specialCellConfig;
 
@@ -38,4 +32,7 @@ typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
 - (UIFont *)fontForState:(THKeyboardCellState)state;
 - (UIColor *)textColorForState:(THKeyboardCellState)state;
 - (UIColor *)backgroundColorForState:(THKeyboardCellState)state;
+- (CGFloat)borderWidthForState:(THKeyboardCellState)state;
+- (UIColor *)borderColorForState:(THKeyboardCellState)state;
+
 @end

@@ -96,4 +96,4 @@ static NSString *katakana_handakuten = @"アイウエオ"
                                         "ラリルレロ"
                                         "ワヲンー";
 
-#endif
+#endif /* THKeyboardJaConstants_h */
