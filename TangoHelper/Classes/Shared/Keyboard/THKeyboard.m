@@ -341,10 +341,6 @@ static NSUInteger index_to_core_index(NSUInteger index) {
   return NSNotFound;
 }
 
-static BOOL belongs_to_cross(THKeyboardCell *cell) {
-  return cell.state == kTHKeyboardCellStatePopped || cell.state == kTHKeyboardCellStateFocused;
-}
-
 static NSUInteger calc_neighbor(NSUInteger index, CGVector vec) {
   CGFloat len = sqrt(vec.dx * vec.dx + vec.dy * vec.dy);
   CGFloat cos = vec.dx / len;
@@ -365,6 +361,10 @@ static NSUInteger calc_neighbor(NSUInteger index, CGVector vec) {
     return neighbor(index, 0);
   }
   return NSNotFound;
+}
+
+static BOOL belongs_to_cross(THKeyboardCell *cell) {
+  return cell.state == kTHKeyboardCellStatePopped || cell.state == kTHKeyboardCellStateFocused;
 }
 
 @end

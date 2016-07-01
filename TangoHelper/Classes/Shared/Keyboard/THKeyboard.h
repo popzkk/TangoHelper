@@ -10,7 +10,7 @@ typedef NS_ENUM(NSUInteger, THKeyboardType) {
 
 @protocol THKeyboardDelegate <NSObject>
 
-- (void)customButtonTapped;
+- (void)actionCellTapped;
 
 @end
 
