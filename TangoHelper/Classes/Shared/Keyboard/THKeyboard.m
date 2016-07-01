@@ -178,8 +178,10 @@ static const NSUInteger rightCellCoreIndex = 11;
   _startPoint = [[touches anyObject] locationInView:self];
   _currentIndex = _startIndex = [self touchedIndex:_startPoint];
   _lastIndex = NSNotFound;
-  NSAssert(_startIndex != NSNotFound, @"%@ %@: cannot find the touched cell.",
-           NSStringFromClass([self class]), NSStringFromSelector(_cmd));
+  // touch is on the padding area.
+  if (_startIndex == NSNotFound) {
+    return;
+  }
   // the first touch must fall into one of the visible cell.
   if (_startIndex > 4) {
     if (is_char_cell(index_to_core_index(_startIndex))) {

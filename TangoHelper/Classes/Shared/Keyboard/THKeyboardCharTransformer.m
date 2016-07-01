@@ -1,4 +1,4 @@
-#import "THKeyboardCharTransformers.h"
+#import "THKeyboardCharTransformer.h"
 #import "THKeyboardJaConstants.h"
 
 @implementation THKeyboardCharTransformer {
