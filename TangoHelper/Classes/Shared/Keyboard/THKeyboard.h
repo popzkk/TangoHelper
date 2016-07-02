@@ -1,11 +1,10 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, THKeyboardType) {
-  kTHKeyboardUnknown = 0,
+  kTHKeyboardHiragana = 0,
+  kTHKeyboardKatakana,
   //kTHKeyboardNumber,
-  //kTHKeyboardEnglish,
-  kTHKeyboardHiragana,
-  kTHKeyboardKatakana
+  //kTHKeyboardEnglish
 };
 
 @protocol THKeyboardDelegate <NSObject>

@@ -10,7 +10,7 @@ static NSString *hiragana_original = @"あいうえお"
                                       "まみむめも"
                                       "や「ゆ」よ"
                                       "らりるれろ"
-                                      "わをん";
+                                      "わをんー";
 
 static NSString *katakana_original = @"アイウエオ"
                                       "カキクケコ"

@@ -15,14 +15,13 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
 
 - (id)copyWithZone:(NSZone *)zone {
   THKeyboardCellConfig *copy = [[THKeyboardCellConfig alloc] init];
-  memcpy((void *)copy->_font, (void *)_font, numberOfKeyboardCellStates * sizeof(UIFont *));
-  memcpy((void *)copy->_textColor, (void *)_textColor,
-         numberOfKeyboardCellStates * sizeof(UIColor *));
-  memcpy((void *)copy->_backgroundColor, (void *)_backgroundColor,
-         numberOfKeyboardCellStates * sizeof(UIColor *));
-  memcpy(copy->_borderWidth, _borderWidth, numberOfKeyboardCellStates * sizeof(CGFloat));
-  memcpy((void *)copy->_borderColor, (void *)_borderColor,
-         numberOfKeyboardCellStates * sizeof(UIColor *));
+  for (int i = 0; i < numberOfKeyboardCellStates; ++i) {
+    copy->_font[i] = _font[i];
+    copy->_textColor[i] = _textColor[i];
+    copy->_backgroundColor[i] = _backgroundColor[i];
+    copy->_borderWidth[i] = _borderWidth[i];
+    copy->_borderColor[i] = _borderColor[i];
+  }
   return copy;
 }
 
@@ -47,17 +46,20 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
   [instance setFont:ja_normal_big() state:kTHKeyboardCellStatePopped];
   [instance setFont:ja_bold_big() state:kTHKeyboardCellStateFocused];
   [instance setBackgroundColor:blue_color() state:kTHKeyboardCellStateFocused];
+  [instance setBackgroundColor:light_blue_color() state:kTHKeyboardCellStatePopped];
   [instance setBorderWidth:0.5 state:kTHKeyboardCellStateFocused];
   [instance setBorderWidth:0.5 state:kTHKeyboardCellStatePopped];
   return instance;
 }
 
 + (instancetype)hiraganaLeftCellConfig {
-  return [[self class] defaultJaInstance];
+  THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
+  [instance setBackgroundColor:grey_color_half() state:kTHKeyboardCellStateFocused];
+  return instance;
 }
 
 + (instancetype)hiraganaRightCellConfig {
-  return [[self class] defaultJaInstance];
+  return [[self class] hiraganaLeftCellConfig];
 }
 
 // currently katakana has the same style as hiragana.
@@ -171,12 +173,17 @@ static UIFont *ja_bold_big() {
 
 static UIColor *blue_color() {
   // 007aff
-  return [UIColor colorWithRed:0.00 green:0.48 blue:1.00 alpha:0.8];
+  return [UIColor colorWithRed:0.00 green:0.48 blue:1.00 alpha:0.7];
+}
+
+static UIColor *light_blue_color() {
+  // 5ac8fa
+  return [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:0.4];
 }
 
 static UIColor *grey_color() {
   // c7c7cc
-  return [UIColor colorWithRed:0.78 green:0.78 blue:0.80 alpha:1];
+  return [UIColor colorWithRed:0.78 green:0.78 blue:0.80 alpha:1.0];
 }
 
 static UIColor *grey_color_half() {

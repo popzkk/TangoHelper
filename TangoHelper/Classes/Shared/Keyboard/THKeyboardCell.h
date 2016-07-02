@@ -12,8 +12,14 @@
 // if nil, no config will be made.
 @property(nonatomic) THKeyboardCellConfig *config;
 
+- (void)onlySetState:(THKeyboardCellState)state;
+
+- (void)onlySetConfig:(THKeyboardCellConfig *)config;
+
+- (void)configSelf;
+
 // saves the state config, text, and the |hidden| property.
-- (void)saveForState:(THKeyboardCellState)state config:(THKeyboardCellConfig *)config;
+- (void)save;
 
 - (void)restore;
 

@@ -20,8 +20,7 @@
     [self addSubview:_depot];
     [self addSubview:_lists];
     _keyboard = [THKeyboard sharedInstance];
-    _keyboard.keyboardType = kTHKeyboardHiragana;
-    _keyboard.actionText = @"確認";
+    _keyboard.keyboardType = kTHKeyboardKatakana;
     [self addSubview:_keyboard];
   }
   return self;

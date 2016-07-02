@@ -30,7 +30,7 @@
   }
 }
 
-- (void)saveForState:(THKeyboardCellState)state config:(THKeyboardCellConfig *)config {
+- (void)save {
   if (_saved) {
     NSLog(@"WARNING: save after saving!");
   }
@@ -39,9 +39,6 @@
   _savedConfig = _config;
   _savedText = self.text;
   _savedHidden = self.hidden;
-
-  _state = state;
-  self.config = config;
 
   _saved = YES;
 }
@@ -53,11 +50,24 @@
   }
 
   _state = _savedState;
-  self.config = _savedConfig;
+  _config = _savedConfig;
+  [self configSelf];
   self.text = _savedText;
   self.hidden = _savedHidden;
 
   _saved = NO;
+}
+
+- (void)onlySetState:(THKeyboardCellState)state {
+  _state = state;
+}
+
+- (void)onlySetConfig:(THKeyboardCellConfig *)config {
+  _config = config;
+}
+
+- (void)configSelf {
+  [self configSelfWithCellConfig:self.config cellState:_state];
 }
 
 #pragma mark - private
@@ -105,10 +115,6 @@
   } else {
     // NSLog(@"WARNING: cell config is nil!");
   }
-}
-
-- (void)configSelf {
-  [self configSelfWithCellConfig:self.config cellState:_state];
 }
 
 @end

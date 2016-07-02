@@ -23,8 +23,9 @@ static const NSUInteger rightCellCoreIndex = 11;
 
   THKeyboardTouchState _state;
   NSUInteger _startIndex;  // index of the cell when the touch begins.
+  BOOL _crossIsShown; // whether the cross is shown;
   CGPoint _startPoint;     // touch point at the beginning.
-  NSUInteger _lastIndex;
+  NSUInteger _previousIndex; // the previous index of the cell when the user is moving.
   NSUInteger _currentIndex;  // index of the cell when the user is moving.
 }
 
@@ -92,7 +93,7 @@ static const NSUInteger rightCellCoreIndex = 11;
 }
 
 - (void)initAll {
-  // add the action cell first so that other cells can cover it when necessary
+  // add the action cell first so that other cells can cover it when necessary.
   _actionCell = [[THKeyboardCell alloc] initWithFrame:CGRectZero];
   _actionCell.textAlignment = NSTextAlignmentCenter;
   _actionCell.layer.borderWidth = 0.5;
@@ -108,44 +109,62 @@ static const NSUInteger rightCellCoreIndex = 11;
     [self addSubview:cell];
   }
 
-  // hide cells in the first row and cells for actionCell
+  // hide cells in the first row and cells for actionCell.
   for (NSUInteger i = 0; i < 5; ++i) {
     _cells[i].hidden = YES;
   }
   _cells[19].hidden = YES;
   _cells[24].hidden = YES;
 
-  // set texts and styles for special cells
+  // set texts and styles for special cells.
   for (NSUInteger i = 0; i < 6; ++i) {
     THKeyboardCell *cell = [self cellAtSpecialIndex:i];
     cell.text = special_names[i];
     cell.config = [THKeyboardCellConfig specialCellConfig];
   }
 
-  // the action cell's text is set after init.
+  // the default action text.
+  self.actionText = @"確認";
   _actionCell.config = [THKeyboardCellConfig actionCellConfig];
 }
 
-- (void)handleTouchedCharCell:(NSUInteger)index {
-  // no need to save here as their states must be |Normal|.
+- (void)touchedCharCellWillMove {
+  if (_crossIsShown) {
+    return;
+  }
+  _crossIsShown = YES;
+
   for (NSUInteger i = 0; i < 25; ++i) {
-    _cells[i].state = kTHKeyboardCellStateFaded;
+    [_cells[i] save];
   }
-  THKeyboardCell *cell = _cells[index];
-  cell.state = kTHKeyboardCellStateFocused;
-  THKeyboardCellConfig *config = nil;
-  if (_keyboardType == kTHKeyboardHiragana) {
-    config = [THKeyboardCellConfig hiraganaCharCellConfig];
-  } else if (_keyboardType == kTHKeyboardKatakana) {
-    config = [THKeyboardCellConfig katakanaCharCellConfig];
-  } else {
-    config = [THKeyboardCellConfig defaultInstance];
+
+  for (NSUInteger i = 0; i < 25; ++i) {
+    [_cells[i] onlySetState:kTHKeyboardCellStateFaded];
   }
+  THKeyboardCell *cell = _cells[_startIndex];
+  [cell onlySetState:kTHKeyboardCellStateFocused];
+
+  THKeyboardCellConfig *config = char_cell_config(_keyboardType);
   for (NSUInteger i = 0; i < cell.arrow.length; ++i) {
-    THKeyboardCell *arrow = _cells[neighbor(index, i)];
-    [arrow saveForState:kTHKeyboardCellStatePopped config:config];
+    THKeyboardCell *arrow = _cells[neighbor(_startIndex, i)];
+    [arrow onlySetState:kTHKeyboardCellStatePopped];
+    [arrow onlySetConfig:config];
     arrow.text = [cell.arrow substringWithRange:NSMakeRange(i, 1)];
     arrow.hidden = NO;
+  }
+
+  for (NSUInteger i = 0; i < 25; ++i) {
+    [_cells[i] configSelf];
+  }
+}
+
+- (void)touchedCharCellReleased {
+  if (!_crossIsShown) {
+    return;
+  }
+  _crossIsShown = NO;
+  for (NSUInteger i = 0; i < 25; ++i) {
+    [_cells[i] restore];
   }
 }
 
@@ -177,25 +196,16 @@ static const NSUInteger rightCellCoreIndex = 11;
 
   _startPoint = [[touches anyObject] locationInView:self];
   _currentIndex = _startIndex = [self touchedIndex:_startPoint];
-  _lastIndex = NSNotFound;
-  // touch is on the padding area.
-  if (_startIndex == NSNotFound) {
+  _previousIndex = NSNotFound;
+  // touch is on the padding area or the first row.
+  if (_startIndex < 5 || _startIndex == NSNotFound) {
     return;
   }
-  // the first touch must fall into one of the visible cell.
-  if (_startIndex > 4) {
-    if (is_char_cell(index_to_core_index(_startIndex))) {
-      [self handleTouchedCharCell:_startIndex];
-      _state = kTHKeyboardTouchStateMoving;
-    } else {
-      _state = kTHKeyboardTouchStateNormal;
-      if (_startIndex != 19 && _startIndex != 24) {
-        _cells[_startIndex].state = kTHKeyboardCellStateFocused;
-      } else {
-        _actionCell.state = kTHKeyboardCellStateFocused;
-      }
-    }
-    // NSLog(@"touchesBegin: %lu", _startIndex);
+  _state = kTHKeyboardTouchStateNormal;
+  if (_startIndex != 19 && _startIndex != 24) {
+    _cells[_startIndex].state = kTHKeyboardCellStateFocused;
+  } else {
+    _actionCell.state = kTHKeyboardCellStateFocused;
   }
 }
 
@@ -213,15 +223,23 @@ static const NSUInteger rightCellCoreIndex = 11;
 
   CGPoint point = [[touches anyObject] locationInView:self];
   NSUInteger index = [self touchedIndex:point];
+
+  if (_state != kTHKeyboardTouchStateMoving) {
+    if (is_char_cell(index_to_core_index(_startIndex))) {
+      _state = kTHKeyboardTouchStateMoving;
+    }
+  }
+
   if (_state == kTHKeyboardTouchStateMoving) {
+    [self touchedCharCellWillMove];
     if (index != _startIndex) {
       CGVector vec = CGVectorMake(point.x - _startPoint.x, point.y - _startPoint.y);
       index = calc_neighbor(_startIndex, vec);
     }
     if (index < 25 && belongs_to_cross(_cells[index])) {
-      _lastIndex = _currentIndex;
+      _previousIndex = _currentIndex;
       _currentIndex = index;
-      _cells[_lastIndex].state = kTHKeyboardCellStatePopped;
+      _cells[_previousIndex].state = kTHKeyboardCellStatePopped;
       _cells[_currentIndex].state = kTHKeyboardCellStateFocused;
     }
   }
@@ -243,13 +261,9 @@ static const NSUInteger rightCellCoreIndex = 11;
   NSUInteger index = [self touchedIndex:point];
 
   if (_state == kTHKeyboardTouchStateMoving) {
-    NSLog(@"Output: %@", _cells[_currentIndex].text);
-    for (NSUInteger i = 0; i < _cells[_startIndex].arrow.length; ++i) {
-      [_cells[neighbor(_startIndex, i)] restore];
-    }
-    for (NSUInteger i = 0; i < 25; ++i) {
-      _cells[i].state = kTHKeyboardCellStateNormal;
-    }
+    NSLog(@"Cell %@ tapped in moving", _cells[_currentIndex].text);
+    [self touchedCharCellReleased];
+    _cells[_startIndex].state = kTHKeyboardCellStateNormal;
   } else if (_state == kTHKeyboardTouchStateNormal) {
     if ((index == 19 && _startIndex == 19) || (index == 24 && _startIndex == 24) ||
         (index == 19 && _startIndex == 24) || (index == 24 && _startIndex == 19)) {
@@ -270,12 +284,7 @@ static const NSUInteger rightCellCoreIndex = 11;
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
   // for any reason, we set it back to |NoTouch| so a new touch can begin.
   _state = kTHKeyboardTouchStateNoTouch;
-  for (NSUInteger i = 0; i < _cells[_startIndex].arrow.length; ++i) {
-    [_cells[neighbor(_startIndex, i)] restore];
-  }
-  for (NSUInteger i = 0; i < 25; ++i) {
-    _cells[i].state = kTHKeyboardCellStateNormal;
-  }
+  [self touchedCharCellReleased];
 }
 
 // this is only available after iOS 9.1
@@ -329,9 +338,9 @@ static NSUInteger neighbor(NSUInteger index, NSUInteger arrow) {
   }
 }
 
-static BOOL is_char_cell(NSUInteger coreIndex) {
-  return coreIndex != leftCellCoreIndex && coreIndex != rightCellCoreIndex &&
-         coreIndex != NSNotFound;
+static BOOL is_char_cell(NSUInteger core_index) {
+  return core_index != leftCellCoreIndex && core_index != rightCellCoreIndex &&
+         core_index != NSNotFound;
 }
 
 static NSUInteger index_to_core_index(NSUInteger index) {
@@ -367,6 +376,16 @@ static NSUInteger calc_neighbor(NSUInteger index, CGVector vec) {
 
 static BOOL belongs_to_cross(THKeyboardCell *cell) {
   return cell.state == kTHKeyboardCellStatePopped || cell.state == kTHKeyboardCellStateFocused;
+}
+
+static THKeyboardCellConfig *char_cell_config(THKeyboardType type) {
+  if (type == kTHKeyboardHiragana) {
+    return [THKeyboardCellConfig hiraganaCharCellConfig];
+  } else if (type == kTHKeyboardKatakana) {
+    return [THKeyboardCellConfig katakanaCharCellConfig];
+  } else {
+    return [THKeyboardCellConfig defaultInstance];
+  }
 }
 
 @end
