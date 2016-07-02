@@ -45,7 +45,7 @@
 
 - (void)restore {
   if (!_saved) {
-    NSLog(@"try to restore without saving before");
+    NSLog(@"try to restore without saving before!");
     return;
   }
 

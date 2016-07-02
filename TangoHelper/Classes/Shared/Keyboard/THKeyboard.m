@@ -351,7 +351,9 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
         [self commitTouchResult:kTHKeyboardTouchResultAction object:nil];
       }
     } else {
-      _cells[_startIndex].state = kTHKeyboardCellStateNormal;
+      if (_startIndex != self.keyboardType * 5) {
+        _cells[_startIndex].state = kTHKeyboardCellStateNormal;
+      }
       if (index == _startIndex) {
         THKeyboardTouchResult result = kTHKeyboardTouchResultText;
         id object = nil;
@@ -472,7 +474,6 @@ static NSUInteger calc_neighbor(NSUInteger index, CGVector vec) {
     // left
     return neighbor(index, 0);
   }
-  return NSNotFound;
 }
 
 static BOOL belongs_to_cross(THKeyboardCell *cell) {
