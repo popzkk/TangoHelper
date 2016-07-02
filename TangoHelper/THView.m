@@ -19,8 +19,7 @@
     _lists.titleLabel.font = [UIFont fontWithName:@"Roboto-Regular" size:20];
     [self addSubview:_depot];
     [self addSubview:_lists];
-    _keyboard = [THKeyboard sharedInstance];
-    _keyboard.keyboardType = kTHKeyboardKatakana;
+    _keyboard = [THKeyboard sharedInstanceWithKeyboardType:kTHKeyboardKatakana];
     [self addSubview:_keyboard];
   }
   return self;

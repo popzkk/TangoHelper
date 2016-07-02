@@ -6,6 +6,9 @@
 }
 
 - (NSString *)nextFormOfContent:(NSString *)content {
+  if (!content) {
+    return nil;
+  }
   NSUInteger cur = 0, index = NSNotFound;
   for (; cur < _sources.count && index == NSNotFound; ++cur) {
     index = [[_sources objectAtIndex:cur] rangeOfString:content].location;
@@ -28,22 +31,22 @@
   return content;
 }
 
-+ (instancetype)THKeyboardHiraganaTransformer {
++ (instancetype)hiraganaTransformer {
   static dispatch_once_t onceToken;
   static THKeyboardCharTransformer *instance;
   dispatch_once(&onceToken, ^{
-    instance = [[self class] init];
+    instance = [[[self class] alloc] init];
     instance->_sources =
         @[ hiragana_original, hiragana_small, hiragana_dakuten, hiragana_handakuten ];
   });
   return instance;
 }
 
-+ (instancetype)THKeyboardKatakanaTransformer {
++ (instancetype)katakanaTransformer {
   static dispatch_once_t onceToken;
   static THKeyboardCharTransformer *instance;
   dispatch_once(&onceToken, ^{
-    instance = [[self class] init];
+    instance = [[[self class] alloc] init];
     instance->_sources =
         @[ katakana_original, katakana_small, katakana_dakuten, katakana_handakuten ];
   });

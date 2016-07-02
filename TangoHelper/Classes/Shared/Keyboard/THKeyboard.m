@@ -2,6 +2,7 @@
 #import "THKeyboardConfig.h"
 #import "THKeyboardCell.h"
 #import "THKeyboardCellConfig.h"
+#import "THKeyboardCharTransformer.h"
 
 typedef NS_ENUM(NSUInteger, THKeyboardTouchState) {
   kTHKeyboardTouchStateNoTouch = 0,  // no touch
@@ -9,57 +10,80 @@ typedef NS_ENUM(NSUInteger, THKeyboardTouchState) {
   kTHKeyboardTouchStateMoving,       // already touched, and is a char cell
 };
 
+typedef NS_ENUM(NSUInteger, THKeyboardTouchResult) {
+  kTHKeyboardTouchResultText = 0,  // add or delete text
+  kTHKeyboardTouchResultSelf,      // touched on a cell related to the keyboard itself
+  kTHKeyboardTouchResultLeft,      // touched on the left cell
+  kTHKeyboardTouchResultRight,     // touched on the right cell
+  kTHKeyboardTouchResultAction,    // touched on the action cell
+};
+
 static CGFloat kPadding = 3;
 
+static const NSUInteger numberCellIndex = 5;
+static const NSUInteger englishCellIndex = 10;
+static const NSUInteger hiraganaCellIndex = 15;
+static const NSUInteger katakanaCellIndex = 20;
+static const NSUInteger backCellIndex = 9;
+static const NSUInteger spaceCellIndex = 14;
 static NSString *special_names[] = {@"１２３", @"ＡＢＣ", @"あいう", @"アイウ", @"⌫", @"空白"};
-static const NSUInteger special_indexes[] = {5, 10, 15, 20, 9, 14};
+static const NSUInteger special_indexes[] = {numberCellIndex,   englishCellIndex, hiraganaCellIndex,
+                                             katakanaCellIndex, backCellIndex,    spaceCellIndex};
 static const NSUInteger core_indexes[12] = {6, 7, 8, 11, 12, 13, 16, 17, 18, 21, 22, 23};
 static const NSUInteger leftCellCoreIndex = 9;
+static const NSUInteger leftCellIndex = 21;  // core_indexes[leftCellCoreIndex]
 static const NSUInteger rightCellCoreIndex = 11;
+static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex]
 
 @implementation THKeyboard {
   THKeyboardCell *_cells[25];
   THKeyboardCell *_actionCell;  // overlap with cells 19 and 24.
 
+  __weak id<THKeyboardDelegate> _delegate;
+
   THKeyboardTouchState _state;
-  NSUInteger _startIndex;  // index of the cell when the touch begins.
-  BOOL _crossIsShown; // whether the cross is shown;
-  CGPoint _startPoint;     // touch point at the beginning.
-  NSUInteger _previousIndex; // the previous index of the cell when the user is moving.
-  NSUInteger _currentIndex;  // index of the cell when the user is moving.
+  NSUInteger _startIndex;     // index of the cell when the touch begins.
+  BOOL _crossIsShown;         // whether the cross is shown.
+  CGPoint _startPoint;        // touch point at the beginning.
+  NSUInteger _previousIndex;  // the previous index of the cell when the user is moving.
+  NSUInteger _currentIndex;   // index of the cell when the user is moving.
 }
 
 #pragma mark - public
 
-+ (instancetype)sharedInstance {
-  static dispatch_once_t once;
-  static THKeyboard *sharedInstance = nil;
-  dispatch_once(&once, ^{
-    sharedInstance = [[self alloc] initWithFrame:CGRectZero];
-    [sharedInstance initAll];
-  });
++ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
+                                    actionText:(NSString *)actionText
+                                      delegate:(id<THKeyboardDelegate>)delegate {
+  THKeyboard *sharedInstance = [self sharedInstance];
+  [sharedInstance setKeyboardType:type];
+  if (actionText) {
+    [sharedInstance setActionText:actionText];
+  }
+  sharedInstance->_delegate = delegate;
   return sharedInstance;
 }
 
++ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
+                                    actionText:(NSString *)actionText {
+  return [self sharedInstanceWithKeyboardType:type actionText:actionText delegate:nil];
+}
+
++ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type {
+  return [self sharedInstanceWithKeyboardType:type actionText:nil delegate:nil];
+}
+
 - (void)setKeyboardType:(THKeyboardType)keyboardType {
+  if (keyboardType == _keyboardType) {
+    return;
+  }
+
+  _cells[keyboardType * 5].state = kTHKeyboardCellStateFocused;
+  _cells[_keyboardType * 5].state = kTHKeyboardCellStateNormal;
   _keyboardType = keyboardType;
-  [self loadKeyboardWithType:keyboardType];
-}
 
-- (NSString *)actionText {
-  return _actionCell.text;
-}
-
-- (void)setActionText:(NSString *)actionText {
-  _actionCell.text = actionText;
-}
-
-#pragma mark - private
-
-- (void)loadKeyboardWithType:(THKeyboardType)type {
   THKeyboardConfig *keyboardConfig;
   THKeyboardCellConfig *charCellConfig, *leftCellConfig, *rightCellConfig;
-  switch (type) {
+  switch (keyboardType) {
     case kTHKeyboardHiragana:
       keyboardConfig = [THKeyboardConfig hiraganaConfig];
       charCellConfig = [THKeyboardCellConfig hiraganaCharCellConfig];
@@ -74,12 +98,9 @@ static const NSUInteger rightCellCoreIndex = 11;
       break;
     default:
       NSLog(@"WARNING: unknown keyboard type!");
-      keyboardConfig = nil;
-      charCellConfig = [THKeyboardCellConfig defaultInstance];
-      leftCellConfig = [THKeyboardCellConfig defaultInstance];
-      rightCellConfig = [THKeyboardCellConfig defaultInstance];
-      break;
+      return;
   }
+
   [self leftCell].config = leftCellConfig;
   [self rightCell].config = rightCellConfig;
   for (NSUInteger i = 0; i < 12; ++i) {
@@ -90,6 +111,30 @@ static const NSUInteger rightCellCoreIndex = 11;
     cell.text = [keyboardConfig.texts objectAtIndex:i];
     cell.arrow = [keyboardConfig.arrows objectAtIndex:i];
   }
+}
+
+- (NSString *)actionText {
+  return _actionCell.text;
+}
+
+- (void)setActionText:(NSString *)actionText {
+  _actionCell.text = actionText;
+}
+
+- (void)setDelegate:(id<THKeyboardDelegate>)delegate {
+  _delegate = delegate;
+}
+
+#pragma mark - private
+
++ (instancetype)sharedInstance {
+  static dispatch_once_t once;
+  static THKeyboard *sharedInstance = nil;
+  dispatch_once(&once, ^{
+    sharedInstance = [[self alloc] initWithFrame:CGRectZero];
+    [sharedInstance initAll];
+  });
+  return sharedInstance;
 }
 
 - (void)initAll {
@@ -165,6 +210,39 @@ static const NSUInteger rightCellCoreIndex = 11;
   _crossIsShown = NO;
   for (NSUInteger i = 0; i < 25; ++i) {
     [_cells[i] restore];
+  }
+}
+
+- (void)commitTouchResult:(THKeyboardTouchResult)result object:(id)object {
+  switch (result) {
+    // right cell has no function currently...
+    case kTHKeyboardTouchResultRight:
+      NSLog(@"right cell tapped");
+      break;
+    case kTHKeyboardTouchResultAction:
+      NSLog(@"action cell tapped");
+      [_delegate actionCellTapped];
+      break;
+    case kTHKeyboardTouchResultLeft:
+      NSLog(@"left cell tapped");
+      [_delegate changeLastInputTo:[transformer(self.keyboardType)
+                                       nextFormOfContent:[_delegate lastInput]]];
+      break;
+    case kTHKeyboardTouchResultSelf:
+      NSLog(@"will change keyboard to %@", object);
+      self.keyboardType = keyboard_type(object);
+      break;
+    // kTHKeyboardTouchResultText
+    default:
+      NSLog(@"will add text: %@", object);
+      if ([object isEqualToString:@"⌫"]) {
+        [_delegate backCellTapped];
+      } else if ([object isEqualToString:@"空白"]) {
+        [_delegate addContent:space_for_keyboard(self.keyboardType)];
+      } else {
+        [_delegate addContent:object];
+      }
+      break;
   }
 }
 
@@ -261,20 +339,43 @@ static const NSUInteger rightCellCoreIndex = 11;
   NSUInteger index = [self touchedIndex:point];
 
   if (_state == kTHKeyboardTouchStateMoving) {
-    NSLog(@"Cell %@ tapped in moving", _cells[_currentIndex].text);
+    // restore the keyboard to the normal UI first as the delegate may cost a lot of time.
+    NSString *content = _cells[_currentIndex].text;
     [self touchedCharCellReleased];
     _cells[_startIndex].state = kTHKeyboardCellStateNormal;
+    [self commitTouchResult:kTHKeyboardTouchResultText object:content];
   } else if (_state == kTHKeyboardTouchStateNormal) {
-    if ((index == 19 && _startIndex == 19) || (index == 24 && _startIndex == 24) ||
-        (index == 19 && _startIndex == 24) || (index == 24 && _startIndex == 19)) {
-      NSLog(@"Action Cell tapped");
-    } else if (index == _startIndex) {
-      NSLog(@"Cell %@ tapped", _cells[_startIndex].text);
-    }
     if (_startIndex == 19 || _startIndex == 24) {
       _actionCell.state = kTHKeyboardCellStateNormal;
+      if (index == 19 || index == 24) {
+        [self commitTouchResult:kTHKeyboardTouchResultAction object:nil];
+      }
     } else {
       _cells[_startIndex].state = kTHKeyboardCellStateNormal;
+      if (index == _startIndex) {
+        THKeyboardTouchResult result = kTHKeyboardTouchResultText;
+        id object = nil;
+        switch (index) {
+          case leftCellIndex:
+            result = kTHKeyboardTouchResultLeft;
+            break;
+          case rightCellIndex:
+            result = kTHKeyboardTouchResultRight;
+            break;
+          case hiraganaCellIndex:
+          case katakanaCellIndex:
+          case numberCellIndex:
+          case englishCellIndex:
+            result = kTHKeyboardTouchResultSelf;
+            object = _cells[index].text;
+            break;
+          // default means back cell, space cell, or any other char cell.
+          default:
+            object = _cells[index].text;
+            break;
+        }
+        [self commitTouchResult:result object:object];
+      }
     }
   }
 
@@ -302,11 +403,11 @@ static const NSUInteger rightCellCoreIndex = 11;
 }
 
 - (THKeyboardCell *)leftCell {
-  return [self cellAtCoreIndex:leftCellCoreIndex];
+  return _cells[leftCellIndex];
 }
 
 - (THKeyboardCell *)rightCell {
-  return [self cellAtCoreIndex:rightCellCoreIndex];
+  return _cells[rightCellIndex];
 }
 
 - (NSUInteger)touchedIndex:(CGPoint)point {
@@ -385,6 +486,41 @@ static THKeyboardCellConfig *char_cell_config(THKeyboardType type) {
     return [THKeyboardCellConfig katakanaCharCellConfig];
   } else {
     return [THKeyboardCellConfig defaultInstance];
+  }
+}
+
+static THKeyboardCharTransformer *transformer(THKeyboardType type) {
+  switch (type) {
+    case kTHKeyboardHiragana:
+      return [THKeyboardCharTransformer hiraganaTransformer];
+    case kTHKeyboardKatakana:
+      return [THKeyboardCharTransformer katakanaTransformer];
+    default:
+      return nil;
+  }
+}
+
+static THKeyboardType keyboard_type(NSString *cell_name) {
+  if ([cell_name isEqualToString:@"１２３"]) {
+    return kTHKeyboardNumber;
+  } else if ([cell_name isEqualToString:@"ＡＢＣ"]) {
+    return kTHKeyboardEnglish;
+  } else if ([cell_name isEqualToString:@"あいう"]) {
+    return kTHKeyboardHiragana;
+  } else if ([cell_name isEqualToString:@"アイウ"]) {
+    return kTHKeyboardKatakana;
+  } else {
+    return kTHKeyboardUnknown;
+  }
+}
+
+static NSString *space_for_keyboard(THKeyboardType type) {
+  switch (type) {
+    case kTHKeyboardHiragana:
+    case kTHKeyboardKatakana:
+      return @"　";
+    default:
+      return @" ";
   }
 }
 

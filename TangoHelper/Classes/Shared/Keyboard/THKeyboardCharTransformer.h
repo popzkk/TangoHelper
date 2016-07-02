@@ -5,9 +5,9 @@
 // for convenience, pass in NSString here - only the first char will be used.
 - (NSString *)nextFormOfContent:(NSString *)content;
 
-+ (instancetype)THKeyboardHiraganaTransformer;
++ (instancetype)hiraganaTransformer;
 
-+ (instancetype)THKeyboardKatakanaTransformer;
++ (instancetype)katakanaTransformer;
 
 // add other transformers...
 

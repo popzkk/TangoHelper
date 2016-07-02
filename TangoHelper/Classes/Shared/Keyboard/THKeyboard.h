@@ -1,26 +1,44 @@
 #import <UIKit/UIKit.h>
 
 typedef NS_ENUM(NSUInteger, THKeyboardType) {
-  kTHKeyboardHiragana = 0,
-  kTHKeyboardKatakana,
-  //kTHKeyboardNumber,
-  //kTHKeyboardEnglish
+  kTHKeyboardUnknown = 0,
+  // make the order as it appears on the keyboard
+  kTHKeyboardNumber,
+  kTHKeyboardEnglish,
+  kTHKeyboardHiragana,
+  kTHKeyboardKatakana
 };
 
 @protocol THKeyboardDelegate <NSObject>
 
 - (void)actionCellTapped;
 
+- (void)backCellTapped;
+
+- (void)addContent:(NSString *)content;
+
+- (NSString *)lastInput;
+
+- (void)changeLastInputTo:(NSString *)content;
+
 @end
 
+// after getting the shared instance, set these properties immediately!
 @interface THKeyboard : UIView
 
-@property(nonatomic, weak) id<THKeyboardDelegate> delegate;
 @property(nonatomic) THKeyboardType keyboardType;
-@property(nonatomic, copy) NSString *actionText;
-// should support set/get text.
-@property(nonatomic) UIView *targetView;
 
-+ (instancetype)sharedInstance;
+@property(nonatomic, copy) NSString *actionText;
+
++ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type;
+
++ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
+                                    actionText:(NSString *)actionText;
+
++ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
+                                    actionText:(NSString *)actionText
+                                      delegate:(id<THKeyboardDelegate>)delegate;
+
+- (void)setDelegate:(id<THKeyboardDelegate>)delegate;
 
 @end
