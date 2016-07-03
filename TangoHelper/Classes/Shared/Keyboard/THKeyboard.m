@@ -184,7 +184,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   }
 
   for (NSUInteger i = 0; i < 25; ++i) {
-    [_cells[i] onlySetState:kTHKeyboardCellStateFaded];
+    //[_cells[i] onlySetState:kTHKeyboardCellStateFaded];
   }
   THKeyboardCell *cell = _cells[_startIndex];
   [cell onlySetState:kTHKeyboardCellStateFocused];
@@ -217,24 +217,24 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   switch (result) {
     // right cell has no function currently...
     case kTHKeyboardTouchResultRight:
-      NSLog(@"right cell tapped");
+      // NSLog(@"right cell tapped");
       break;
     case kTHKeyboardTouchResultAction:
-      NSLog(@"action cell tapped");
+      // NSLog(@"action cell tapped");
       [_delegate actionCellTapped];
       break;
     case kTHKeyboardTouchResultLeft:
-      NSLog(@"left cell tapped");
+      // NSLog(@"left cell tapped");
       [_delegate changeLastInputTo:[transformer(self.keyboardType)
                                        nextFormOfContent:[_delegate lastInput]]];
       break;
     case kTHKeyboardTouchResultSelf:
-      NSLog(@"will change keyboard to %@", object);
+      // NSLog(@"will change keyboard to %@", object);
       self.keyboardType = keyboard_type(object);
       break;
     // kTHKeyboardTouchResultText
     default:
-      NSLog(@"will add text: %@", object);
+      // NSLog(@"will add text: %@", object);
       if ([object isEqualToString:@"⌫"]) {
         [_delegate backCellTapped];
       } else if ([object isEqualToString:@"空白"]) {

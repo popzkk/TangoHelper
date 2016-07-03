@@ -1,6 +1,8 @@
 #import "THAppDelegate.h"
 #import "THViewController.h"
 
+#import "Classes/Backend/THFileRW.h"
+
 @implementation THAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -21,6 +23,8 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
   // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
   // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
+
+  [THFileRW flushAll];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -29,10 +33,37 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+  /*
+  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+  NSString *documentsDirectory = paths.firstObject;
+  NSString *path = [documentsDirectory stringByAppendingPathComponent:@"test.depot"];
+   */
+  /*
+   if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
+   [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
+   }
+
+   exit(0);
+   */
+  /*
+  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+    NSMutableDictionary *depot = [NSMutableDictionary dictionary];
+    for (NSUInteger i = 0; i < 20; ++i) {
+      [depot setObject:[NSString stringWithFormat:@"explanation%lu", i] forKey:[NSString stringWithFormat:@"word%lu", i]];
+    }
+    [depot writeToFile:path atomically:NO];
+  }
+  NSLog(@"\n%@", [NSDictionary dictionaryWithContentsOfFile:path]);
+
+  THFileRW *fileRW = [THFileRW instanceForPath:path];
+  [fileRW setObject:@"explanation" forKey:@"word"];
+   */
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+
+  [THFileRW flushAll];
 }
 
 @end

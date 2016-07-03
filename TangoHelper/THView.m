@@ -2,6 +2,8 @@
 
 #import "Classes/Shared/Keyboard/THKeyboard.h"
 
+#import "Classes/Backend/THFileRW.h"
+
 @implementation THView {
   UIButton *_depot;
   UIButton *_lists;
@@ -17,8 +19,8 @@
     _lists = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [_lists setTitle:@"Lists" forState:UIControlStateNormal];
     _lists.titleLabel.font = [UIFont fontWithName:@"Roboto-Regular" size:20];
-    [self addSubview:_depot];
-    [self addSubview:_lists];
+    //[self addSubview:_depot];
+    //[self addSubview:_lists];
     _keyboard = [THKeyboard sharedInstanceWithKeyboardType:kTHKeyboardKatakana];
     [self addSubview:_keyboard];
   }

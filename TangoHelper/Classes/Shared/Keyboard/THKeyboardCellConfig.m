@@ -158,7 +158,7 @@ static UIFont *ja_normal_small() {
 }
 
 static UIFont *ja_normal_big() {
-  return [UIFont fontWithName:ja_font_normal size:20];
+  return [UIFont fontWithName:ja_font_normal size:24];
 }
 
 /*
@@ -168,7 +168,7 @@ static UIFont *ja_bold_small() {
 */
 
 static UIFont *ja_bold_big() {
-  return [UIFont fontWithName:ja_font_bold size:20];
+  return [UIFont fontWithName:ja_font_bold size:24];
 }
 
 static UIColor *blue_color() {
