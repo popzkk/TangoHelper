@@ -2,27 +2,27 @@
 
 #import "Classes/Shared/Keyboard/THKeyboard.h"
 
-#import "Classes/Backend/THFileRW.h"
+#import "Classes/Shared/THWordPreview.h"
 
 @implementation THView {
-  UIButton *_depot;
-  UIButton *_lists;
   THKeyboard *_keyboard;
+  THWordPreview *_preview;
+  UIScrollView *_scrollView;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame {
   self = [super initWithFrame:frame];
   if (self) {
-    _depot = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [_depot setTitle:@"Depot" forState:UIControlStateNormal];
-    _depot.titleLabel.font = [UIFont fontWithName:@"Roboto-Regular" size:20];
-    _lists = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [_lists setTitle:@"Lists" forState:UIControlStateNormal];
-    _lists.titleLabel.font = [UIFont fontWithName:@"Roboto-Regular" size:20];
-    //[self addSubview:_depot];
-    //[self addSubview:_lists];
+    _preview = [[THWordPreview alloc] initWithFrame:CGRectZero key:@"word" object:@"explanation"];
     _keyboard = [THKeyboard sharedInstanceWithKeyboardType:kTHKeyboardKatakana];
     [self addSubview:_keyboard];
+    //[self addSubview:_preview];
+    _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    _scrollView.scrollEnabled = YES;
+    [self addSubview:_scrollView];
+    for (NSUInteger i = 0; i < 20; ++i) {
+      [_scrollView addSubview:[[THWordPreview alloc] initWithFrame:CGRectZero key:[NSString stringWithFormat:@"word%lu", i] object:[NSString stringWithFormat:@"explanation%lu", i]]];
+    }
   }
   return self;
 }
@@ -30,10 +30,16 @@
 - (void)layoutSubviews {
   CGFloat padding = 20;
   CGRect frame = self.bounds;
-  CGFloat width = (frame.size.width - 3 * padding) / 2;
+  CGFloat width = frame.size.width - 2 * padding;
   _keyboard.frame = CGRectMake(padding, frame.size.height - frame.size.width + padding, frame.size.width - 2 * padding, frame.size.width - 2 * padding);
-  _depot.frame = CGRectMake(padding, _keyboard.frame.origin.y, width, [_depot sizeThatFits:CGSizeMake(width, 0)].height);
-  _lists.frame = CGRectMake(padding + _depot.frame.size.width + padding / 2, _depot.frame.origin.y, width, [_lists sizeThatFits:CGSizeMake(width, 0)].height);
+  _preview.frame = CGRectMake(padding, _keyboard.frame.origin.y, width, [_preview sizeThatFits:CGSizeMake(width, 0)].height);
+  _scrollView.frame = CGRectMake(padding, 100, width, frame.size.height - padding - _keyboard.frame.size.height - 50);
+  CGFloat h = 0;
+  for (UIView *view in _scrollView.subviews) {
+    view.frame = CGRectMake(0, h, width, 20);
+    h += 20;
+  }
+  _scrollView.contentSize = CGSizeMake(width, h);
 }
 
 @end

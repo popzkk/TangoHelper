@@ -56,9 +56,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
                                       delegate:(id<THKeyboardDelegate>)delegate {
   THKeyboard *sharedInstance = [self sharedInstance];
   [sharedInstance setKeyboardType:type];
-  if (actionText) {
-    [sharedInstance setActionText:actionText];
-  }
+  [sharedInstance setActionText:actionText];
   sharedInstance->_delegate = delegate;
   return sharedInstance;
 }

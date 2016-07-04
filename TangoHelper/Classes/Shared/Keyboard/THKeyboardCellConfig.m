@@ -47,8 +47,8 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
   [instance setFont:ja_bold_big() state:kTHKeyboardCellStateFocused];
   [instance setBackgroundColor:blue_color() state:kTHKeyboardCellStateFocused];
   [instance setBackgroundColor:light_blue_color() state:kTHKeyboardCellStatePopped];
-  [instance setBorderWidth:0.5 state:kTHKeyboardCellStateFocused];
-  [instance setBorderWidth:0.5 state:kTHKeyboardCellStatePopped];
+  //[instance setBorderWidth:0.5 state:kTHKeyboardCellStateFocused];
+  //[instance setBorderWidth:0.5 state:kTHKeyboardCellStatePopped];
   return instance;
 }
 
@@ -104,7 +104,7 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
     [instance setTextColor:[UIColor blackColor] state:kTHKeyboardCellStateNormal];
     [instance setTextColor:[UIColor lightGrayColor] state:kTHKeyboardCellStateFaded];
     [instance setBackgroundColor:[UIColor clearColor] state:kTHKeyboardCellStateNormal];
-    [instance setBorderWidth:1 state:kTHKeyboardCellStateNormal];
+    //[instance setBorderWidth:1 state:kTHKeyboardCellStateNormal];
     [instance setBorderColor:[UIColor lightGrayColor] state:kTHKeyboardCellStateNormal];
   });
   return instance;
@@ -172,13 +172,13 @@ static UIFont *ja_bold_big() {
 }
 
 static UIColor *blue_color() {
-  // 007aff
-  return [UIColor colorWithRed:0.00 green:0.48 blue:1.00 alpha:0.7];
+  // modified from 007aff
+  return [UIColor colorWithRed:0.00 green:0.60 blue:1.00 alpha:1];
 }
 
 static UIColor *light_blue_color() {
   // 5ac8fa
-  return [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:0.4];
+  return [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:0.6];
 }
 
 static UIColor *grey_color() {
