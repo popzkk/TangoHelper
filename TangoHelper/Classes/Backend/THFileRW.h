@@ -2,10 +2,18 @@
 
 @interface THFileRW : NSObject
 
-+ (instancetype)instanceForPath:(NSString *)path;
++ (instancetype)instanceForFilename:(NSString *)filename;
 
-// will call flush: of every instance.
++ (instancetype)instanceForFilename:(NSString *)filename create:(BOOL)create;
+
+// will call |flush:| of every instance.
 + (void)flushAll;
+
+- (NSString *)filename;
+
+- (NSArray *)allKeys;
+
+- (NSArray *)objectsForKeys:(NSArray *)keys;
 
 - (NSString *)objectForKey:(NSString *)key;
 

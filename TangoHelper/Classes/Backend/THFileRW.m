@@ -2,11 +2,11 @@
 
 @interface THFileCenter : NSObject
 
-+ (THFileRW *)associatedFileRWForPath:(NSString *)path;
++ (THFileRW *)associatedFileRWForFilename:(NSString *)filename;
 
-+ (void)setFileRW:(THFileRW *)fileRW forPath:(NSString *)path;
++ (void)setFileRW:(THFileRW *)fileRW forFilename:(NSString *)filename;
 
-+ (void)removeFileRWForPath:(NSString*)path;
++ (void)removeFileRWForFilename:(NSString*)filename;
 
 + (void)flushAll;
 
@@ -23,23 +23,44 @@
 static NSUInteger thres = 10;
 
 @implementation THFileRW {
+  NSString *_filename;
   NSString *_path;
   NSMutableDictionary *_content;
 }
 
 #pragma mark - public
 
-+ (instancetype)instanceForPath:(NSString *)path {
-  id instance = [THFileCenter associatedFileRWForPath:path];
++ (instancetype)instanceForFilename:(NSString *)filename {
+  return [self instanceForFilename:filename create:NO];
+}
+
++ (instancetype)instanceForFilename:(NSString *)filename create:(BOOL)create {
+  id instance = [THFileCenter associatedFileRWForFilename:filename];
   if (!instance) {
-    instance = [[self alloc] initWithPath:path];
-    [THFileCenter setFileRW:instance forPath:path];
+    instance = [[self alloc] initWithFilename:filename create:create];
+    if (!instance) {
+      NSLog(@"File %@ doesn't exist or cannot be created!", filename);
+      return nil;
+    }
+    [THFileCenter setFileRW:instance forFilename:filename];
   }
   return instance;
 }
 
 + (void)flushAll {
   [THFileCenter flushAll];
+}
+
+- (NSString *)filename {
+  return _filename;
+}
+
+- (NSArray *)allKeys {
+  return _content.allKeys;
+}
+
+- (NSArray *)objectsForKeys:(NSArray *)keys {
+  return [_content objectsForKeys:keys notFoundMarker:@""];
 }
 
 - (NSString *)objectForKey:(NSString *)key {
@@ -62,7 +83,7 @@ static NSUInteger thres = 10;
 
 - (void)close {
   [self flush];
-  [THFileCenter removeFileRWForPath:_path];
+  [THFileCenter removeFileRWForFilename:_filename];
 }
 
 #pragma mark - private
@@ -73,14 +94,20 @@ static NSUInteger thres = 10;
 }
 
 // only called internally
-- (instancetype)initWithPath:(NSString *)path {
+- (instancetype)initWithFilename:(NSString *)filename create:(BOOL)create {
   self = [super init];
   if (self) {
-    _content = [NSMutableDictionary dictionaryWithContentsOfFile:path];
-    if (!_content) {
-      return nil;
+    _path = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)
+                 .firstObject stringByAppendingPathComponent:filename];
+    NSFileManager *fileManager = [NSFileManager defaultManager];
+    if (create && ![fileManager fileExistsAtPath:_path]) {
+      [fileManager createFileAtPath:_path contents:nil attributes:nil];
     }
-    _path = path;
+    _content = [NSMutableDictionary dictionaryWithContentsOfFile:_path];
+    //if (!_content) {
+      //return nil;
+    //}
+    _filename = filename;
     _diff = 0;
   }
   return self;
@@ -104,16 +131,16 @@ static NSUInteger thres = 10;
 
 #pragma mark - public
 
-+ (THFileRW *)associatedFileRWForPath:(NSString *)path {
-  return [[self sharedInstance] associatedFileRWForPath:path];
++ (THFileRW *)associatedFileRWForFilename:(NSString *)filename {
+  return [[self sharedInstance] associatedFileRWForFilename:filename];
 }
 
-+ (void)setFileRW:(THFileRW *)fileRW forPath:(NSString *)path {
-  [[self sharedInstance] setFileRW:fileRW forPath:path];
++ (void)setFileRW:(THFileRW *)fileRW forFilename:(NSString *)filename {
+  [[self sharedInstance] setFileRW:fileRW forFilename:filename];
 }
 
-+ (void)removeFileRWForPath:(NSString *)path {
-  [[self sharedInstance] removeFileRWForPath:path];
++ (void)removeFileRWForFilename:(NSString *)filename {
+  [[self sharedInstance] removeFileRWForFilename:filename];
 }
 
 + (void)flushAll {
@@ -139,16 +166,16 @@ static NSUInteger thres = 10;
   return self;
 }
 
-- (THFileRW *)associatedFileRWForPath:(NSString *)path {
-  return [_openedFiles objectForKey:path];
+- (THFileRW *)associatedFileRWForFilename:(NSString *)filename {
+  return [_openedFiles objectForKey:filename];
 }
 
-- (void)setFileRW:(THFileRW *)fileRW forPath:(NSString *)path {
-  [_openedFiles setObject:fileRW forKey:path];
+- (void)setFileRW:(THFileRW *)fileRW forFilename:(NSString *)filename {
+  [_openedFiles setObject:fileRW forKey:filename];
 }
 
-- (void)removeFileRWForPath:(NSString *)path {
-  [_openedFiles removeObjectForKey:path];
+- (void)removeFileRWForFilename:(NSString *)filename {
+  [_openedFiles removeObjectForKey:filename];
 }
 
 - (void)flushAll {

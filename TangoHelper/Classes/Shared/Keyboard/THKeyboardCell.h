@@ -1,8 +1,6 @@
 #import <UIKit/UIKit.h>
 #import "THKeyboardCellConfig.h"
 
-@class THKeyboardCellConfig;
-
 @interface THKeyboardCell : UILabel
 
 @property(nonatomic, copy) NSString *arrow;

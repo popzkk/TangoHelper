@@ -10,8 +10,6 @@
 
 @property(nonatomic, weak) id<THMultiPortionsViewDelegate> delegate;
 
-@property(nonatomic) NSArray *portions; // of UIView
-
 - (instancetype)initWithFrame:(CGRect)frame portions:(NSArray *)portions;
 
 @end

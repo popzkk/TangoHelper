@@ -1,13 +1,29 @@
 #import "THAppDelegate.h"
 #import "THViewController.h"
-
+#import "Classes/THWordsViewController.h"
+#import "Classes/THPlaylistsViewController.h"
 #import "Classes/Backend/THFileRW.h"
 
 @implementation THAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+/*
+  for (NSUInteger i = 2; i < 4; ++i) {
+    NSString *filename = [NSString stringWithFormat:@"list%lu.list", i];
+    THFileRW *fileRW = [THFileRW instanceForFilename:filename create:YES];
+    for (NSInteger j = 1; j < 10; ++j) {
+      if (i * j > 19) {
+        break;
+      }
+      [fileRW setObject:[NSString stringWithFormat:@"explanation%lu", i * j] forKey:[NSString stringWithFormat:@"word%lu", i * j]];
+    }
+    [fileRW close];
+  }
+  exit(0);
+  */
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  UIViewController *rootViewController = [[THViewController alloc] init];
+  //UIViewController *rootViewController = [[THWordsViewController alloc] initWithDepot:[THFileRW instanceForFilename:@"test.depot"] playlist:nil];
+  UIViewController *rootViewController = [[THPlaylistsViewController alloc] init];
   UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
   self.window.rootViewController = navController;
   self.window.backgroundColor = [UIColor whiteColor];
@@ -33,29 +49,9 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-  /*
-  NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-  NSString *documentsDirectory = paths.firstObject;
-  NSString *path = [documentsDirectory stringByAppendingPathComponent:@"test.depot"];
-   */
-  /*
-   if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
-   [[NSFileManager defaultManager] removeItemAtPath:path error:nil];
-   }
 
-   exit(0);
-   */
   /*
-  if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-    NSMutableDictionary *depot = [NSMutableDictionary dictionary];
-    for (NSUInteger i = 0; i < 20; ++i) {
-      [depot setObject:[NSString stringWithFormat:@"explanation%lu", i] forKey:[NSString stringWithFormat:@"word%lu", i]];
-    }
-    [depot writeToFile:path atomically:NO];
-  }
-  NSLog(@"\n%@", [NSDictionary dictionaryWithContentsOfFile:path]);
-
-  THFileRW *fileRW = [THFileRW instanceForPath:path];
+  THFileRW *fileRW = [THFileRW instanceForFilename:@"test.depot"];
   [fileRW setObject:@"explanation" forKey:@"word"];
    */
 }
