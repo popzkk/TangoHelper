@@ -1,10 +1,7 @@
 #import "THPlaylistsViewController.h"
 #import "Shared/THMultiPortionsView.h"
+#import "Shared/THItemView.h"
 #import "Backend/THFileRW.h"
-
-@interface THPlaylistsViewController ()<THMultiPortionsViewDelegate>
-
-@end
 
 static CGFloat kPadding = 15;
 static CGFloat kPlaylistPreviewHeight = 35;
@@ -14,34 +11,45 @@ static NSString *kToDepot = @"To depot";
 static NSString *kAdd = @"Add";
 static NSString *kGoWithSelected = @"Go with selected";
 
+@interface THPlaylistPreview : UILabel
+
+- (instancetype)initWithFrame:(CGRect)frame name:(NSString *)name;
+
+@end
+
+#pragma mark - THPlaylistsViewController
+
+@interface THPlaylistsViewController ()<THMultiPortionsViewDelegate>
+
+@end
+
 @implementation THPlaylistsViewController {
-  BOOL _somePlaylistSelected;
   UIScrollView *_scrollView;
   UILabel *_left, *_right;
   THMultiPortionsView *_actions;
   NSMutableArray *_playlists;
+  NSMutableSet *_selectedPlaylists;
 }
 
 #pragma mark - UIViewController
 
 - (void)viewDidLoad {
-  _somePlaylistSelected = NO;
   _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
 
   NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
   _playlists = [NSMutableArray array];
-  //NSMutableArray *lists = [NSMutableArray array];
   [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
     NSString *extension = [filename.pathExtension lowercaseString];
     if ([extension isEqualToString:@"list"]) {
-      UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
-      label.text = filename;
-      label.tag = idx;
-      [_scrollView addSubview:label];
       [_playlists addObject:[THFileRW instanceForFilename:filename]];
-      //[lists addObject:filename];
+      filename = filename.stringByDeletingPathExtension;
+      THPlaylistPreview *preview = [[THPlaylistPreview alloc] initWithFrame:CGRectZero name:filename];
+      THItemView *view = [[THItemView alloc] initWithFrame:CGRectZero view:preview];
+      view.tag = idx;
+      view.delegate = self;
+      [_scrollView addSubview:view];
     }
   }];
 
@@ -59,6 +67,8 @@ static NSString *kGoWithSelected = @"Go with selected";
 
   _left.text = kToDepot;
   _right.text = kAdd;
+
+  _selectedPlaylists = [NSMutableSet set];
 }
 
 - (void)viewWillLayoutSubviews {
@@ -81,15 +91,44 @@ static NSString *kGoWithSelected = @"Go with selected";
     if (portion == _left) {
       NSLog(@"Will go to depot");
     } else {
-      if (_somePlaylistSelected) {
-        NSLog(@"Will go with selected playlists");
+      if (_selectedPlaylists.count > 0) {
+        NSLog(@"Will go with selected playlists %@", _selectedPlaylists);
       } else {
         NSLog(@"Will add a playlist");
       }
     }
   } else {
-    NSLog(@"Will show %@", ((THFileRW *)[_playlists objectAtIndex:view.tag]).filename);
+    if (portion.tag == 1) {
+      NSLog(@"Will show %@", ((THFileRW *)[_playlists objectAtIndex:view.tag]).filename);
+    } else {
+      if (((THItemView *)view).selected) {
+        [_selectedPlaylists removeObject:[_playlists objectAtIndex:view.tag]];
+        if (_selectedPlaylists.count == 0) {
+          _right.text = kAdd;
+        }
+      } else {
+        if (_selectedPlaylists.count == 0) {
+          _right.text = kGoWithSelected;
+        }
+        [_selectedPlaylists addObject:[_playlists objectAtIndex:view.tag]];
+      }
+      [((THItemView *)view) toggle];
+    }
   }
+}
+
+@end
+
+#pragma mark - THPlaylistPreview
+
+@implementation THPlaylistPreview
+
+- (instancetype)initWithFrame:(CGRect)frame name:(NSString *)name {
+  self = [super initWithFrame:frame];
+  if (self) {
+    self.text = name;
+  }
+  return self;
 }
 
 @end

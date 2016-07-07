@@ -1,7 +1,7 @@
 #import "THWordsViewController.h"
 #import "Backend/THFileRW.h"
 #import "Shared/THMultiPortionsView.h"
-#import "Shared/THWordPreview.h"
+#import "Shared/THItemView.h"
 
 static CGFloat kPadding = 15;
 static CGFloat kWordPreviewHeight = 35;
@@ -11,6 +11,18 @@ static NSString *kRemove = @"Remove";
 static NSString *kAdd = @"Add";
 static NSString *kAddToList = @"Add to list";
 static NSString *kGoWithSelected = @"Go with selected";
+
+@interface THWordPreview : UIView
+
+- (instancetype)initWithFrame:(CGRect)frame key:(NSString *)key object:(NSString *)object;
+
+- (NSString *)key;
+
+- (NSString *)object;
+
+@end
+
+#pragma mark - THWordsViewController
 
 @interface THWordsViewController ()<THMultiPortionsViewDelegate>
 
@@ -28,6 +40,8 @@ static NSString *kGoWithSelected = @"Go with selected";
 
   NSMutableSet *_newKeys;
 }
+
+#pragma mark - public
 
 - (instancetype)initWithDepot:(THFileRW *)depot
                      playlist:(THFileRW *)playlist {
@@ -48,7 +62,8 @@ static NSString *kGoWithSelected = @"Go with selected";
     _objects = [_depot objectsForKeys:_keys];
     for (NSUInteger i = 0; i < _keys.count; ++i) {
       NSString *key = [_keys objectAtIndex:i];
-      THWordPreview *view = [[THWordPreview alloc] initWithFrame:CGRectZero key:key object:[_objects objectAtIndex:i]];
+      THWordPreview *preview = [[THWordPreview alloc] initWithFrame:CGRectZero key:key object:[_objects objectAtIndex:i]];
+      THItemView *view = [[THItemView alloc] initWithFrame:CGRectZero view:preview];
       if ([_playlist objectForKey:key]) {
         view.selected = YES;
         view.canToggle = NO;
@@ -61,7 +76,8 @@ static NSString *kGoWithSelected = @"Go with selected";
     _keys = [_playlist allKeys];
     _objects = [_playlist objectsForKeys:_keys];
     for (NSUInteger i = 0; i < _keys.count; ++i) {
-      THWordPreview *view = [[THWordPreview alloc] initWithFrame:CGRectZero key:[_keys objectAtIndex:i] object:[_objects objectAtIndex:i]];
+      THWordPreview *preview = [[THWordPreview alloc] initWithFrame:CGRectZero key:[_keys objectAtIndex:i] object:[_objects objectAtIndex:i]];
+      THItemView *view = [[THItemView alloc] initWithFrame:CGRectZero view:preview];
       view.tag = i;
       view.delegate = self;
       [_scrollView addSubview:view];
@@ -126,16 +142,61 @@ static NSString *kGoWithSelected = @"Go with selected";
     }
   } else {
     if (portion.tag == 1) {
-      NSLog(@"word [%@] tapped", ((UILabel *)portion).text);
+      NSLog(@"word [%@] tapped", ((THWordPreview *)portion).key);
     } else {
-      if (((THWordPreview *)view).selected) {
+      if (((THItemView *)view).selected) {
         [_newKeys removeObject:[_keys objectAtIndex:view.tag]];
       } else {
         [_newKeys addObject:[_keys objectAtIndex:view.tag]];
       }
-      [((THWordPreview *)view) toggle];
+      [((THItemView *)view) toggle];
     }
   }
+}
+
+@end
+
+#pragma mark - THWordPreview
+
+@implementation THWordPreview {
+  NSString *_key;
+  NSString *_object;
+  UILabel *_keyLabel;
+  UILabel *_objectLabel;
+}
+
+#pragma mark - public
+
+- (instancetype)initWithFrame:(CGRect)frame key:(NSString *)key object:(NSString *)object {
+  self = [super initWithFrame:frame];
+  if (self) {
+    _key = [key copy];
+    _object = [object copy];
+    _keyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _keyLabel.text = key;
+    _objectLabel = [[UILabel alloc] initWithFrame:CGRectZero];
+    _objectLabel.text = object;
+    [self addSubview:_keyLabel];
+    [self addSubview:_objectLabel];
+  }
+  return self;
+}
+
+- (NSString *)key {
+  return _key;
+}
+
+- (NSString *)object {
+  return _object;
+}
+
+#pragma mark - UIView
+
+- (void)layoutSubviews {
+  CGRect frame = self.bounds;
+  CGFloat height = frame.size.height / 2;
+  _keyLabel.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, height);
+  _objectLabel.frame = CGRectMake(frame.origin.x, frame.origin.y + height, frame.size.width, height);
 }
 
 @end

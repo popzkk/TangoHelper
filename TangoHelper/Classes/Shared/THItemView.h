@@ -1,12 +1,13 @@
 #import "THMultiPortionsView.h"
 
-@interface THWordPreview : THMultiPortionsView
+@interface THItemView : THMultiPortionsView
 
 @property(nonatomic) BOOL canToggle;
 
 @property(nonatomic) BOOL selected;
 
-- (instancetype)initWithFrame:(CGRect)frame key:(NSString *)key object:(NSString *)object;
+// view.tag must be set after passed in.
+- (instancetype)initWithFrame:(CGRect)frame view:(UIView *)view;
 
 - (instancetype)initWithFrame:(CGRect)frame portions:(NSArray *)portions NS_UNAVAILABLE;
 
