@@ -3,6 +3,7 @@
 #import "Classes/THWordsViewController.h"
 #import "Classes/THPlaylistsViewController.h"
 #import "Classes/Backend/THFileRW.h"
+#import "Classes/THWordsViewController.h"
 
 @implementation THAppDelegate
 
@@ -21,10 +22,23 @@
   }
   exit(0);
   */
+/*
+  NSString *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+  NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+  [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *filename = (NSString *)obj;
+    if (![filename isEqualToString:@"test.depot"]) {
+      [[NSFileManager defaultManager] removeItemAtPath:[path stringByAppendingPathComponent:filename] error:nil];
+    }
+  }];
+  exit(0);
+*/
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
   //UIViewController *rootViewController = [[THWordsViewController alloc] initWithDepot:[THFileRW instanceForFilename:@"test.depot"] playlist:nil];
-  UIViewController *rootViewController = [[THPlaylistsViewController alloc] init];
+  //UIViewController *rootViewController = [[THPlaylistsViewController alloc] init];
+  UIViewController *rootViewController = [[THWordsViewController alloc] initUsingDepot];
   UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
+  navController.toolbarHidden = NO;
   self.window.rootViewController = navController;
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
@@ -49,11 +63,6 @@
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-
-  /*
-  THFileRW *fileRW = [THFileRW instanceForFilename:@"test.depot"];
-  [fileRW setObject:@"explanation" forKey:@"word"];
-   */
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

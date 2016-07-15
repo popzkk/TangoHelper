@@ -20,12 +20,15 @@
 
 @end
 
-static NSUInteger thres = 10;
+static NSUInteger thres = 20;
 
 @implementation THFileRW {
   NSString *_filename;
   NSString *_path;
   NSMutableDictionary *_content;
+
+  NSArray *_keys;
+  NSArray *_objects;
 }
 
 #pragma mark - public
@@ -56,7 +59,10 @@ static NSUInteger thres = 10;
 }
 
 - (NSArray *)allKeys {
-  return _content.allKeys;
+  if (!_keys) {
+    _keys = _content.allKeys;
+  }
+  return _keys;
 }
 
 - (NSArray *)objectsForKeys:(NSArray *)keys {
@@ -70,11 +76,13 @@ static NSUInteger thres = 10;
 - (void)removeObjectForKey:(NSString *)key {
   [_content removeObjectForKey:key];
   ++self.diff;
+  // ...sync depot with playlists
 }
 
 - (void)setObject:(NSString *)object forKey:(NSString *)key {
   [_content setObject:object forKey:key];
   ++self.diff;
+  // ...sync depot with playlists
 }
 
 - (void)flush {

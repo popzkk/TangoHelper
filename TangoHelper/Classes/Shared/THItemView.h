@@ -6,6 +6,8 @@
 
 @property(nonatomic) BOOL selected;
 
+@property(nonatomic) BOOL showTick;
+
 // view.tag must be set after passed in.
 - (instancetype)initWithFrame:(CGRect)frame view:(UIView *)view;
 

@@ -2,11 +2,12 @@
 
 @class THFileRW;
 
-@interface THWordsViewController : UIViewController
+@interface THWordsViewController : UITableViewController
 
-// a nil playlist indicates showing the depot; otherwise, showDepot means whether it is a request to
-// add words from depot to the playlist or showing the content of the playlist.
-- (instancetype)initWithDepot:(THFileRW *)depot
-                     playlist:(THFileRW *)playlist;
+- (instancetype)initUsingDepot;
+
+- (instancetype)initWithPlaylist:(THFileRW *)playlist;
+
+- (instancetype)initUsingDepotWithPlaylist:(THFileRW *)playlist;
 
 @end

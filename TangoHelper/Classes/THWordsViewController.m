@@ -1,202 +1,304 @@
 #import "THWordsViewController.h"
 #import "Backend/THFileRW.h"
-#import "Shared/THMultiPortionsView.h"
-#import "Shared/THItemView.h"
+#import "Shared/THStrings.h"
 
-static CGFloat kPadding = 15;
-static CGFloat kWordPreviewHeight = 35;
-static CGFloat kBottomBarHeight = 40;
+typedef void (^THRemoveConfirmAction)(UIAlertAction *);
+typedef void (^THWordConfirmAction)(NSString *, id, UIAlertAction *);
 
-static NSString *kRemove = @"Remove";
-static NSString *kAdd = @"Add";
-static NSString *kAddToList = @"Add to list";
-static NSString *kGoWithSelected = @"Go with selected";
+static NSString *kCellIdentifier = @"WordsViewCell";
 
-@interface THWordPreview : UIView
-
-- (instancetype)initWithFrame:(CGRect)frame key:(NSString *)key object:(NSString *)object;
-
-- (NSString *)key;
-
-- (NSString *)object;
-
-@end
-
-#pragma mark - THWordsViewController
-
-@interface THWordsViewController ()<THMultiPortionsViewDelegate>
+@interface THWordsViewController ()<UITableViewDataSource, UITableViewDelegate>
 
 @end
 
 @implementation THWordsViewController {
   THFileRW *_depot;
   THFileRW *_playlist;
-  NSArray *_keys;
-  NSArray *_objects;
+  NSMutableArray *_keys;
+  NSMutableArray *_objects;
+  NSUInteger _nSelected;
 
-  UIScrollView *_scrollView;
-  UILabel *_left, *_middle, *_right;
-  THMultiPortionsView *_actions;
-
-  NSMutableSet *_newKeys;
+  UIBarButtonItem *_edit;
+  UIBarButtonItem *_done;
+  UIBarButtonItem *_left;
+  UIBarButtonItem *_middle;
+  UIBarButtonItem *_right;
+  UIBarButtonItem *_padding;
 }
 
 #pragma mark - public
 
-- (instancetype)initWithDepot:(THFileRW *)depot
-                     playlist:(THFileRW *)playlist {
+- (instancetype)initUsingDepot {
+  return [self initUsingDepotWithPlaylist:nil];
+}
+
+- (instancetype)initWithPlaylist:(THFileRW *)playlist {
+  return [self initWithDepot:nil playlist:playlist];
+}
+
+- (instancetype)initUsingDepotWithPlaylist:(THFileRW *)playlist {
+  return [self initWithDepot:[THFileRW instanceForFilename:@"test.depot" create:YES]
+                    playlist:playlist];
+}
+
+#pragma mark - private
+
+- (instancetype)initWithDepot:(THFileRW *)depot playlist:(THFileRW *)playlist {
   self = [super init];
   if (self) {
     _depot = depot;
     _playlist = playlist;
+    if (_depot && !_playlist) {
+      _keys = [NSMutableArray arrayWithArray:[_depot allKeys]];
+      _objects = [NSMutableArray arrayWithArray:[_depot objectsForKeys:_keys]];
+      _nSelected = 0;
+    } else if (!_depot && _playlist) {
+      _keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
+      _objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:_keys]];
+      _nSelected = 0;
+    } else if (_depot && _playlist) {
+      NSMutableArray *keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
+      _nSelected = keys.count;
+      NSMutableArray *objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:keys]];
+      NSArray *tmpKeys = [_depot allKeys];
+      for (NSString *key in tmpKeys) {
+        id object = [_playlist objectForKey:key];
+        if (!object) {
+          [keys addObject:key];
+          [objects addObject:object];
+        }
+      }
+      _keys = keys;
+      _objects = objects;
+    } else {
+      NSLog(@"both depot and playlist are nil!");
+      return nil;
+    }
+
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
+    self.tableView.allowsSelection = NO;
+    self.tableView.allowsMultipleSelectionDuringEditing = YES;
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+
+    self.title = kTitleDepot;
+
+    _padding =
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                      target:nil
+                                                      action:nil];
+    _edit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
+                                                          target:self
+                                                          action:@selector(startEditing)];
+    _done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                          target:self
+                                                          action:@selector(endEditing)];
+    _left = [[UIBarButtonItem alloc]
+        initWithBarButtonSystemItem:_depot && _playlist ? UIBarButtonSystemItemCancel
+                                                        : UIBarButtonSystemItemTrash
+                             target:self
+                             action:@selector(leftTapped)];
+    _middle = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                            target:self
+                                                            action:@selector(middleTapped)];
+    _right = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay
+                                                           target:self
+                                                           action:@selector(rightTapped)];
+    if (!_depot || !_playlist) {
+      self.navigationItem.rightBarButtonItem = _edit;
+    } else {
+      self.tableView.editing = YES;
+      for (NSUInteger i = 0; i < _nSelected; ++i) {
+        // ...config a different style. probably move to viewDidLoad:
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]
+                                    animated:NO
+                              scrollPosition:UITableViewScrollPositionNone];
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_nSelected inSection:0]
+                              atScrollPosition:UITableViewScrollPositionNone animated:NO];
+      }
+    }
   }
   return self;
+}
+
+- (void)startEditing {
+  [self.tableView setEditing:YES animated:YES];
+  self.navigationItem.rightBarButtonItem = _done;
+  [self setToolbarItems:@[ _left, _padding, _middle, _padding, _right ] animated:YES];
+}
+
+- (void)endEditing {
+  [self setToolbarItems:@[ _padding, _middle, _padding ] animated:YES];
+  self.navigationItem.rightBarButtonItem = _edit;
+  [self.tableView setEditing:NO animated:YES];
+}
+
+- (void)leftTapped {
+  NSLog(@"left tapped");
+  if (_depot && _playlist) {
+    // ...dismiss self.
+  } else {
+    NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
+    if (!indexPaths) {
+      return;
+    }
+    [self showRemoveDialogWithBlock:^(UIAlertAction *action) {
+      // _nSelected must be 0.
+      NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+      for (NSIndexPath *indexPath in indexPaths) {
+        [indexSet addIndex:indexPath.row];
+      }
+      NSArray *keys = [_keys objectsAtIndexes:indexSet];
+      for (NSString *key in keys) {
+        if (_depot) {
+          [_depot removeObjectForKey:key];
+        } else {
+          [_playlist removeObjectForKey:key];
+        }
+      }
+      [_keys removeObjectsAtIndexes:indexSet];
+      [_objects removeObjectsAtIndexes:indexSet];
+      [self.tableView deleteRowsAtIndexPaths:indexPaths
+                            withRowAnimation:UITableViewRowAnimationNone];
+    }];
+  }
+}
+
+- (void)middleTapped {
+  // middle is always add.
+  [self showWordDialogWithBlock:^(NSString *key, id object, UIAlertAction *action) {
+    NSLog(@"Will add %@:%@", key, object);
+    if (_depot) {
+      [_depot setObject:object forKey:key];
+    } else {
+      [_playlist setObject:object forKey:key];
+    }
+    [_keys insertObject:key atIndex:_nSelected];
+    [_objects insertObject:object atIndex:_nSelected];
+    [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_nSelected inSection:0] ]
+                     withRowAnimation:UITableViewRowAnimationNone];
+  } key:nil explanation:nil];
+}
+
+- (void)rightTapped {
+  NSLog(@"right tapped");
+}
+
+- (void)showRemoveDialogWithBlock:(THRemoveConfirmAction)block {
+  UIAlertController *alert =
+      [UIAlertController alertControllerWithTitle:kRemoveDialogTitle
+                                          message:@""
+                                   preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction *cancel = [UIAlertAction actionWithTitle:kCancel
+                                                         style:UIAlertActionStyleCancel
+                                                       handler:nil];
+  UIAlertAction *confirm = [UIAlertAction actionWithTitle:kConfirm
+                                                    style:UIAlertActionStyleDestructive
+                                                  handler:^(UIAlertAction *action) {
+                                                    block(action);
+                                                  }];
+  [alert addAction:cancel];
+  [alert addAction:confirm];
+  [self.navigationController presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)showWordDialogWithBlock:(THWordConfirmAction)block
+                            key:(NSString *)key
+                    explanation:(NSString *)explanation {
+  UIAlertController *alert =
+      [UIAlertController alertControllerWithTitle:kWordDialogTitle
+                                          message:@""
+                                   preferredStyle:UIAlertControllerStyleAlert];
+  UIAlertAction *cancel = [UIAlertAction actionWithTitle:kCancel
+                                                   style:UIAlertActionStyleCancel
+                                                 handler:nil];
+  UIAlertAction *confirm =
+      [UIAlertAction actionWithTitle:kConfirm
+                               style:UIAlertActionStyleDestructive
+                             handler:^(UIAlertAction *action) {
+                               NSString *key = alert.textFields.firstObject.text;
+                               // ...object should change.
+                               id object = [alert.textFields objectAtIndex:1].text;
+                               // check these two fields are not nil.
+                               block(key, object, action);
+                             }];
+  [alert addAction:cancel];
+  [alert addAction:confirm];
+  [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+    if (!key || key.length == 0) {
+      textField.placeholder = kWordKeyTextField;
+    } else {
+      textField.text = key;
+    }
+  }];
+  [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+    if (!explanation || explanation.length == 0) {
+      textField.placeholder = kWordObjectTextField;
+    } else {
+      textField.text = explanation;
+    }
+  }];
+  [self.navigationController presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - UIViewController
 
-- (void)viewDidLoad {
-  _scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
-  if (_depot) {
-    _keys = [_depot allKeys];
-    _objects = [_depot objectsForKeys:_keys];
-    for (NSUInteger i = 0; i < _keys.count; ++i) {
-      NSString *key = [_keys objectAtIndex:i];
-      THWordPreview *preview = [[THWordPreview alloc] initWithFrame:CGRectZero key:key object:[_objects objectAtIndex:i]];
-      THItemView *view = [[THItemView alloc] initWithFrame:CGRectZero view:preview];
-      if ([_playlist objectForKey:key]) {
-        view.selected = YES;
-        view.canToggle = NO;
-      }
-      view.tag = i;
-      view.delegate = self;
-      [_scrollView addSubview:view];
-    }
+- (void)viewWillAppear:(BOOL)animated {
+  if (!_depot || !_playlist) {
+    self.toolbarItems = @[ _padding, _middle, _padding ];
   } else {
-    _keys = [_playlist allKeys];
-    _objects = [_playlist objectsForKeys:_keys];
-    for (NSUInteger i = 0; i < _keys.count; ++i) {
-      THWordPreview *preview = [[THWordPreview alloc] initWithFrame:CGRectZero key:[_keys objectAtIndex:i] object:[_objects objectAtIndex:i]];
-      THItemView *view = [[THItemView alloc] initWithFrame:CGRectZero view:preview];
-      view.tag = i;
-      view.delegate = self;
-      [_scrollView addSubview:view];
-    }
+    self.toolbarItems = @[ _left, _padding, _middle, _padding, _right ];
   }
-  [self.view addSubview:_scrollView];
+}
 
-  _left = [[UILabel alloc] initWithFrame:CGRectZero];
-  _left.textAlignment = NSTextAlignmentCenter;
-  _left.numberOfLines = 0;
-  _middle = [[UILabel alloc] initWithFrame:CGRectZero];
-  _middle.textAlignment = NSTextAlignmentCenter;
-  _middle.numberOfLines = 0;
-  _right = [[UILabel alloc] initWithFrame:CGRectZero];
-  _right.textAlignment = NSTextAlignmentCenter;
-  _right.numberOfLines = 0;
-  _actions = [[THMultiPortionsView alloc] initWithFrame:CGRectZero portions:@[ _left, _middle, _right ]];
-  _actions.delegate = self;
-  [self.view addSubview:_actions];
+#pragma mark - UITableViewDataSource
 
-  if (_depot) {
-    if (_playlist) {
-      _left.text = @"";
-      _middle.text = kAdd;
-      _right.text = kAddToList;
-    } else {
-      _left.text = kRemove;
-      _middle.text = kAdd;
-      _right.text = kGoWithSelected;
-    }
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
+  cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:kCellIdentifier];
+  NSInteger row = indexPath.row;
+  cell.textLabel.text = [_keys objectAtIndex:row];
+  cell.textLabel.font = [UIFont fontWithName:@"" size:24];
+  // ...object should change.
+  cell.detailTextLabel.text = [_objects objectAtIndex:row];
+  return cell;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+  return _keys.count;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+}
+
+#pragma mark - UITableViewDelegate
+
+- (NSIndexPath *)tableView:(UITableView *)tableView
+willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (indexPath.row < _nSelected) {
+    return nil;
   } else {
-    _left.text = kRemove;
-    _middle.text = kAdd;
-    _right.text = kGoWithSelected;
-  }
-  _newKeys = [NSMutableSet set];
-}
-
-- (void)viewWillLayoutSubviews {
-  CGRect frame = self.view.bounds;
-  CGFloat width = frame.size.width - 2 * kPadding;
-  _scrollView.frame = CGRectMake(kPadding, kPadding, width, frame.size.height - 2 * kPadding - kBottomBarHeight);
-  CGFloat h = 0;
-  for (UIView *view in _scrollView.subviews) {
-    view.frame = CGRectMake(0, h, width, kWordPreviewHeight);
-    h += kWordPreviewHeight;
-  }
-  _scrollView.contentSize = CGSizeMake(width, h - kWordPreviewHeight);
-  _actions.frame = CGRectMake(kPadding, frame.size.height - kPadding - kBottomBarHeight, width, kBottomBarHeight);
-}
-
-#pragma mark - THMultiPortionsViewDelegate
-
-- (void)portion:(UIView *)portion isTappedInView:(UIView *)view {
-  if (view == _actions) {
-    if (portion == _left) {
-      NSLog(@"Will delete: %@", _newKeys);
-    } else if (portion == _right) {
-      NSLog(@"Chosen: %@", _newKeys);
-    } else {
-      NSLog(@"middle tapped");
-    }
-  } else {
-    if (portion.tag == 1) {
-      NSLog(@"word [%@] tapped", ((THWordPreview *)portion).key);
-    } else {
-      if (((THItemView *)view).selected) {
-        [_newKeys removeObject:[_keys objectAtIndex:view.tag]];
-      } else {
-        [_newKeys addObject:[_keys objectAtIndex:view.tag]];
-      }
-      [((THItemView *)view) toggle];
-    }
+    return indexPath;
   }
 }
 
-@end
-
-#pragma mark - THWordPreview
-
-@implementation THWordPreview {
-  NSString *_key;
-  NSString *_object;
-  UILabel *_keyLabel;
-  UILabel *_objectLabel;
-}
-
-#pragma mark - public
-
-- (instancetype)initWithFrame:(CGRect)frame key:(NSString *)key object:(NSString *)object {
-  self = [super initWithFrame:frame];
-  if (self) {
-    _key = [key copy];
-    _object = [object copy];
-    _keyLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _keyLabel.text = key;
-    _objectLabel = [[UILabel alloc] initWithFrame:CGRectZero];
-    _objectLabel.text = object;
-    [self addSubview:_keyLabel];
-    [self addSubview:_objectLabel];
-  }
-  return self;
-}
-
-- (NSString *)key {
-  return _key;
-}
-
-- (NSString *)object {
-  return _object;
-}
-
-#pragma mark - UIView
-
-- (void)layoutSubviews {
-  CGRect frame = self.bounds;
-  CGFloat height = frame.size.height / 2;
-  _keyLabel.frame = CGRectMake(frame.origin.x, frame.origin.y, frame.size.width, height);
-  _objectLabel.frame = CGRectMake(frame.origin.x, frame.origin.y + height, frame.size.width, height);
+- (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
+                  editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
+  UITableViewRowAction *edit = [UITableViewRowAction
+      rowActionWithStyle:UITableViewRowActionStyleNormal
+                   title:kViewEdit
+                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                   NSLog(@"edit at %ld", (long)indexPath.row);
+                 }];
+  UITableViewRowAction *remove = [UITableViewRowAction
+      rowActionWithStyle:UITableViewRowActionStyleNormal
+                   title:kRemove
+                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                   NSLog(@"will remove %ld", (long)indexPath.row);
+                 }];
+  remove.backgroundColor = [UIColor redColor];
+  return @[ remove, edit ];
 }
 
 @end

@@ -43,6 +43,11 @@ static NSString *kSelected = @"✓";
   self.selected = !self.selected;
 }
 
+- (void)setShowTick:(BOOL)showTick {
+  _showTick = showTick;
+  _tickLabel.hidden = _showTick;
+}
+
 #pragma mark - UIView
 
 // This assumes that self.bounds is always not tall...

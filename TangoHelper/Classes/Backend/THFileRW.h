@@ -15,11 +15,11 @@
 
 - (NSArray *)objectsForKeys:(NSArray *)keys;
 
-- (NSString *)objectForKey:(NSString *)key;
+- (id)objectForKey:(NSString *)key;
 
 - (void)removeObjectForKey:(NSString *)key;
 
-- (void)setObject:(NSString *)object forKey:(NSString *)key;
+- (void)setObject:(NSString *)object forKey:(id)key;
 
 // force writing immediately.
 - (void)flush;
