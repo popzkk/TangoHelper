@@ -82,7 +82,7 @@ static NSUInteger thres = 20;
 - (void)setObject:(NSString *)object forKey:(NSString *)key {
   [_content setObject:object forKey:key];
   ++self.diff;
-  // ...sync depot with playlists
+  // ...sync depot with playlists, though no need to sync adding.
 }
 
 - (void)flush {

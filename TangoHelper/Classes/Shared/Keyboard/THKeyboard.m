@@ -4,6 +4,10 @@
 #import "THKeyboardCellConfig.h"
 #import "THKeyboardCharTransformer.h"
 
+/** TODO
+ * merge hiragana and katakana buttons and add a button to switch to system keyboards.
+ */
+
 typedef NS_ENUM(NSUInteger, THKeyboardTouchState) {
   kTHKeyboardTouchStateNoTouch = 0,  // no touch
   kTHKeyboardTouchStateNormal,       // already touched, but not a char cell

@@ -2,10 +2,22 @@
 #import "Backend/THFileRW.h"
 #import "Shared/THStrings.h"
 
+/** TODO
+ * save selected rows when switched out.
+ */
+
 typedef void (^THRemoveConfirmAction)(UIAlertAction *);
 typedef void (^THWordConfirmAction)(NSString *, id, UIAlertAction *);
 
 static NSString *kCellIdentifier = @"WordsViewCell";
+
+@interface NSIndexPath (THWordsViewController)
+
++ (instancetype)indexPathForRow:(NSUInteger)row;
+
+@end
+
+#pragma mark - THWordsViewController
 
 @interface THWordsViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -110,10 +122,10 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       self.tableView.editing = YES;
       for (NSUInteger i = 0; i < _nSelected; ++i) {
         // ...config a different style. probably move to viewDidLoad:
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i inSection:0]
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
                                     animated:NO
                               scrollPosition:UITableViewScrollPositionNone];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_nSelected inSection:0]
+        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_nSelected]
                               atScrollPosition:UITableViewScrollPositionNone animated:NO];
       }
     }
@@ -165,19 +177,23 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 }
 
 - (void)middleTapped {
-  // middle is always add.
-  [self showWordDialogWithBlock:^(NSString *key, id object, UIAlertAction *action) {
-    NSLog(@"Will add %@:%@", key, object);
-    if (_depot) {
-      [_depot setObject:object forKey:key];
-    } else {
-      [_playlist setObject:object forKey:key];
+  if (!_depot && _playlist) {
+  } else {
+    [self showWordDialogWithBlock:^(NSString *key, id object, UIAlertAction *action) {
+      NSLog(@"Will add %@:%@", key, object);
+      if (_depot) {
+        [_depot setObject:object forKey:key];
+      } else {
+        [_playlist setObject:object forKey:key];
+      }
+      [_keys insertObject:key atIndex:_nSelected];
+      [_objects insertObject:object atIndex:_nSelected];
+      [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_nSelected] ]
+                            withRowAnimation:UITableViewRowAnimationNone];
     }
-    [_keys insertObject:key atIndex:_nSelected];
-    [_objects insertObject:object atIndex:_nSelected];
-    [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_nSelected inSection:0] ]
-                     withRowAnimation:UITableViewRowAnimationNone];
-  } key:nil explanation:nil];
+                              key:nil
+                      explanation:nil];
+  }
 }
 
 - (void)rightTapped {
@@ -189,9 +205,8 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       [UIAlertController alertControllerWithTitle:kRemoveDialogTitle
                                           message:@""
                                    preferredStyle:UIAlertControllerStyleAlert];
-  UIAlertAction *cancel = [UIAlertAction actionWithTitle:kCancel
-                                                         style:UIAlertActionStyleCancel
-                                                       handler:nil];
+  UIAlertAction *cancel =
+      [UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil];
   UIAlertAction *confirm = [UIAlertAction actionWithTitle:kConfirm
                                                     style:UIAlertActionStyleDestructive
                                                   handler:^(UIAlertAction *action) {
@@ -209,9 +224,8 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       [UIAlertController alertControllerWithTitle:kWordDialogTitle
                                           message:@""
                                    preferredStyle:UIAlertControllerStyleAlert];
-  UIAlertAction *cancel = [UIAlertAction actionWithTitle:kCancel
-                                                   style:UIAlertActionStyleCancel
-                                                 handler:nil];
+  UIAlertAction *cancel =
+      [UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil];
   UIAlertAction *confirm =
       [UIAlertAction actionWithTitle:kConfirm
                                style:UIAlertActionStyleDestructive
@@ -219,7 +233,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
                                NSString *key = alert.textFields.firstObject.text;
                                // ...object should change.
                                id object = [alert.textFields objectAtIndex:1].text;
-                               // check these two fields are not nil.
+                               // ...check these two fields are valid.
                                block(key, object, action);
                              }];
   [alert addAction:cancel];
@@ -299,6 +313,16 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                  }];
   remove.backgroundColor = [UIColor redColor];
   return @[ remove, edit ];
+}
+
+@end
+
+#pragma mark - NSIndexPath (THWordsViewController)
+
+@implementation NSIndexPath (THWordsViewController)
+
++ (instancetype)indexPathForRow:(NSUInteger)row {
+  return [self indexPathForRow:row inSection:0];
 }
 
 @end
