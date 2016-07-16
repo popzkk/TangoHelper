@@ -42,8 +42,6 @@ static NSString *kCellIdentifier = @"WordsViewCell";
   UIBarButtonItem *_middle;
   UIBarButtonItem *_right;
   UIBarButtonItem *_padding;
-
-  NSIndexPath *_current;
 }
 
 #pragma mark - public
@@ -146,10 +144,6 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 }
 
 - (void)startEditing {
-  UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_current];
-  if (cell.editing) {
-    return;
-  }
   [self.tableView setEditing:YES animated:YES];
   self.navigationItem.rightBarButtonItem = _done;
   [self setToolbarItems:@[ _left, _padding, _middle, _padding, _right ] animated:YES];
@@ -363,7 +357,11 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-  _current = indexPath;
+  self.navigationItem.rightBarButtonItem = nil;
+}
+
+- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+  self.navigationItem.rightBarButtonItem = _edit;
 }
 
 @end

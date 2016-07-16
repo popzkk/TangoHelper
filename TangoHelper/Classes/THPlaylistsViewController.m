@@ -32,8 +32,6 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
   UIBarButtonItem *_play;
   UIBarButtonItem *_add;
   UIBarButtonItem *_padding;
-
-  NSIndexPath *_current;
 }
 
 #pragma mark - public
@@ -85,10 +83,6 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 #pragma mark - private
 
 - (void)startEditing {
-  UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_current];
-  if (cell.editing) {
-    return;
-  }
   [self.tableView setEditing:YES animated:YES];
   self.navigationItem.rightBarButtonItem = _done;
   [self setToolbarItems:@[ _trash, _padding, _play ] animated:YES];
@@ -242,7 +236,11 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-  _current = indexPath;
+  self.navigationItem.rightBarButtonItem = nil;
+}
+
+- (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+  self.navigationItem.rightBarButtonItem = _edit;
 }
 
 @end
