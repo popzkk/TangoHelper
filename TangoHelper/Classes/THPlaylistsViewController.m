@@ -188,7 +188,7 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
   cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifier];
   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
-  cell.textLabel.text = [playlist particialName];
+  cell.textLabel.text = [playlist partialName];
   // cell.textLabel.font = [UIFont fontWithName:@"" size:24];
   cell.detailTextLabel.text = [playlist desc];
   return cell;

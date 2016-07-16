@@ -78,7 +78,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       _keys = [_playlist allKeys];
       _objects = [_playlist objectsForKeys:_keys];
       _nSelected = 0;
-      self.title = [NSString stringWithFormat:kTitlePlaylist, [_playlist particialName]];
+      self.title = [NSString stringWithFormat:kTitlePlaylist, [_playlist partialName]];
     } else if (_depot && _playlist) {
       _fileRW = _depot;
       NSMutableArray *keys = [_playlist allKeys];
@@ -93,7 +93,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       }
       _keys = keys;
       _objects = objects;
-      self.title = [NSString stringWithFormat:kTitleAddWords, [_playlist particialName]];
+      self.title = [NSString stringWithFormat:kTitleAddWords, [_playlist partialName]];
     } else {
       NSLog(@"both depot and playlist are nil!");
       return nil;

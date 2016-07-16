@@ -2,7 +2,7 @@
 
 @interface THPlaylist : THFileRW
 
-- (NSString *)particialName;
+- (NSString *)partialName;
 
 - (NSString *)desc;
 

@@ -6,7 +6,7 @@
 
 @implementation THPlaylist
 
-- (NSString *)particialName {
+- (NSString *)partialName {
   return [[super filename] stringByDeletingPathExtension];
 }
 
