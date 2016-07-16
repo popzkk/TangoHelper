@@ -78,12 +78,14 @@
   id fileRW = [_openedFiles objectForKey:filename];
   if (!fileRW) {
     NSString *path = [_path stringByAppendingPathComponent:filename];
-    if (create && ![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-      [[NSDictionary dictionary] writeToFile:path atomically:NO];
+    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+      if (!create) {
+        return nil;
+      } else {
+        [[NSFileManager defaultManager] createFileAtPath:path contents:nil attributes:nil];
+      }
     }
     fileRW = [[fileRWClass alloc] initWithFilename:filename];
-  }
-  if (fileRW) {
     [_openedFiles setObject:fileRW forKey:filename];
   }
   return fileRW;
@@ -95,8 +97,8 @@
   NSMutableArray *files = [NSMutableArray array];
   [allFiles enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
-    NSString *extension = [filename.pathExtension lowercaseString];
-    if ([extension isEqualToString:extension]) {
+    NSString *ext = [filename.pathExtension lowercaseString];
+    if ([ext isEqualToString:extension]) {
       [files addObject:[self fileRWForClass:[THPlaylist class] filename:filename create:NO]];
     }
   }];

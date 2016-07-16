@@ -35,9 +35,8 @@
   exit(0);
 */
   self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-  //UIViewController *rootViewController = [[THWordsViewController alloc] initWithDepot:[THFileRW instanceForFilename:@"test.depot"] playlist:nil];
-  //UIViewController *rootViewController = [[THPlaylistsViewController alloc] init];
-  UIViewController *rootViewController = [[THWordsViewController alloc] initUsingDepot];
+  UIViewController *rootViewController = [[THPlaylistsViewController alloc] init];
+  //UIViewController *rootViewController = [[THWordsViewController alloc] initUsingDepot];
   UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:rootViewController];
   navController.toolbarHidden = NO;
   self.window.rootViewController = navController;

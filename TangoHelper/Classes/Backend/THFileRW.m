@@ -22,12 +22,12 @@ static NSUInteger thres = 20;
   return _filename;
 }
 
-- (NSArray *)allKeys {
-  return _content.allKeys;
+- (NSMutableArray *)allKeys {
+  return [NSMutableArray arrayWithArray:_content.allKeys];
 }
 
-- (NSArray *)objectsForKeys:(NSArray *)keys {
-  return [_content objectsForKeys:keys notFoundMarker:@""];
+- (NSMutableArray *)objectsForKeys:(NSArray *)keys {
+  return [NSMutableArray arrayWithArray:[_content objectsForKeys:keys notFoundMarker:@""]];
 }
 
 - (NSString *)objectForKey:(NSString *)key {
@@ -46,21 +46,30 @@ static NSUInteger thres = 20;
   // ...sync depot with playlists, though no need to sync adding.
 }
 
+- (void)setObjects:(NSArray *)objects forKeys:(NSArray *)keys {
+  [_content addEntriesFromDictionary:[NSDictionary dictionaryWithObjects:objects forKeys:keys]];
+  self.diff += keys.count;
+}
+
 - (void)flush {
   [self flushWithThres:0];
 }
 
 #pragma mark - private
 
+// only called internally, and this file does exist!
 - (instancetype)initWithFilename:(NSString *)filename {
   self = [super init];
   if (self) {
     _filename = filename;
     _path = [[THFileCenter sharedInstance].directoryPath stringByAppendingPathComponent:_filename];
     _content = [NSMutableDictionary dictionaryWithContentsOfFile:_path];
+    if (!_content) {
+      _content = [NSMutableDictionary dictionary];
+    }
     _diff = 0;
   }
-  return _content ? self : nil;
+  return self;
 }
 
 - (void)setDiff:(NSUInteger)diff {

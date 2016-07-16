@@ -31,6 +31,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 @implementation THWordsViewController {
   THDepot *_depot;
   THPlaylist *_playlist;
+  THFileRW *_fileRW;
   NSMutableArray *_keys;
   NSMutableArray *_objects;
   NSUInteger _nSelected;
@@ -41,6 +42,8 @@ static NSString *kCellIdentifier = @"WordsViewCell";
   UIBarButtonItem *_middle;
   UIBarButtonItem *_right;
   UIBarButtonItem *_padding;
+
+  NSIndexPath *_current;
 }
 
 #pragma mark - public
@@ -54,8 +57,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 }
 
 - (instancetype)initUsingDepotWithPlaylist:(THPlaylist *)playlist {
-  return [self initWithDepot:[[THFileCenter sharedInstance] depot]
-                    playlist:playlist];
+  return [self initWithDepot:[[THFileCenter sharedInstance] depot] playlist:playlist];
 }
 
 #pragma mark - private
@@ -66,27 +68,32 @@ static NSString *kCellIdentifier = @"WordsViewCell";
     _depot = depot;
     _playlist = playlist;
     if (_depot && !_playlist) {
-      _keys = [NSMutableArray arrayWithArray:[_depot allKeys]];
-      _objects = [NSMutableArray arrayWithArray:[_depot objectsForKeys:_keys]];
+      _fileRW = _depot;
+      _keys = [_depot allKeys];
+      _objects = [_depot objectsForKeys:_keys];
       _nSelected = 0;
+      self.title = kTitleDepot;
     } else if (!_depot && _playlist) {
-      _keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
-      _objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:_keys]];
+      _fileRW = _playlist;
+      _keys = [_playlist allKeys];
+      _objects = [_playlist objectsForKeys:_keys];
       _nSelected = 0;
+      self.title = [NSString stringWithFormat:kTitlePlaylist, [_playlist particialName]];
     } else if (_depot && _playlist) {
-      NSMutableArray *keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
+      _fileRW = _depot;
+      NSMutableArray *keys = [_playlist allKeys];
       _nSelected = keys.count;
-      NSMutableArray *objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:keys]];
+      NSMutableArray *objects = [_playlist objectsForKeys:keys];
       NSArray *tmpKeys = [_depot allKeys];
       for (NSString *key in tmpKeys) {
-        id object = [_playlist objectForKey:key];
-        if (!object) {
+        if (![_playlist objectForKey:key]) {
           [keys addObject:key];
-          [objects addObject:object];
+          [objects addObject:[_depot objectForKey:key]];
         }
       }
       _keys = keys;
       _objects = objects;
+      self.title = [NSString stringWithFormat:kTitleAddWords, [_playlist particialName]];
     } else {
       NSLog(@"both depot and playlist are nil!");
       return nil;
@@ -97,8 +104,6 @@ static NSString *kCellIdentifier = @"WordsViewCell";
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
-
-    self.title = kTitleDepot;
 
     _padding =
         [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
@@ -124,6 +129,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
     if (!_depot || !_playlist) {
       self.navigationItem.rightBarButtonItem = _edit;
     } else {
+      self.navigationItem.hidesBackButton = YES;
       self.tableView.editing = YES;
       for (NSUInteger i = 0; i < _nSelected; ++i) {
         // ...probably move to viewDidLoad:
@@ -131,7 +137,8 @@ static NSString *kCellIdentifier = @"WordsViewCell";
                                     animated:NO
                               scrollPosition:UITableViewScrollPositionNone];
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_nSelected]
-                              atScrollPosition:UITableViewScrollPositionNone animated:NO];
+                              atScrollPosition:UITableViewScrollPositionNone
+                                      animated:NO];
       }
     }
   }
@@ -139,6 +146,10 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 }
 
 - (void)startEditing {
+  UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_current];
+  if (cell.editing) {
+    return;
+  }
   [self.tableView setEditing:YES animated:YES];
   self.navigationItem.rightBarButtonItem = _done;
   [self setToolbarItems:@[ _left, _padding, _middle, _padding, _right ] animated:YES];
@@ -152,8 +163,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 
 - (void)leftTapped {
   if (_depot && _playlist) {
-    // ...dismiss self.
-    NSLog(@"left tapped");
+    [self.navigationController popViewControllerAnimated:NO];
   } else {
     NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
     if (!indexPaths) {
@@ -167,11 +177,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       }
       NSArray *keys = [_keys objectsAtIndexes:indexSet];
       for (NSString *key in keys) {
-        if (_depot) {
-          [_depot removeObjectForKey:key];
-        } else {
-          [_playlist removeObjectForKey:key];
-        }
+        [_fileRW removeObjectForKey:key];
       }
       [_keys removeObjectsAtIndexes:indexSet];
       [_objects removeObjectsAtIndexes:indexSet];
@@ -183,16 +189,12 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 
 - (void)middleTapped {
   if (!_depot && _playlist) {
-    // ...
-    NSLog(@"middle tapped");
+    [self.navigationController
+        pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:_playlist]
+                  animated:YES];
   } else {
     [self showWordDialogWithBlock:^(NSString *key, id object) {
-      NSLog(@"Will add %@:%@", key, object);
-      if (_depot) {
-        [_depot setObject:object forKey:key];
-      } else {
-        [_playlist setObject:object forKey:key];
-      }
+      [_fileRW setObject:object forKey:key];
       [_keys insertObject:key atIndex:_nSelected];
       [_objects insertObject:object atIndex:_nSelected];
       [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_nSelected] ]
@@ -217,7 +219,9 @@ static NSString *kCellIdentifier = @"WordsViewCell";
         [indexSet addIndex:indexPath.row];
       }
     }
-    //THPlaylistsViewController *viewController = []
+    [_playlist setObjects:[_objects objectsAtIndexes:indexSet]
+                  forKeys:[_keys objectsAtIndexes:indexSet]];
+    [self.navigationController popViewControllerAnimated:YES];
   }
 }
 
@@ -280,6 +284,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
   } else {
     self.toolbarItems = @[ _left, _padding, _middle, _padding, _right ];
   }
+  // ... refresh dataSource.
 }
 
 #pragma mark - UITableViewDataSource
@@ -323,18 +328,42 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                   editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewRowAction *edit = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
-                   title:kViewEdit
+                   title:kEdit
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                   NSLog(@"edit at %ld", (long)indexPath.row);
+                   NSUInteger row = indexPath.row;
+                   NSString *oldKey = [_keys objectAtIndex:row];
+                   [self showWordDialogWithBlock:^(NSString *key, id object) {
+                     if (![oldKey isEqualToString:key]) {
+                       [_fileRW removeObjectForKey:oldKey];
+                     }
+                     [_fileRW setObject:object forKey:key];
+                     [_keys setObject:key atIndexedSubscript:row];
+                     [_objects setObject:object atIndexedSubscript:row];
+                     [self.tableView rectForRowAtIndexPath:indexPath];
+                   }
+                                             key:oldKey
+                                     explanation:[_objects
+                                                     objectAtIndex:row]];  // ...object will change.
                  }];
   UITableViewRowAction *remove = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kRemove
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                   NSLog(@"will remove %ld", (long)indexPath.row);
+                   NSUInteger row = indexPath.row;
+                   [self showRemoveDialogWithBlock:^() {
+                     [_fileRW removeObjectForKey:[_keys objectAtIndex:row]];
+                     [_keys removeObjectAtIndex:row];
+                     [_objects removeObjectAtIndex:row];
+                     [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
+                                           withRowAnimation:UITableViewRowAnimationNone];
+                   }];
                  }];
   remove.backgroundColor = [UIColor redColor];
   return @[ remove, edit ];
+}
+
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+  _current = indexPath;
 }
 
 @end

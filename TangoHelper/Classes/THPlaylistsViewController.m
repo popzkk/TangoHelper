@@ -5,8 +5,7 @@
 #import "Shared/THStrings.h"
 #import "THWordsViewController.h"
 
-typedef void (^THRemoveConfirmAction)();
-typedef void (^THPlayConfirmAction)();
+typedef void (^THBasicConfirmAction)();
 typedef void (^THPlaylistConformAction)(NSString *);
 
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
@@ -28,10 +27,13 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 
   UIBarButtonItem *_edit;
   UIBarButtonItem *_done;
-  UIBarButtonItem *_left;
-  UIBarButtonItem *_middle;
-  UIBarButtonItem *_right;
+  UIBarButtonItem *_trash;
+  UIBarButtonItem *_toDepot;
+  UIBarButtonItem *_play;
+  UIBarButtonItem *_add;
   UIBarButtonItem *_padding;
+
+  NSIndexPath *_current;
 }
 
 #pragma mark - public
@@ -50,53 +52,60 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
     self.title = kTitlePlaylists;
 
     _padding =
-    [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                  target:nil
-                                                  action:nil];
+        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
+                                                      target:nil
+                                                      action:nil];
     _edit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
                                                           target:self
                                                           action:@selector(startEditing)];
     _done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                           target:self
                                                           action:@selector(endEditing)];
-    _left = [[UIBarButtonItem alloc]
-             initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
-             target:self
-             action:@selector(leftTapped)];
-    _middle = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                            target:self
-                                                            action:@selector(middleTapped)];
-    _right = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay
+    _trash = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
                                                            target:self
-                                                           action:@selector(rightTapped)];
+                                                           action:@selector(trashTapped)];
+    _toDepot = [[UIBarButtonItem alloc] initWithTitle:kToDepot
+                                                style:UIBarButtonItemStylePlain
+                                               target:self
+                                               action:@selector(toDepotTapped)];
+    _play = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay
+                                                          target:self
+                                                          action:@selector(playTapped)];
+    _add = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
+                                                         target:self
+                                                         action:@selector(addTapped)];
+    self.navigationItem.rightBarButtonItem = _edit;
   }
   return self;
 }
 
 - (void)showDialogForPlaylist:(THFileRW *)playlist {
-
 }
 
 #pragma mark - private
 
 - (void)startEditing {
+  UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_current];
+  if (cell.editing) {
+    return;
+  }
   [self.tableView setEditing:YES animated:YES];
   self.navigationItem.rightBarButtonItem = _done;
-  [self setToolbarItems:@[ _left, _padding, _right ] animated:YES];
+  [self setToolbarItems:@[ _trash, _padding, _play ] animated:YES];
 }
 
 - (void)endEditing {
-  [self setToolbarItems:@[ _padding, _middle, _padding ] animated:YES];
+  [self setToolbarItems:@[ _toDepot, _padding, _add ] animated:YES];
   self.navigationItem.rightBarButtonItem = _edit;
   [self.tableView setEditing:NO animated:YES];
 }
 
-- (void)leftTapped {
+- (void)trashTapped {
   NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
   if (!indexPaths) {
     return;
   }
-  [self showRemoveDialogWithBlock:^() {
+  [self showBasicDialogWithBlock:^() {
     NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
     for (NSIndexPath *indexPath in indexPaths) {
       [indexSet addIndex:indexPath.row];
@@ -107,20 +116,35 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
   }];
 }
 
-- (void)middleTapped {
+- (void)toDepotTapped {
+  [self.navigationController pushViewController:[[THWordsViewController alloc] initUsingDepot]
+                                       animated:YES];
 }
 
-- (void)rightTapped {
-
+- (void)addTapped {
+  [self showPlaylistDialogWithBlock:^(NSString *partialName) {
+    THPlaylist *playlist =
+        [[THFileCenter sharedInstance] playlistWithPartialName:partialName create:YES];
+    [_playlists insertObject:playlist atIndex:0];
+    [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0] ]
+                          withRowAnimation:UITableViewRowAnimationNone];
+    [self.navigationController
+        pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:playlist]
+                  animated:NO];
+  }];
 }
 
-- (void)showRemoveDialogWithBlock:(THRemoveConfirmAction)block {
+- (void)playTapped {
+  NSLog(@"right tapped");
+}
+
+- (void)showBasicDialogWithBlock:(THBasicConfirmAction)block {
   UIAlertController *alert =
-  [UIAlertController alertControllerWithTitle:kRemoveDialogTitle
-                                      message:@""
-                               preferredStyle:UIAlertControllerStyleAlert];
+      [UIAlertController alertControllerWithTitle:kRemoveDialogTitle
+                                          message:@""
+                                   preferredStyle:UIAlertControllerStyleAlert];
   [alert
-   addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
+      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
   [alert addAction:[UIAlertAction actionWithTitle:kConfirm
                                             style:UIAlertActionStyleDestructive
                                           handler:^(UIAlertAction *action) {
@@ -129,10 +153,32 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
   [self.navigationController presentViewController:alert animated:YES completion:nil];
 }
 
+- (void)showPlaylistDialogWithBlock:(THPlaylistConformAction)block {
+  UIAlertController *alert =
+      [UIAlertController alertControllerWithTitle:kPlaylistDialogTitle
+                                          message:@""
+                                   preferredStyle:UIAlertControllerStyleAlert];
+  [alert
+      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
+                                            style:UIAlertActionStyleDestructive
+                                          handler:^(UIAlertAction *action) {
+                                            NSString *partialName =
+                                                alert.textFields.firstObject.text;
+                                            // ...check if valid.
+                                            block(partialName);
+                                          }]];
+  [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+    textField.placeholder = kPlaylistTextField;
+  }];
+  [self.navigationController presentViewController:alert animated:YES completion:nil];
+}
+
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
-  self.toolbarItems = @[ _padding, _middle, _padding ];
+  self.toolbarItems = @[ _toDepot, _padding, _add ];
+  // ...refresh dataSource.
 }
 
 #pragma mark - UITableViewDataSource
@@ -143,7 +189,7 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
   cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifier];
   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
   cell.textLabel.text = [playlist particialName];
-  //cell.textLabel.font = [UIFont fontWithName:@"" size:24];
+  // cell.textLabel.font = [UIFont fontWithName:@"" size:24];
   cell.detailTextLabel.text = [playlist desc];
   return cell;
 }
@@ -153,8 +199,8 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 }
 
 - (void)tableView:(UITableView *)tableView
-commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
-forRowAtIndexPath:(NSIndexPath *)indexPath {
+    commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+     forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - UITableViewDelegate
@@ -162,25 +208,41 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
                   editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewRowAction *recite = [UITableViewRowAction
-                                rowActionWithStyle:UITableViewRowActionStyleNormal
-                                title:kRecite
-                                handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                                  NSLog(@"recite at %ld", (long)indexPath.row);
-                                }];
+      rowActionWithStyle:UITableViewRowActionStyleNormal
+                   title:kRecite
+                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                   NSLog(@"recite at %ld", (long)indexPath.row);
+                 }];
+  recite.backgroundColor = [UIColor brownColor];
   UITableViewRowAction *edit = [UITableViewRowAction
-                                rowActionWithStyle:UITableViewRowActionStyleNormal
-                                title:kViewEdit
-                                handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                                  NSLog(@"edit at %ld", (long)indexPath.row);
-                                }];
+      rowActionWithStyle:UITableViewRowActionStyleNormal
+                   title:kEdit
+                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                   [self.navigationController
+                       pushViewController:[[THWordsViewController alloc]
+                                              initWithPlaylist:[_playlists
+                                                                   objectAtIndex:indexPath.row]]
+                                 animated:YES];
+                 }];
   UITableViewRowAction *remove = [UITableViewRowAction
-                                  rowActionWithStyle:UITableViewRowActionStyleNormal
-                                  title:kRemove
-                                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                                    NSLog(@"will remove %ld", (long)indexPath.row);
-                                  }];
+      rowActionWithStyle:UITableViewRowActionStyleNormal
+                   title:kRemove
+                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                   NSUInteger row = indexPath.row;
+                   THPlaylist *playlist = [_playlists objectAtIndex:row];
+                   [self showBasicDialogWithBlock:^() {
+                     [[THFileCenter sharedInstance] deletePlaylist:playlist];
+                     [_playlists removeObjectAtIndex:row];
+                     [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
+                                           withRowAnimation:UITableViewRowAnimationNone];
+                   }];
+                 }];
   remove.backgroundColor = [UIColor redColor];
   return @[ remove, edit, recite ];
+}
+
+- (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+  _current = indexPath;
 }
 
 @end
