@@ -1,13 +1,13 @@
 #import <UIKit/UIKit.h>
 
-@class THFileRW;
+@class THPlaylist;
 
 @interface THWordsViewController : UITableViewController
 
 - (instancetype)initUsingDepot;
 
-- (instancetype)initWithPlaylist:(THFileRW *)playlist;
+- (instancetype)initWithPlaylist:(THPlaylist *)playlist;
 
-- (instancetype)initUsingDepotWithPlaylist:(THFileRW *)playlist;
+- (instancetype)initUsingDepotWithPlaylist:(THPlaylist *)playlist;
 
 @end

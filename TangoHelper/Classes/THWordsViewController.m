@@ -1,13 +1,18 @@
 #import "THWordsViewController.h"
-#import "Backend/THFileRW.h"
+
+#import "Backend/THFileCenter.h"
+#import "Backend/THDepot.h"
+#import "Backend/THPlaylist.h"
 #import "Shared/THStrings.h"
+#import "THPlaylistsViewController.h"
 
 /** TODO
  * save selected rows when switched out.
+ * edit the table when a cell is being editted?
  */
 
-typedef void (^THRemoveConfirmAction)(UIAlertAction *);
-typedef void (^THWordConfirmAction)(NSString *, id, UIAlertAction *);
+typedef void (^THRemoveConfirmAction)();
+typedef void (^THWordConfirmAction)(NSString *, id);
 
 static NSString *kCellIdentifier = @"WordsViewCell";
 
@@ -24,8 +29,8 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 @end
 
 @implementation THWordsViewController {
-  THFileRW *_depot;
-  THFileRW *_playlist;
+  THDepot *_depot;
+  THPlaylist *_playlist;
   NSMutableArray *_keys;
   NSMutableArray *_objects;
   NSUInteger _nSelected;
@@ -44,19 +49,19 @@ static NSString *kCellIdentifier = @"WordsViewCell";
   return [self initUsingDepotWithPlaylist:nil];
 }
 
-- (instancetype)initWithPlaylist:(THFileRW *)playlist {
+- (instancetype)initWithPlaylist:(THPlaylist *)playlist {
   return [self initWithDepot:nil playlist:playlist];
 }
 
-- (instancetype)initUsingDepotWithPlaylist:(THFileRW *)playlist {
-  return [self initWithDepot:[THFileRW instanceForFilename:@"test.depot" create:YES]
+- (instancetype)initUsingDepotWithPlaylist:(THPlaylist *)playlist {
+  return [self initWithDepot:[[THFileCenter sharedInstance] depot]
                     playlist:playlist];
 }
 
 #pragma mark - private
 
-- (instancetype)initWithDepot:(THFileRW *)depot playlist:(THFileRW *)playlist {
-  self = [super init];
+- (instancetype)initWithDepot:(THDepot *)depot playlist:(THPlaylist *)playlist {
+  self = [super initWithStyle:UITableViewStylePlain];
   if (self) {
     _depot = depot;
     _playlist = playlist;
@@ -121,7 +126,7 @@ static NSString *kCellIdentifier = @"WordsViewCell";
     } else {
       self.tableView.editing = YES;
       for (NSUInteger i = 0; i < _nSelected; ++i) {
-        // ...config a different style. probably move to viewDidLoad:
+        // ...probably move to viewDidLoad:
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
                                     animated:NO
                               scrollPosition:UITableViewScrollPositionNone];
@@ -146,15 +151,15 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 }
 
 - (void)leftTapped {
-  NSLog(@"left tapped");
   if (_depot && _playlist) {
     // ...dismiss self.
+    NSLog(@"left tapped");
   } else {
     NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
     if (!indexPaths) {
       return;
     }
-    [self showRemoveDialogWithBlock:^(UIAlertAction *action) {
+    [self showRemoveDialogWithBlock:^() {
       // _nSelected must be 0.
       NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
       for (NSIndexPath *indexPath in indexPaths) {
@@ -178,8 +183,10 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 
 - (void)middleTapped {
   if (!_depot && _playlist) {
+    // ...
+    NSLog(@"middle tapped");
   } else {
-    [self showWordDialogWithBlock:^(NSString *key, id object, UIAlertAction *action) {
+    [self showWordDialogWithBlock:^(NSString *key, id object) {
       NSLog(@"Will add %@:%@", key, object);
       if (_depot) {
         [_depot setObject:object forKey:key];
@@ -197,7 +204,21 @@ static NSString *kCellIdentifier = @"WordsViewCell";
 }
 
 - (void)rightTapped {
-  NSLog(@"right tapped");
+  if (!_depot || !_playlist) {
+    NSLog(@"right tapped");
+  } else {
+    NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
+    if (indexPaths.count <= _nSelected) {
+      return;
+    }
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *indexPath in indexPaths) {
+      if (indexPath.row > _nSelected) {
+        [indexSet addIndex:indexPath.row];
+      }
+    }
+    //THPlaylistsViewController *viewController = []
+  }
 }
 
 - (void)showRemoveDialogWithBlock:(THRemoveConfirmAction)block {
@@ -205,15 +226,13 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       [UIAlertController alertControllerWithTitle:kRemoveDialogTitle
                                           message:@""
                                    preferredStyle:UIAlertControllerStyleAlert];
-  UIAlertAction *cancel =
-      [UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil];
-  UIAlertAction *confirm = [UIAlertAction actionWithTitle:kConfirm
-                                                    style:UIAlertActionStyleDestructive
-                                                  handler:^(UIAlertAction *action) {
-                                                    block(action);
-                                                  }];
-  [alert addAction:cancel];
-  [alert addAction:confirm];
+  [alert
+      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
+                                            style:UIAlertActionStyleDestructive
+                                          handler:^(UIAlertAction *action) {
+                                            block();
+                                          }]];
   [self.navigationController presentViewController:alert animated:YES completion:nil];
 }
 
@@ -224,20 +243,18 @@ static NSString *kCellIdentifier = @"WordsViewCell";
       [UIAlertController alertControllerWithTitle:kWordDialogTitle
                                           message:@""
                                    preferredStyle:UIAlertControllerStyleAlert];
-  UIAlertAction *cancel =
-      [UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil];
-  UIAlertAction *confirm =
-      [UIAlertAction actionWithTitle:kConfirm
-                               style:UIAlertActionStyleDestructive
-                             handler:^(UIAlertAction *action) {
-                               NSString *key = alert.textFields.firstObject.text;
-                               // ...object should change.
-                               id object = [alert.textFields objectAtIndex:1].text;
-                               // ...check these two fields are valid.
-                               block(key, object, action);
-                             }];
-  [alert addAction:cancel];
-  [alert addAction:confirm];
+
+  [alert
+      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
+                                            style:UIAlertActionStyleDestructive
+                                          handler:^(UIAlertAction *action) {
+                                            NSString *key = alert.textFields.firstObject.text;
+                                            // ...object should change.
+                                            id object = [alert.textFields objectAtIndex:1].text;
+                                            // ...check these two fields are valid.
+                                            block(key, object);
+                                          }]];
   [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
     if (!key || key.length == 0) {
       textField.placeholder = kWordKeyTextField;
@@ -276,6 +293,9 @@ static NSString *kCellIdentifier = @"WordsViewCell";
   cell.textLabel.font = [UIFont fontWithName:@"" size:24];
   // ...object should change.
   cell.detailTextLabel.text = [_objects objectAtIndex:row];
+  if (indexPath.row < _nSelected) {
+    cell.selectionStyle = UITableViewCellSelectionStyleGray;
+  }
   return cell;
 }
 
@@ -283,7 +303,9 @@ static NSString *kCellIdentifier = @"WordsViewCell";
   return _keys.count;
 }
 
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView
+    commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
+     forRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 #pragma mark - UITableViewDelegate

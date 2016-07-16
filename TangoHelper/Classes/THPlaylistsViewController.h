@@ -1,5 +1,11 @@
 #import <UIKit/UIKit.h>
 
-@interface THPlaylistsViewController : UIViewController
+@class THFileRW;
+
+@interface THPlaylistsViewController : UITableViewController
+
+- (instancetype)init;
+
+- (void)showDialogForPlaylist:(THFileRW *)playlist;
 
 @end

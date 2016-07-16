@@ -1,8 +1,9 @@
 #import "THAppDelegate.h"
+
 #import "THViewController.h"
 #import "Classes/THWordsViewController.h"
 #import "Classes/THPlaylistsViewController.h"
-#import "Classes/Backend/THFileRW.h"
+#import "Classes/Backend/THFileCenter.h"
 #import "Classes/THWordsViewController.h"
 
 @implementation THAppDelegate
@@ -54,7 +55,7 @@
   // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
   // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 
-  [THFileRW flushAll];
+  [[THFileCenter sharedInstance] flushAll];
 }
 
 - (void)applicationWillEnterForeground:(UIApplication *)application {
@@ -68,7 +69,7 @@
 - (void)applicationWillTerminate:(UIApplication *)application {
   // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 
-  [THFileRW flushAll];
+  [[THFileCenter sharedInstance] flushAll];
 }
 
 @end

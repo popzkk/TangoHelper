@@ -1,4 +1,5 @@
 #import "THKeyboardConfig.h"
+
 #import "THKeyboardJaConstants.h"
 
 typedef void (^onceBlock)(NSMutableArray *, NSMutableArray *);

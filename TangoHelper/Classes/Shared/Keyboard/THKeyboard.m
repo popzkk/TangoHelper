@@ -1,8 +1,9 @@
 #import "THKeyboard.h"
-#import "THKeyboardConfig.h"
+
 #import "THKeyboardCell.h"
 #import "THKeyboardCellConfig.h"
 #import "THKeyboardCharTransformer.h"
+#import "THKeyboardConfig.h"
 
 /** TODO
  * merge hiragana and katakana buttons and add a button to switch to system keyboards.

@@ -2,13 +2,6 @@
 
 @interface THFileRW : NSObject
 
-+ (instancetype)instanceForFilename:(NSString *)filename;
-
-+ (instancetype)instanceForFilename:(NSString *)filename create:(BOOL)create;
-
-// will call |flush:| of every instance.
-+ (void)flushAll;
-
 - (NSString *)filename;
 
 - (NSArray *)allKeys;
@@ -23,8 +16,5 @@
 
 // force writing immediately.
 - (void)flush;
-
-// close self. Will flush before closing.
-- (void)close;
 
 @end
