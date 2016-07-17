@@ -1,4 +1,5 @@
 #import "THHelpers.h"
+#import "THStrings.h"
 
 #if __cplusplus
 extern "C" {

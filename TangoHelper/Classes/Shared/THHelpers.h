@@ -2,7 +2,6 @@
 #define THHelpers_h
 
 #import <UIKit/UIKit.h>
-#import "THStrings.h"
 
 typedef void (^THBasicAlertConfirmAction)();
 typedef void (^THTextsAlertConformAction)(NSArray<UITextField *> *);
