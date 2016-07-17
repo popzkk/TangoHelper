@@ -10,6 +10,8 @@ typedef void (^THPlaylistConformAction)(NSString *);
 
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
 
+static CGFloat kPlaylistHeight = 80;
+
 @interface NSIndexPath (THPlaylistsViewController)
 
 + (instancetype)indexPathForRow:(NSUInteger)row;
@@ -39,8 +41,6 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 - (instancetype)init {
   self = [super initWithStyle:UITableViewStylePlain];
   if (self) {
-    _playlists = [[THFileCenter sharedInstance] playlists];
-
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     self.tableView.allowsSelection = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
@@ -107,7 +107,8 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
     }
     [_playlists removeObjectsAtIndexes:indexSet];
     [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-  }];
+  }
+                           title:kRemoveDialogTitle];
 }
 
 - (void)toDepotTapped {
@@ -132,9 +133,9 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
   NSLog(@"right tapped");
 }
 
-- (void)showBasicDialogWithBlock:(THBasicConfirmAction)block {
+- (void)showBasicDialogWithBlock:(THBasicConfirmAction)block title:(NSString *)title {
   UIAlertController *alert =
-      [UIAlertController alertControllerWithTitle:kRemoveDialogTitle
+      [UIAlertController alertControllerWithTitle:title
                                           message:@""
                                    preferredStyle:UIAlertControllerStyleAlert];
   [alert
@@ -172,7 +173,8 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 
 - (void)viewWillAppear:(BOOL)animated {
   self.toolbarItems = @[ _toDepot, _padding, _add ];
-  // ...refresh dataSource.
+  _playlists = [[THFileCenter sharedInstance] playlists];
+  [self.tableView reloadData];
 }
 
 #pragma mark - UITableViewDataSource
@@ -198,6 +200,10 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
 }
 
 #pragma mark - UITableViewDelegate
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  return kPlaylistHeight;
+}
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
                   editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -229,7 +235,8 @@ static NSString *kCellIdentifier = @"PlaylistsViewCell";
                      [_playlists removeObjectAtIndex:row];
                      [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
                                            withRowAnimation:UITableViewRowAnimationNone];
-                   }];
+                   }
+                                            title:kRemoveDialogTitle];
                  }];
   remove.backgroundColor = [UIColor redColor];
   return @[ remove, edit, recite ];
