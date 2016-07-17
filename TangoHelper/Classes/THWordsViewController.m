@@ -124,13 +124,9 @@ static CGFloat kWordHeight = 50;
       self.navigationItem.hidesBackButton = YES;
       self.tableView.editing = YES;
       for (NSUInteger i = 0; i < _nSelected; ++i) {
-        // ...probably move to viewDidLoad:
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
                                     animated:NO
                               scrollPosition:UITableViewScrollPositionNone];
-        [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:_nSelected]
-                              atScrollPosition:UITableViewScrollPositionNone
-                                      animated:NO];
       }
     }
   }
@@ -191,7 +187,7 @@ static CGFloat kWordHeight = 50;
   if (!_depot && _playlist) {
     [self.navigationController
         pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:_playlist]
-                  animated:YES];
+                  animated:NO];
   } else {
     [self.navigationController
         presentViewController:texts_alert(kWordDialogTitleAdd, nil, @[ @"", @"" ],
