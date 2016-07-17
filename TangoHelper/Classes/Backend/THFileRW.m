@@ -18,6 +18,10 @@ static NSUInteger thres = 20;
 
 #pragma mark - public
 
+- (NSUInteger)count {
+  return _content.count;
+}
+
 - (NSString *)filename {
   return _filename;
 }
@@ -51,11 +55,20 @@ static NSUInteger thres = 20;
   self.diff += keys.count;
 }
 
+- (void)addFromFileRW:(THFileRW *)otherFileRW {
+  [_content addEntriesFromDictionary:[otherFileRW content]];
+  self.diff += [otherFileRW count];
+}
+
 - (void)flush {
   [self flushWithThres:0];
 }
 
 #pragma mark - private
+
+- (NSDictionary *)content {
+  return _content;
+}
 
 // only called internally, and this file does exist!
 - (instancetype)initWithFilename:(NSString *)filename {

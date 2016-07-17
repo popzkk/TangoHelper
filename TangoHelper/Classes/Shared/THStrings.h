@@ -22,23 +22,26 @@ static NSString *kPlaylistTextField = @"列表标题";
 static NSString *kToDepot = @"浏览词库";
 */
 
-static NSString *kTitleDepot = @"Depot";
-static NSString *kTitlePlaylists = @"Playlists";
-static NSString *kTitlePlaylist = @"Current: %@";
-static NSString *kTitleAddWords = @"Add words to: %@";
+static NSString *kDepotTitle = @"Depot";
+static NSString *kPlaylistsTitle = @"Playlists";
+static NSString *kPlaylistTitle = @"Current: %@";
+static NSString *kAddWordsTitle = @"Add words to: %@";
 
-static NSString *kRecite = @"Play";
+static NSString *kPlay = @"Play";
 static NSString *kConfirm = @"Confirm";
 static NSString *kCancel = @"Cancel";
 static NSString *kEdit = @"Edit";
 static NSString *kRemove = @"Remove";
+static NSString *kAdd = @"Add";
 
 static NSString *kRemoveDialogTitle = @"Remove?";
-static NSString *kWordDialogTitle = @"Word";
 static NSString *kPlaylistDialogTitle = @"Add a Playlist";
-static NSString *kWordKeyTextField = @"word to add";
-static NSString *kWordObjectTextField = @"explanation";
-static NSString *kPlaylistTextField = @"Title";
+static NSString *kPlayDialogTitle = @"Play?";
+static NSString *kPlayImmediatelyDialogTitle = @"%@ created";
+static NSString *kPlayImmediatelyDialogMessage = @"Play now?";
+static NSString *kWordDialogKeyTextField = @"word to add";
+static NSString *kWordDialogObjectTextField = @"explanation";
+static NSString *kPlaylistDialogTextField = @"Title";
 static NSString *kToDepot = @"Browser Depot";
 
 #endif

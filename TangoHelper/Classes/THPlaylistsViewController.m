@@ -2,11 +2,9 @@
 
 #import "Backend/THFileCenter.h"
 #import "Backend/THPlaylist.h"
+#import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
 #import "THWordsViewController.h"
-
-typedef void (^THBasicConfirmAction)();
-typedef void (^THPlaylistConformAction)(NSString *);
 
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
 
@@ -42,42 +40,35 @@ static CGFloat kPlaylistHeight = 80;
   self = [super initWithStyle:UITableViewStylePlain];
   if (self) {
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
-    self.tableView.allowsSelection = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
 
-    self.title = kTitlePlaylists;
+    self.title = kPlaylistsTitle;
 
-    _padding =
-        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                      target:nil
-                                                      action:nil];
-    _edit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-                                                          target:self
-                                                          action:@selector(startEditing)];
-    _done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                          target:self
-                                                          action:@selector(endEditing)];
-    _trash = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemTrash
-                                                           target:self
-                                                           action:@selector(trashTapped)];
-    _toDepot = [[UIBarButtonItem alloc] initWithTitle:kToDepot
-                                                style:UIBarButtonItemStylePlain
-                                               target:self
-                                               action:@selector(toDepotTapped)];
-    _play = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay
-                                                          target:self
-                                                          action:@selector(playTapped)];
-    _add = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                         target:self
-                                                         action:@selector(addTapped)];
+    _padding = system_item(UIBarButtonSystemItemFlexibleSpace, nil, nil);
+    _edit = system_item(UIBarButtonSystemItemEdit, self, @selector(startEditing));
+    _done = system_item(UIBarButtonSystemItemDone, self, @selector(endEditing));
+    _trash = system_item(UIBarButtonSystemItemTrash, self, @selector(trashTapped));
+    _toDepot = custom_item(kToDepot, UIBarButtonItemStylePlain, self, @selector(toDepotTapped));
+    _play = system_item(UIBarButtonSystemItemPlay, self, @selector(playTapped));
+    _add = system_item(UIBarButtonSystemItemAdd, self, @selector(addTapped));
+
     self.navigationItem.rightBarButtonItem = _edit;
   }
   return self;
 }
 
-- (void)showDialogForPlaylist:(THFileRW *)playlist {
+- (void)showDialogForPlaylist:(THPlaylist *)playlist {
+  [self.navigationController
+      presentViewController:basic_alert([NSString stringWithFormat:kPlayImmediatelyDialogTitle,
+                                                                   [playlist partialName]],
+                                        kPlayImmediatelyDialogMessage,
+                                        ^() {
+                                          [self playWithPlaylist:playlist];
+                                        })
+                   animated:YES
+                 completion:nil];
 }
 
 #pragma mark - private
@@ -99,16 +90,23 @@ static CGFloat kPlaylistHeight = 80;
   if (!indexPaths) {
     return;
   }
-  [self showBasicDialogWithBlock:^() {
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    for (NSIndexPath *indexPath in indexPaths) {
-      [indexSet addIndex:indexPath.row];
-      [[THFileCenter sharedInstance] deletePlaylist:[_playlists objectAtIndex:indexPath.row]];
-    }
-    [_playlists removeObjectsAtIndexes:indexSet];
-    [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
-  }
-                           title:kRemoveDialogTitle];
+  [self.navigationController
+      presentViewController:basic_alert(
+                                kRemoveDialogTitle, nil,
+                                ^() {
+                                  NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+                                  for (NSIndexPath *indexPath in indexPaths) {
+                                    [indexSet addIndex:indexPath.row];
+                                    [[THFileCenter sharedInstance]
+                                        deletePlaylist:[_playlists objectAtIndex:indexPath.row]];
+                                  }
+                                  [_playlists removeObjectsAtIndexes:indexSet];
+                                  [self.tableView
+                                      deleteRowsAtIndexPaths:indexPaths
+                                            withRowAnimation:UITableViewRowAnimationNone];
+                                })
+                   animated:YES
+                 completion:nil];
 }
 
 - (void)toDepotTapped {
@@ -117,56 +115,61 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)addTapped {
-  [self showPlaylistDialogWithBlock:^(NSString *partialName) {
-    THPlaylist *playlist =
-        [[THFileCenter sharedInstance] playlistWithPartialName:partialName create:YES];
-    [_playlists insertObject:playlist atIndex:0];
-    [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0] ]
-                          withRowAnimation:UITableViewRowAnimationNone];
-    [self.navigationController
-        pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:playlist]
-                  animated:NO];
-  }];
+  [self.navigationController
+      presentViewController:texts_alert(
+                                kPlaylistDialogTitle, nil, @[ @"" ], @[ kPlaylistDialogTextField ],
+                                ^(NSArray<UITextField *> *texts) {
+                                  // check if valid.
+                                  NSString *partialName = texts.firstObject.text;
+                                  THPlaylist *playlist =
+                                      [self newPlaylistWithPartialName:partialName atRow:0];
+                                  [self.navigationController
+                                      pushViewController:[[THWordsViewController alloc]
+                                                             initUsingDepotWithPlaylist:playlist]
+                                                animated:NO];
+                                })
+                   animated:YES
+                 completion:nil];
 }
 
 - (void)playTapped {
-  NSLog(@"right tapped");
+  [self.navigationController
+      presentViewController:texts_alert(
+                                kPlaylistDialogTitle, nil, @[ @"" ], @[ kPlaylistDialogTextField ],
+                                ^(NSArray<UITextField *> *texts) {
+                                  // check if valid.
+                                  NSString *partialName = texts.firstObject.text;
+                                  THPlaylist *playlist =
+                                      [self newPlaylistWithPartialName:partialName atRow:0];
+                                  for (NSIndexPath *indexPath in self.tableView
+                                           .indexPathsForSelectedRows) {
+                                    [playlist
+                                        addFromFileRW:[_playlists objectAtIndex:indexPath.row]];
+                                  }
+                                  [self.navigationController
+                                      presentViewController:basic_alert(
+                                                                kPlayDialogTitle, nil,
+                                                                ^() {
+                                                                  [self playWithPlaylist:playlist];
+                                                                })
+                                                   animated:YES
+                                                 completion:nil];
+                                })
+                   animated:YES
+                 completion:nil];
 }
 
-- (void)showBasicDialogWithBlock:(THBasicConfirmAction)block title:(NSString *)title {
-  UIAlertController *alert =
-      [UIAlertController alertControllerWithTitle:title
-                                          message:@""
-                                   preferredStyle:UIAlertControllerStyleAlert];
-  [alert
-      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
-  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
-                                            style:UIAlertActionStyleDestructive
-                                          handler:^(UIAlertAction *action) {
-                                            block();
-                                          }]];
-  [self.navigationController presentViewController:alert animated:YES completion:nil];
+- (THPlaylist *)newPlaylistWithPartialName:(NSString *)partialName atRow:(NSUInteger)row {
+  THPlaylist *playlist =
+      [[THFileCenter sharedInstance] playlistWithPartialName:partialName create:YES];
+  [_playlists insertObject:playlist atIndex:0];
+  [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0] ]
+                        withRowAnimation:UITableViewRowAnimationNone];
+  return playlist;
 }
 
-- (void)showPlaylistDialogWithBlock:(THPlaylistConformAction)block {
-  UIAlertController *alert =
-      [UIAlertController alertControllerWithTitle:kPlaylistDialogTitle
-                                          message:@""
-                                   preferredStyle:UIAlertControllerStyleAlert];
-  [alert
-      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
-  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
-                                            style:UIAlertActionStyleDestructive
-                                          handler:^(UIAlertAction *action) {
-                                            NSString *partialName =
-                                                alert.textFields.firstObject.text;
-                                            // ...check if valid.
-                                            block(partialName);
-                                          }]];
-  [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-    textField.placeholder = kPlaylistTextField;
-  }];
-  [self.navigationController presentViewController:alert animated:YES completion:nil];
+- (void)playWithPlaylist:(THPlaylist *)playlist {
+  NSLog(@"Will play: %@", [playlist partialName]);
 }
 
 #pragma mark - UIViewController
@@ -205,13 +208,28 @@ static CGFloat kPlaylistHeight = 80;
   return kPlaylistHeight;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  if (tableView.isEditing) {
+    return;
+  }
+  [tableView deselectRowAtIndexPath:indexPath animated:YES];
+  [self.navigationController
+      presentViewController:basic_alert(kPlaylistDialogTitle, nil,
+                                        ^() {
+                                          [self playWithPlaylist:[_playlists
+                                                                     objectAtIndex:indexPath.row]];
+                                        })
+                   animated:YES
+                 completion:nil];
+}
+
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
                   editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewRowAction *recite = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
-                   title:kRecite
+                   title:kPlay
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                   NSLog(@"recite at %ld", (long)indexPath.row);
+                   [self playWithPlaylist:[_playlists objectAtIndex:indexPath.row]];
                  }];
   recite.backgroundColor = [UIColor brownColor];
   UITableViewRowAction *edit = [UITableViewRowAction
@@ -230,13 +248,18 @@ static CGFloat kPlaylistHeight = 80;
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    NSUInteger row = indexPath.row;
                    THPlaylist *playlist = [_playlists objectAtIndex:row];
-                   [self showBasicDialogWithBlock:^() {
-                     [[THFileCenter sharedInstance] deletePlaylist:playlist];
-                     [_playlists removeObjectAtIndex:row];
-                     [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
-                                           withRowAnimation:UITableViewRowAnimationNone];
-                   }
-                                            title:kRemoveDialogTitle];
+                   [self.navigationController
+                       presentViewController:
+                           basic_alert(kRemoveDialogTitle, nil,
+                                       ^() {
+                                         [[THFileCenter sharedInstance] deletePlaylist:playlist];
+                                         [_playlists removeObjectAtIndex:row];
+                                         [self.tableView
+                                             deleteRowsAtIndexPaths:@[ indexPath ]
+                                                   withRowAnimation:UITableViewRowAnimationNone];
+                                       })
+                                    animated:YES
+                                  completion:nil];
                  }];
   remove.backgroundColor = [UIColor redColor];
   return @[ remove, edit, recite ];

@@ -3,15 +3,13 @@
 #import "Backend/THFileCenter.h"
 #import "Backend/THDepot.h"
 #import "Backend/THPlaylist.h"
+#import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
 #import "THPlaylistsViewController.h"
 
 /** TODO
  * save selected rows when switched out.
  */
-
-typedef void (^THBasicConfirmAction)();
-typedef void (^THWordConfirmAction)(NSString *, id);
 
 static NSString *kCellIdentifier = @"WordsViewCell";
 static CGFloat kWordHeight = 50;
@@ -93,13 +91,13 @@ static CGFloat kWordHeight = 50;
     _playlist = playlist;
     if (_depot && !_playlist) {
       _fileRW = _depot;
-      self.title = kTitleDepot;
+      self.title = kDepotTitle;
     } else if (!_depot && _playlist) {
       _fileRW = _playlist;
-      self.title = [NSString stringWithFormat:kTitlePlaylist, [_playlist partialName]];
+      self.title = [NSString stringWithFormat:kPlaylistTitle, [_playlist partialName]];
     } else if (_depot && _playlist) {
       _fileRW = _depot;
-      self.title = [NSString stringWithFormat:kTitleAddWords, [_playlist partialName]];
+      self.title = [NSString stringWithFormat:kAddWordsTitle, [_playlist partialName]];
     } else {
       NSLog(@"both depot and playlist are nil!");
       return nil;
@@ -111,27 +109,15 @@ static CGFloat kWordHeight = 50;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
 
-    _padding =
-        [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace
-                                                      target:nil
-                                                      action:nil];
-    _edit = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemEdit
-                                                          target:self
-                                                          action:@selector(startEditing)];
-    _done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                          target:self
-                                                          action:@selector(endEditing)];
-    _left = [[UIBarButtonItem alloc]
-        initWithBarButtonSystemItem:_depot && _playlist ? UIBarButtonSystemItemCancel
-                                                        : UIBarButtonSystemItemTrash
-                             target:self
-                             action:@selector(leftTapped)];
-    _middle = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd
-                                                            target:self
-                                                            action:@selector(middleTapped)];
-    _right = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemPlay
-                                                           target:self
-                                                           action:@selector(rightTapped)];
+    _padding = system_item(UIBarButtonSystemItemFlexibleSpace, nil, nil);
+    _edit = system_item(UIBarButtonSystemItemEdit, self, @selector(startEditing));
+    _done = system_item(UIBarButtonSystemItemDone, self, @selector(endEditing));
+    _left =
+        system_item(_depot && _playlist ? UIBarButtonSystemItemCancel : UIBarButtonSystemItemTrash,
+                    self, @selector(leftTapped));
+    _middle = system_item(UIBarButtonSystemItemAdd, self, @selector(middleTapped));
+    _right = system_item(UIBarButtonSystemItemPlay, self, @selector(rightTapped));
+
     if (!_depot || !_playlist) {
       self.navigationItem.rightBarButtonItem = _edit;
     } else {
@@ -171,22 +157,27 @@ static CGFloat kWordHeight = 50;
     if (!indexPaths) {
       return;
     }
-    [self showBasicDialogWithBlock:^() {
-      // _nSelected must be 0.
-      NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-      for (NSIndexPath *indexPath in indexPaths) {
-        [indexSet addIndex:indexPath.row];
-      }
-      NSArray *keys = [_keys objectsAtIndexes:indexSet];
-      for (NSString *key in keys) {
-        [_fileRW removeObjectForKey:key];
-      }
-      [_keys removeObjectsAtIndexes:indexSet];
-      [_objects removeObjectsAtIndexes:indexSet];
-      [self.tableView deleteRowsAtIndexPaths:indexPaths
-                            withRowAnimation:UITableViewRowAnimationNone];
+    // _nSelected must be 0.
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *indexPath in indexPaths) {
+      [indexSet addIndex:indexPath.row];
     }
-                             title:kRemoveDialogTitle];
+
+    [self.navigationController
+        presentViewController:basic_alert(kRemoveDialogTitle, nil,
+                                          ^() {
+                                            NSArray *keys = [_keys objectsAtIndexes:indexSet];
+                                            for (NSString *key in keys) {
+                                              [_fileRW removeObjectForKey:key];
+                                            }
+                                            [_keys removeObjectsAtIndexes:indexSet];
+                                            [_objects removeObjectsAtIndexes:indexSet];
+                                            [self.tableView
+                                                deleteRowsAtIndexPaths:indexPaths
+                                                      withRowAnimation:UITableViewRowAnimationNone];
+                                          })
+                     animated:YES
+                   completion:nil];
   }
 }
 
@@ -196,84 +187,60 @@ static CGFloat kWordHeight = 50;
         pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:_playlist]
                   animated:YES];
   } else {
-    [self showWordDialogWithBlock:^(NSString *key, id object) {
-      [_fileRW setObject:object forKey:key];
-      [_keys insertObject:key atIndex:_nSelected];
-      [_objects insertObject:object atIndex:_nSelected];
-      [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:_nSelected] ]
-                            withRowAnimation:UITableViewRowAnimationNone];
-    }
-                              key:nil
-                      explanation:nil];
+    [self.navigationController
+        presentViewController:texts_alert(kAdd, nil, @[ @"", @"" ],
+                                          @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
+                                          ^(NSArray<UITextField *> *textFields) {
+                                            // check if valid.
+                                            NSString *key = textFields.firstObject.text;
+                                            // ...object should change.
+                                            NSString *object = [textFields objectAtIndex:1].text;
+                                            [_fileRW setObject:object forKey:key];
+                                            [_keys insertObject:key atIndex:_nSelected];
+                                            [_objects insertObject:object atIndex:_nSelected];
+                                            [self.tableView
+                                                insertRowsAtIndexPaths:@[
+                                                  [NSIndexPath indexPathForRow:_nSelected]
+                                                ]
+                                                      withRowAnimation:UITableViewRowAnimationNone];
+                                          })
+                     animated:YES
+                   completion:nil];
   }
 }
 
 - (void)rightTapped {
-  if (!_depot || !_playlist) {
-    NSLog(@"right tapped");
-  } else {
-    // pre-selected rows are not counted.
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
-      if (indexPath.row >= _nSelected) {
-        [indexSet addIndex:indexPath.row];
-      }
+  // pre-selected rows are not counted.
+  NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+  for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+    if (indexPath.row >= _nSelected) {
+      [indexSet addIndex:indexPath.row];
     }
+  }
+  if (!_depot || !_playlist) {
+    [self.navigationController
+        presentViewController:texts_alert(
+                                  kPlaylistDialogTitle, nil, @[ @"" ],
+                                  @[ kPlaylistDialogTextField ],
+                                  ^(NSArray<UITextField *> *texts) {
+                                    NSString *partialName = texts.firstObject.text;
+                                    THPlaylist *playlist = [[THFileCenter sharedInstance]
+                                        playlistWithPartialName:partialName
+                                                         create:YES];
+                                    [playlist setObjects:[_objects objectsAtIndexes:indexSet]
+                                                 forKeys:[_keys objectsAtIndexes:indexSet]];
+                                    [self.navigationController popToRootViewControllerAnimated:YES];
+                                    [(THPlaylistsViewController *)
+                                            self.navigationController.viewControllers.firstObject
+                                        showDialogForPlaylist:playlist];
+                                  })
+                     animated:YES
+                   completion:nil];
+  } else {
     [_playlist setObjects:[_objects objectsAtIndexes:indexSet]
                   forKeys:[_keys objectsAtIndexes:indexSet]];
     [self.navigationController popViewControllerAnimated:YES];
   }
-}
-
-- (void)showBasicDialogWithBlock:(THBasicConfirmAction)block title:(NSString *)title {
-  UIAlertController *alert =
-      [UIAlertController alertControllerWithTitle:title
-                                          message:@""
-                                   preferredStyle:UIAlertControllerStyleAlert];
-  [alert
-      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
-  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
-                                            style:UIAlertActionStyleDestructive
-                                          handler:^(UIAlertAction *action) {
-                                            block();
-                                          }]];
-  [self.navigationController presentViewController:alert animated:YES completion:nil];
-}
-
-- (void)showWordDialogWithBlock:(THWordConfirmAction)block
-                            key:(NSString *)key
-                    explanation:(NSString *)explanation {
-  UIAlertController *alert =
-      [UIAlertController alertControllerWithTitle:kWordDialogTitle
-                                          message:@""
-                                   preferredStyle:UIAlertControllerStyleAlert];
-
-  [alert
-      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
-  [alert addAction:[UIAlertAction actionWithTitle:kConfirm
-                                            style:UIAlertActionStyleDestructive
-                                          handler:^(UIAlertAction *action) {
-                                            NSString *key = alert.textFields.firstObject.text;
-                                            // ...object should change.
-                                            id object = [alert.textFields objectAtIndex:1].text;
-                                            // ...check these two fields are valid.
-                                            block(key, object);
-                                          }]];
-  [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-    if (!key || key.length == 0) {
-      textField.placeholder = kWordKeyTextField;
-    } else {
-      textField.text = key;
-    }
-  }];
-  [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-    if (!explanation || explanation.length == 0) {
-      textField.placeholder = kWordObjectTextField;
-    } else {
-      textField.text = explanation;
-    }
-  }];
-  [self.navigationController presentViewController:alert animated:YES completion:nil];
 }
 
 #pragma mark - UIViewController
@@ -345,32 +312,46 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    NSUInteger row = indexPath.row;
                    NSString *oldKey = [_keys objectAtIndex:row];
-                   [self showWordDialogWithBlock:^(NSString *key, id object) {
-                     if (![oldKey isEqualToString:key]) {
-                       [_fileRW removeObjectForKey:oldKey];
-                     }
-                     [_fileRW setObject:object forKey:key];
-                     [_keys setObject:key atIndexedSubscript:row];
-                     [_objects setObject:object atIndexedSubscript:row];
-                     [self.tableView rectForRowAtIndexPath:indexPath];
-                   }
-                                             key:oldKey
-                                     // ...object will change.
-                                     explanation:[_objects objectAtIndex:row]];
+                   // ...object should change.
+                   NSString *oldExplanation = [_objects objectAtIndex:row];
+                   [self.navigationController
+                       presentViewController:
+                           texts_alert(kEdit, nil, @[ oldKey, oldExplanation ], @[ @"", @"" ],
+                                       ^(NSArray<UITextField *> *textFields) {
+                                         // check if valid.
+                                         NSString *key = textFields.firstObject.text;
+                                         NSString *object = [textFields objectAtIndex:1].text;
+                                         if (![oldKey isEqualToString:key]) {
+                                           [_fileRW removeObjectForKey:oldKey];
+                                         }
+                                         [_fileRW setObject:object forKey:key];
+                                         [_keys setObject:key atIndexedSubscript:row];
+                                         [_objects setObject:object atIndexedSubscript:row];
+                                         [self.tableView
+                                             reloadRowsAtIndexPaths:@[ indexPath ]
+                                                   withRowAnimation:UITableViewRowAnimationNone];
+                                       })
+                                    animated:YES
+                                  completion:nil];
                  }];
   UITableViewRowAction *remove = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kRemove
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    NSUInteger row = indexPath.row;
-                   [self showBasicDialogWithBlock:^() {
-                     [_fileRW removeObjectForKey:[_keys objectAtIndex:row]];
-                     [_keys removeObjectAtIndex:row];
-                     [_objects removeObjectAtIndex:row];
-                     [self.tableView deleteRowsAtIndexPaths:@[ indexPath ]
-                                           withRowAnimation:UITableViewRowAnimationNone];
-                   }
-                                            title:kRemoveDialogTitle];
+                   [self.navigationController
+                       presentViewController:
+                           basic_alert(kRemoveDialogTitle, nil,
+                                       ^() {
+                                         [_fileRW removeObjectForKey:[_keys objectAtIndex:row]];
+                                         [_keys removeObjectAtIndex:row];
+                                         [_objects removeObjectAtIndex:row];
+                                         [self.tableView
+                                             deleteRowsAtIndexPaths:@[ indexPath ]
+                                                   withRowAnimation:UITableViewRowAnimationNone];
+                                       })
+                                    animated:YES
+                                  completion:nil];
                  }];
   remove.backgroundColor = [UIColor redColor];
   return @[ remove, edit ];

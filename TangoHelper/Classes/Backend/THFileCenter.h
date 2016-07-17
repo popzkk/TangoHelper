@@ -17,7 +17,7 @@
 
 - (THPlaylist *)playlistWithPartialName:(NSString *)partialName create:(BOOL)create;
 
-- (THPlaylist *)tmpPlaylist;
+// - (THPlaylist *)tmpPlaylist;
 
 - (void)deletePlaylist:(THPlaylist *)playlist;
 
