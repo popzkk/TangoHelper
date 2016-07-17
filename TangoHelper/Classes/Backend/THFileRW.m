@@ -7,23 +7,18 @@ static NSUInteger thres = 20;
 @interface THFileRW ()
 
 @property(nonatomic) NSUInteger diff;
+@property(nonatomic, readonly) NSMutableDictionary *content;
 
 @end
 
 @implementation THFileRW {
-  NSString *_filename;
   NSString *_path;
-  NSMutableDictionary *_content;
 }
 
 #pragma mark - public
 
 - (NSUInteger)count {
   return _content.count;
-}
-
-- (NSString *)filename {
-  return _filename;
 }
 
 - (NSMutableArray *)allKeys {
@@ -56,8 +51,8 @@ static NSUInteger thres = 20;
 }
 
 - (void)addFromFileRW:(THFileRW *)otherFileRW {
-  [_content addEntriesFromDictionary:[otherFileRW content]];
-  self.diff += [otherFileRW count];
+  [_content addEntriesFromDictionary:otherFileRW.content];
+  self.diff += otherFileRW.count;
 }
 
 - (void)flush {
@@ -65,10 +60,6 @@ static NSUInteger thres = 20;
 }
 
 #pragma mark - private
-
-- (NSDictionary *)content {
-  return _content;
-}
 
 // only called internally, and this file does exist!
 - (instancetype)initWithFilename:(NSString *)filename {

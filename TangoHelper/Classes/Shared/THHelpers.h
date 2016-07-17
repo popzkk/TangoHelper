@@ -22,10 +22,11 @@ static UIAlertController *basic_alert(NSString *title, NSString *message,
       [UIAlertController alertControllerWithTitle:title
                                           message:message
                                    preferredStyle:UIAlertControllerStyleAlert];
-  [alert
-      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:kCancel
+                                            style:UIAlertActionStyleDefault
+                                          handler:nil]];
   [alert addAction:[UIAlertAction actionWithTitle:kConfirm
-                                            style:UIAlertActionStyleDestructive
+                                            style:UIAlertActionStyleDefault
                                           handler:^(UIAlertAction *action) {
                                             block();
                                           }]];
@@ -52,10 +53,11 @@ static UIAlertController *texts_alert(NSString *title, NSString *message, NSArra
       }
     }];
   }
-  [alert
-      addAction:[UIAlertAction actionWithTitle:kCancel style:UIAlertActionStyleCancel handler:nil]];
+  [alert addAction:[UIAlertAction actionWithTitle:kCancel
+                                            style:UIAlertActionStyleDefault
+                                          handler:nil]];
   [alert addAction:[UIAlertAction actionWithTitle:kConfirm
-                                            style:UIAlertActionStyleDestructive
+                                            style:UIAlertActionStyleDefault
                                           handler:^(UIAlertAction *action) {
                                             block(alert.textFields);
                                           }]];

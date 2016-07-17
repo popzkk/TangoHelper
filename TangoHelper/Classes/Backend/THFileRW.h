@@ -2,9 +2,9 @@
 
 @interface THFileRW : NSObject
 
-- (NSString *)filename;
+@property(nonatomic, readonly) NSString *filename;
 
-- (NSUInteger)count;
+@property(nonatomic, readonly) NSUInteger count;
 
 // returns an empty array if no entries exist.
 - (NSMutableArray *)allKeys;

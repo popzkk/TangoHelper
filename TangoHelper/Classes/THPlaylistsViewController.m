@@ -62,7 +62,7 @@ static CGFloat kPlaylistHeight = 80;
 - (void)showDialogForPlaylist:(THPlaylist *)playlist {
   [self.navigationController
       presentViewController:basic_alert([NSString stringWithFormat:kPlayImmediatelyDialogTitle,
-                                                                   [playlist partialName]],
+                                                                   playlist.partialName],
                                         kPlayImmediatelyDialogMessage,
                                         ^() {
                                           [self playWithPlaylist:playlist];
@@ -92,7 +92,7 @@ static CGFloat kPlaylistHeight = 80;
   }
   [self.navigationController
       presentViewController:basic_alert(
-                                kRemoveDialogTitle, nil,
+                                kRemoveDialogTitleFromPlaylists, nil,
                                 ^() {
                                   NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
                                   for (NSIndexPath *indexPath in indexPaths) {
@@ -169,7 +169,7 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)playWithPlaylist:(THPlaylist *)playlist {
-  NSLog(@"Will play: %@", [playlist partialName]);
+  NSLog(@"Will play: %@", playlist.partialName);
 }
 
 #pragma mark - UIViewController
@@ -187,9 +187,9 @@ static CGFloat kPlaylistHeight = 80;
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
   cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifier];
   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
-  cell.textLabel.text = [playlist partialName];
+  cell.textLabel.text = playlist.partialName;
   // cell.textLabel.font = [UIFont fontWithName:@"" size:24];
-  cell.detailTextLabel.text = [playlist desc];
+  cell.detailTextLabel.text = playlist.desc;
   return cell;
 }
 
@@ -213,12 +213,14 @@ static CGFloat kPlaylistHeight = 80;
     return;
   }
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
+  THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
   [self.navigationController
-      presentViewController:basic_alert(kPlaylistDialogTitle, nil,
-                                        ^() {
-                                          [self playWithPlaylist:[_playlists
-                                                                     objectAtIndex:indexPath.row]];
-                                        })
+      presentViewController:basic_alert(
+                                [NSString stringWithFormat:kPlayDialogTitle, playlist.partialName],
+                                nil,
+                                ^() {
+                                  [self playWithPlaylist:playlist];
+                                })
                    animated:YES
                  completion:nil];
 }
@@ -232,9 +234,9 @@ static CGFloat kPlaylistHeight = 80;
                    [self playWithPlaylist:[_playlists objectAtIndex:indexPath.row]];
                  }];
   recite.backgroundColor = [UIColor brownColor];
-  UITableViewRowAction *edit = [UITableViewRowAction
+  UITableViewRowAction *view = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
-                   title:kEdit
+                   title:kView
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    [self.navigationController
                        pushViewController:[[THWordsViewController alloc]
@@ -250,7 +252,9 @@ static CGFloat kPlaylistHeight = 80;
                    THPlaylist *playlist = [_playlists objectAtIndex:row];
                    [self.navigationController
                        presentViewController:
-                           basic_alert(kRemoveDialogTitle, nil,
+                           basic_alert([NSString stringWithFormat:kRemoveDialogTitleNormal,
+                                                                  playlist.partialName],
+                                       nil,
                                        ^() {
                                          [[THFileCenter sharedInstance] deletePlaylist:playlist];
                                          [_playlists removeObjectAtIndex:row];
@@ -262,7 +266,7 @@ static CGFloat kPlaylistHeight = 80;
                                   completion:nil];
                  }];
   remove.backgroundColor = [UIColor redColor];
-  return @[ remove, edit, recite ];
+  return @[ remove, view, recite ];
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {

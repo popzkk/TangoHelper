@@ -2,8 +2,8 @@
 
 @interface THPlaylist : THFileRW
 
-- (NSString *)partialName;
+@property(nonatomic, readonly) NSString *partialName;
 
-- (NSString *)desc;
+@property(nonatomic, readonly) NSString *desc;
 
 @end

@@ -94,10 +94,10 @@ static CGFloat kWordHeight = 50;
       self.title = kDepotTitle;
     } else if (!_depot && _playlist) {
       _fileRW = _playlist;
-      self.title = [NSString stringWithFormat:kPlaylistTitle, [_playlist partialName]];
+      self.title = [NSString stringWithFormat:kPlaylistTitle, _playlist.partialName];
     } else if (_depot && _playlist) {
       _fileRW = _depot;
-      self.title = [NSString stringWithFormat:kAddWordsTitle, [_playlist partialName]];
+      self.title = [NSString stringWithFormat:kAddWordsTitle, _playlist.partialName];
     } else {
       NSLog(@"both depot and playlist are nil!");
       return nil;
@@ -163,8 +163,14 @@ static CGFloat kWordHeight = 50;
       [indexSet addIndex:indexPath.row];
     }
 
+    NSString *title;
+    if (_depot) {
+      title = kRemoveDialogTitleFromDepot;
+    } else {
+      title = [NSString stringWithFormat:kRemoveDialogTitleFromPlaylist, _playlist.partialName];
+    }
     [self.navigationController
-        presentViewController:basic_alert(kRemoveDialogTitle, nil,
+        presentViewController:basic_alert(title, nil,
                                           ^() {
                                             NSArray *keys = [_keys objectsAtIndexes:indexSet];
                                             for (NSString *key in keys) {
@@ -188,7 +194,7 @@ static CGFloat kWordHeight = 50;
                   animated:YES];
   } else {
     [self.navigationController
-        presentViewController:texts_alert(kAdd, nil, @[ @"", @"" ],
+        presentViewController:texts_alert(kWordDialogTitleAdd, nil, @[ @"", @"" ],
                                           @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
                                           ^(NSArray<UITextField *> *textFields) {
                                             // check if valid.
@@ -316,7 +322,8 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                    NSString *oldExplanation = [_objects objectAtIndex:row];
                    [self.navigationController
                        presentViewController:
-                           texts_alert(kEdit, nil, @[ oldKey, oldExplanation ], @[ @"", @"" ],
+                           texts_alert(kWordDialogTitleEdit, nil, @[ oldKey, oldExplanation ],
+                                       @[ @"", @"" ],
                                        ^(NSArray<UITextField *> *textFields) {
                                          // check if valid.
                                          NSString *key = textFields.firstObject.text;
@@ -341,7 +348,9 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                    NSUInteger row = indexPath.row;
                    [self.navigationController
                        presentViewController:
-                           basic_alert(kRemoveDialogTitle, nil,
+                           basic_alert([NSString stringWithFormat:kRemoveDialogTitleNormal,
+                                                                  [_keys objectAtIndex:row]],
+                                       nil,
                                        ^() {
                                          [_fileRW removeObjectForKey:[_keys objectAtIndex:row]];
                                          [_keys removeObjectAtIndex:row];

@@ -1,13 +1,13 @@
 #import "THPlaylist.h"
 
 /** TODO
- * add desc
+ * add desc.
  */
 
 @implementation THPlaylist
 
 - (NSString *)partialName {
-  return [[super filename] stringByDeletingPathExtension];
+  return [super.filename stringByDeletingPathExtension];
 }
 
 - (NSString *)desc {

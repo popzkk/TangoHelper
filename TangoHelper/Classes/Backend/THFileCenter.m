@@ -50,7 +50,7 @@
 }
 
 - (void)deletePlaylist:(THPlaylist *)playlist {
-  NSString *filename = [playlist filename];
+  NSString *filename = playlist.filename;
   [_openedFiles removeObjectForKey:filename];
   [[NSFileManager defaultManager] removeItemAtPath:[_path stringByAppendingPathComponent:filename]
                                              error:nil];
