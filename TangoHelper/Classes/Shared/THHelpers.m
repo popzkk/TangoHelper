@@ -9,17 +9,16 @@ UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action) {
   return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:sys target:target action:action];
 }
 
-UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target,
-                                    SEL action) {
+UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action) {
   return [[UIBarButtonItem alloc] initWithTitle:title style:style target:target action:action];
 }
 
 UIAlertController *basic_alert(NSString *title, NSString *message,
-                                      THBasicAlertConfirmAction block) {
+                               THBasicAlertConfirmAction block) {
   UIAlertController *alert =
-  [UIAlertController alertControllerWithTitle:title
-                                      message:message
-                               preferredStyle:UIAlertControllerStyleAlert];
+      [UIAlertController alertControllerWithTitle:title
+                                          message:message
+                                   preferredStyle:UIAlertControllerStyleAlert];
   [alert addAction:[UIAlertAction actionWithTitle:kCancel
                                             style:UIAlertActionStyleDefault
                                           handler:nil]];
@@ -32,11 +31,11 @@ UIAlertController *basic_alert(NSString *title, NSString *message,
 }
 
 UIAlertController *texts_alert(NSString *title, NSString *message, NSArray *texts,
-                                      NSArray *placeholders, THTextsAlertConformAction block) {
+                               NSArray *placeholders, THTextsAlertConformAction block) {
   UIAlertController *alert =
-  [UIAlertController alertControllerWithTitle:title
-                                      message:message
-                               preferredStyle:UIAlertControllerStyleAlert];
+      [UIAlertController alertControllerWithTitle:title
+                                          message:message
+                                   preferredStyle:UIAlertControllerStyleAlert];
   if (texts.count != placeholders.count) {
     NSLog(@"cannot create 'texts_alert': inconsistant number of elements");
     return nil;

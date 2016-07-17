@@ -1,11 +1,7 @@
 #import "THAppDelegate.h"
 
-#import "THViewController.h"
-#import "Classes/THWordsViewController.h"
-#import "Classes/THPlaylistsViewController.h"
 #import "Classes/Backend/THFileCenter.h"
-#import "Classes/Backend/THDepot.h"
-#import "Classes/THWordsViewController.h"
+#import "Classes/THPlaylistsViewController.h"
 
 @implementation THAppDelegate
 
@@ -34,7 +30,7 @@
   exit(0);
    */
 
-  self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+  self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UINavigationController *navController = [[UINavigationController alloc]
       initWithRootViewController:[[THPlaylistsViewController alloc] init]];
   navController.toolbarHidden = NO;
