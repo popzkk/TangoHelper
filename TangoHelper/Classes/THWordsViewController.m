@@ -128,22 +128,23 @@ static CGFloat kWordHeight = 50;
     _right = system_item(UIBarButtonSystemItemPlay, self, @selector(rightTapped));
 
     if (_situation == THWordsViewControllerDepot) {
-        self.navigationItem.rightBarButtonItem = _edit;
-    } else if ( _situation == THWordsViewControllerPlaylist) {
+      self.navigationItem.rightBarButtonItem = _edit;
+    } else if (_situation == THWordsViewControllerPlaylist) {
 #ifdef RENAME_IN_SWIPE
       self.navigationItem.rightBarButtonItem = _edit;
 #else
-      UIBarButtonItem *rename = custom_item(kRename, UIBarButtonItemStylePlain, self, @selector(renameTapped));
+      UIBarButtonItem *rename =
+          custom_item(kRename, UIBarButtonItemStylePlain, self, @selector(renameTapped));
       self.navigationItem.rightBarButtonItems = @[ _edit, rename ];
 #endif
-    } else { // THWordsViewControllerAddingToPlaylist
-        self.navigationItem.hidesBackButton = YES;
-        self.tableView.editing = YES;
-        for (NSUInteger i = 0; i < _nSelected; ++i) {
-          [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
-                                      animated:NO
-                                scrollPosition:UITableViewScrollPositionNone];
-        }
+    } else {  // THWordsViewControllerAddingToPlaylist
+      self.navigationItem.hidesBackButton = YES;
+      self.tableView.editing = YES;
+      for (NSUInteger i = 0; i < _nSelected; ++i) {
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
+                                    animated:NO
+                              scrollPosition:UITableViewScrollPositionNone];
+      }
     }
   }
   return self;
