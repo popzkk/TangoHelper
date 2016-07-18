@@ -1,11 +1,15 @@
 #import "THFileCenter.h"
 
+#import "THFileRW.h"
 #import "THDepot.h"
 #import "THPlaylist.h"
 
+// re-define these methods so they can be used...
 @interface THFileRW ()
 
 - (instancetype)initWithFilename:(NSString *)filename;
+
+- (void)updateWithFilename:(NSString *)filename;
 
 @end
 
@@ -47,6 +51,17 @@
 
 - (THPlaylist *)tmpPlaylist {
   return [self fileRWForClass:[THPlaylist class] filename:@"playlist" create:YES];
+}
+
+- (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName {
+  NSString *filename = [partialName stringByAppendingPathExtension:@"playlist"];
+  [_openedFiles removeObjectForKey:playlist.filename];
+  [[NSFileManager defaultManager]
+      moveItemAtPath:[_path stringByAppendingPathComponent:playlist.filename]
+              toPath:[_path stringByAppendingPathComponent:filename]
+               error:nil];
+  [playlist updateWithFilename:filename];
+  [_openedFiles setObject:playlist forKey:filename];
 }
 
 - (void)deletePlaylist:(THPlaylist *)playlist {

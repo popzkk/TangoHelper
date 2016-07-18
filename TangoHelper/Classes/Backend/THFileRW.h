@@ -6,7 +6,6 @@
 
 @property(nonatomic, readonly) NSUInteger count;
 
-// returns an empty array if no entries exist.
 - (NSMutableArray *)allKeys;
 
 - (NSMutableArray *)objectsForKeys:(NSArray *)keys;

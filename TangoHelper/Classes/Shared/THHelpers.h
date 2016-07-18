@@ -10,6 +10,18 @@ typedef void (^THTextsAlertConformAction)(NSArray<UITextField *> *);
 extern "C" {
 #endif
 
+NSString *playlist_title(NSString *partial_name);
+
+NSString *add_to_playlist_title(NSString *partial_name);
+
+NSString *remove_dialog_title_from_playlist(NSString *partial_name);
+
+NSString *remove_dialog_title_normal(NSString *name);
+
+NSString *play_dialog_title(NSString *partial_name);
+
+NSString *play_immediately_dialog_title(NSString *partial_name);
+
 UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action);
 
 UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action);

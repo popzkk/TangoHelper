@@ -5,6 +5,30 @@
 extern "C" {
 #endif
 
+NSString *playlist_title(NSString *partial_name) {
+  return [NSString stringWithFormat:kPlaylistTitle, partial_name];
+}
+
+NSString *add_to_playlist_title(NSString *partial_name) {
+  return [NSString stringWithFormat:kAddToPlaylistTitle, partial_name];
+}
+
+NSString *remove_dialog_title_from_playlist(NSString *partial_name) {
+  return [NSString stringWithFormat:kRemoveDialogTitleFromPlaylist, partial_name];
+}
+
+NSString *remove_dialog_title_normal(NSString *name) {
+  return [NSString stringWithFormat:kRemoveDialogTitleNormal, name];
+}
+
+NSString *play_dialog_title(NSString *partial_name) {
+  return [NSString stringWithFormat:kPlayDialogTitle, partial_name];
+}
+
+NSString *play_immediately_dialog_title(NSString *partial_name) {
+  return [NSString stringWithFormat:kPlayImmediatelyDialogTitle, partial_name];
+}
+
 UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action) {
   return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:sys target:target action:action];
 }

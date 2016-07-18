@@ -61,21 +61,6 @@ static NSUInteger thres = 20;
 
 #pragma mark - private
 
-// only called internally, and this file does exist!
-- (instancetype)initWithFilename:(NSString *)filename {
-  self = [super init];
-  if (self) {
-    _filename = filename;
-    _path = [[THFileCenter sharedInstance].directoryPath stringByAppendingPathComponent:_filename];
-    _content = [NSMutableDictionary dictionaryWithContentsOfFile:_path];
-    if (!_content) {
-      _content = [NSMutableDictionary dictionary];
-    }
-    _diff = 0;
-  }
-  return self;
-}
-
 - (void)setDiff:(NSUInteger)diff {
   _diff = diff;
   [self flushWithThres:thres];
@@ -89,6 +74,25 @@ static NSUInteger thres = 20;
       NSLog(@"writing to %@ fails.", _filename);
     }
   }
+}
+
+// only called internally, and thus ensures that this file does exist!
+- (instancetype)initWithFilename:(NSString *)filename {
+  self = [super init];
+  if (self) {
+    [self updateWithFilename:filename];
+    _content = [NSMutableDictionary dictionaryWithContentsOfFile:_path];
+    if (!_content) {
+      _content = [NSMutableDictionary dictionary];
+    }
+    _diff = 0;
+  }
+  return self;
+}
+
+- (void)updateWithFilename:(NSString *)filename {
+  _filename = filename;
+  _path = [[THFileCenter sharedInstance].directoryPath stringByAppendingPathComponent:_filename];
 }
 
 @end

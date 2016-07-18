@@ -11,6 +11,12 @@
  * save selected rows when switched out.
  */
 
+typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
+  THWordsViewControllerDepot = 0,
+  THWordsViewControllerPlaylist,
+  THWordsViewControllerAddingToPlaylist,
+};
+
 static NSString *kCellIdentifier = @"WordsViewCell";
 static CGFloat kWordHeight = 50;
 
@@ -29,6 +35,7 @@ static CGFloat kWordHeight = 50;
 @implementation THWordsViewController {
   THDepot *_depot;
   THPlaylist *_playlist;
+  THWordsViewControllerSituation _situation;
   THFileRW *_fileRW;
   NSMutableArray *_keys;
   NSMutableArray *_objects;
@@ -90,20 +97,22 @@ static CGFloat kWordHeight = 50;
     _depot = depot;
     _playlist = playlist;
     if (_depot && !_playlist) {
+      _situation = THWordsViewControllerDepot;
       _fileRW = _depot;
       self.title = kDepotTitle;
     } else if (!_depot && _playlist) {
+      _situation = THWordsViewControllerPlaylist;
       _fileRW = _playlist;
-      self.title = [NSString stringWithFormat:kPlaylistTitle, _playlist.partialName];
+      self.title = playlist_title(_playlist.partialName);
     } else if (_depot && _playlist) {
+      _situation = THWordsViewControllerAddingToPlaylist;
       _fileRW = _depot;
-      self.title = [NSString stringWithFormat:kAddWordsTitle, _playlist.partialName];
+      self.title = add_to_playlist_title(_playlist.partialName);
     } else {
       NSLog(@"both depot and playlist are nil!");
       return nil;
     }
 
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     self.tableView.allowsSelection = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.dataSource = self;
@@ -118,16 +127,23 @@ static CGFloat kWordHeight = 50;
     _middle = system_item(UIBarButtonSystemItemAdd, self, @selector(middleTapped));
     _right = system_item(UIBarButtonSystemItemPlay, self, @selector(rightTapped));
 
-    if (!_depot || !_playlist) {
+    if (_situation == THWordsViewControllerDepot) {
+        self.navigationItem.rightBarButtonItem = _edit;
+    } else if ( _situation == THWordsViewControllerPlaylist) {
+#ifdef RENAME_IN_SWIPE
       self.navigationItem.rightBarButtonItem = _edit;
-    } else {
-      self.navigationItem.hidesBackButton = YES;
-      self.tableView.editing = YES;
-      for (NSUInteger i = 0; i < _nSelected; ++i) {
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
-                                    animated:NO
-                              scrollPosition:UITableViewScrollPositionNone];
-      }
+#else
+      UIBarButtonItem *rename = custom_item(kRename, UIBarButtonItemStylePlain, self, @selector(renameTapped));
+      self.navigationItem.rightBarButtonItems = @[ _edit, rename ];
+#endif
+    } else { // THWordsViewControllerAddingToPlaylist
+        self.navigationItem.hidesBackButton = YES;
+        self.tableView.editing = YES;
+        for (NSUInteger i = 0; i < _nSelected; ++i) {
+          [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:i]
+                                      animated:NO
+                                scrollPosition:UITableViewScrollPositionNone];
+        }
     }
   }
   return self;
@@ -136,59 +152,90 @@ static CGFloat kWordHeight = 50;
 - (void)startEditing {
   [self.tableView setEditing:YES animated:YES];
   self.navigationItem.rightBarButtonItem = _done;
-  [self setToolbarItems:@[ _left, _padding, _middle, _padding, _right ] animated:YES];
+  // if showing a playlist, there are always three items so we don't change it.
+  if (_situation != THWordsViewControllerPlaylist) {
+    [self setToolbarItems:@[ _left, _padding, _middle, _padding, _right ] animated:YES];
+  }
 }
 
 - (void)endEditing {
-  [self setToolbarItems:@[ _padding, _middle, _padding ] animated:YES];
+  // if showing a playlist, there are always three items so we don't change it.
+  if (_situation != THWordsViewControllerPlaylist) {
+    [self setToolbarItems:@[ _padding, _middle, _padding ] animated:YES];
+  }
   self.navigationItem.rightBarButtonItem = _edit;
   [self.tableView setEditing:NO animated:YES];
 }
 
 - (void)leftTapped {
-  if (_depot && _playlist) {
+  // for "adding to playlist", it is a cancel button.
+  if (_situation == THWordsViewControllerAddingToPlaylist) {
     [self.navigationController popViewControllerAnimated:NO];
   } else {
-    NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
-    if (!indexPaths) {
+    NSString *title;
+    if (_situation == THWordsViewControllerDepot) {
+      title = kRemoveDialogTitleFromDepot;
+    } else {  // THWordsViewControllerPlaylist
+      if (self.tableView.isEditing) {
+        title = remove_dialog_title_from_playlist(_playlist.partialName);
+      } else {
+        title = play_dialog_title(_playlist.partialName);
+      }
+    }
+    if ((_situation == THWordsViewControllerPlaylist && self.tableView.isEditing) ||
+        _situation == THWordsViewControllerDepot) {
+      // if it is a depot or a non-editing playlist, remove selected.
+      NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
+      if (!indexPaths) {
+        return;
+      }
+      // _nSelected is 0 here.
+      NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+      for (NSIndexPath *indexPath in indexPaths) {
+        [indexSet addIndex:indexPath.row];
+      }
+
+      [self.navigationController
+          presentViewController:basic_alert(
+                                    title, nil,
+                                    ^() {
+                                      NSArray *keys = [_keys objectsAtIndexes:indexSet];
+                                      for (NSString *key in keys) {
+                                        [_fileRW removeObjectForKey:key];
+                                      }
+                                      [_keys removeObjectsAtIndexes:indexSet];
+                                      [_objects removeObjectsAtIndexes:indexSet];
+                                      [self.tableView
+                                          deleteRowsAtIndexPaths:indexPaths
+                                                withRowAnimation:UITableViewRowAnimationNone];
+                                    })
+                       animated:YES
+                     completion:nil];
+    } else {
+      // otherwise remove the playlist itself.
+      [self.navigationController
+          presentViewController:basic_alert(title, nil,
+                                            ^() {
+                                              [[THFileCenter sharedInstance]
+                                                  deletePlaylist:_playlist];
+                                              [self.navigationController
+                                                  popToRootViewControllerAnimated:YES];
+                                            })
+                       animated:YES
+                     completion:nil];
       return;
     }
-    // _nSelected must be 0.
-    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-    for (NSIndexPath *indexPath in indexPaths) {
-      [indexSet addIndex:indexPath.row];
-    }
-
-    NSString *title;
-    if (_depot) {
-      title = kRemoveDialogTitleFromDepot;
-    } else {
-      title = [NSString stringWithFormat:kRemoveDialogTitleFromPlaylist, _playlist.partialName];
-    }
-    [self.navigationController
-        presentViewController:basic_alert(title, nil,
-                                          ^() {
-                                            NSArray *keys = [_keys objectsAtIndexes:indexSet];
-                                            for (NSString *key in keys) {
-                                              [_fileRW removeObjectForKey:key];
-                                            }
-                                            [_keys removeObjectsAtIndexes:indexSet];
-                                            [_objects removeObjectsAtIndexes:indexSet];
-                                            [self.tableView
-                                                deleteRowsAtIndexPaths:indexPaths
-                                                      withRowAnimation:UITableViewRowAnimationNone];
-                                          })
-                     animated:YES
-                   completion:nil];
   }
 }
 
 - (void)middleTapped {
-  if (!_depot && _playlist) {
+  if (_situation == THWordsViewControllerPlaylist) {
+    // if it is showing a playlist, then add words from the depot.
     [self.navigationController
         pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:_playlist]
                   animated:NO];
   } else {
+    // otherwise, it means adding a word.
     [self.navigationController
         presentViewController:texts_alert(kWordDialogTitleAdd, nil, @[ @"", @"" ],
                                           @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
@@ -212,46 +259,82 @@ static CGFloat kWordHeight = 50;
 }
 
 - (void)rightTapped {
-  // pre-selected rows are not counted.
-  NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
-  for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
-    if (indexPath.row >= _nSelected) {
-      [indexSet addIndex:indexPath.row];
-    }
-  }
-  if (!_depot || !_playlist) {
+  if (_situation == THWordsViewControllerPlaylist && !self.tableView.isEditing) {
+    // if it is a non-editing playlist, go to play.
     [self.navigationController
-        presentViewController:texts_alert(
-                                  kPlaylistDialogTitle, nil, @[ @"" ],
-                                  @[ kPlaylistDialogTextField ],
-                                  ^(NSArray<UITextField *> *texts) {
-                                    NSString *partialName = texts.firstObject.text;
-                                    THPlaylist *playlist = [[THFileCenter sharedInstance]
-                                        playlistWithPartialName:partialName
-                                                         create:YES];
-                                    [playlist setObjects:[_objects objectsAtIndexes:indexSet]
-                                                 forKeys:[_keys objectsAtIndexes:indexSet]];
-                                    [self.navigationController popToRootViewControllerAnimated:YES];
-                                    [(THPlaylistsViewController *)
-                                            self.navigationController.viewControllers.firstObject
-                                        showDialogForPlaylist:playlist];
-                                  })
+        presentViewController:basic_alert(play_dialog_title(_playlist.partialName), nil,
+                                          ^() {
+                                            NSLog(@"Will play %@", _playlist.partialName);
+                                          })
                      animated:YES
                    completion:nil];
   } else {
-    [_playlist setObjects:[_objects objectsAtIndexes:indexSet]
-                  forKeys:[_keys objectsAtIndexes:indexSet]];
-    [self.navigationController popViewControllerAnimated:YES];
+    // otherwise, it is either "adding to playlist" or "adding a playlist with the selected".
+
+    // pre-selected rows are not counted.
+    NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
+    for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+      if (indexPath.row >= _nSelected) {
+        [indexSet addIndex:indexPath.row];
+      }
+    }
+    if (_situation == THWordsViewControllerAddingToPlaylist) {
+      [_playlist setObjects:[_objects objectsAtIndexes:indexSet]
+                    forKeys:[_keys objectsAtIndexes:indexSet]];
+      [self.navigationController popViewControllerAnimated:YES];
+    } else {
+      [self.navigationController
+          presentViewController:texts_alert(
+                                    kPlaylistDialogTitle, nil, @[ @"" ],
+                                    @[ kPlaylistDialogTextField ],
+                                    ^(NSArray<UITextField *> *texts) {
+                                      NSString *partialName = texts.firstObject.text;
+                                      THPlaylist *playlist = [[THFileCenter sharedInstance]
+                                          playlistWithPartialName:partialName
+                                                           create:YES];
+                                      [playlist setObjects:[_objects objectsAtIndexes:indexSet]
+                                                   forKeys:[_keys objectsAtIndexes:indexSet]];
+                                      [self.navigationController
+                                          popToRootViewControllerAnimated:YES];
+                                      [(THPlaylistsViewController *)
+                                              self.navigationController.viewControllers.firstObject
+                                          showDialogForPlaylist:playlist];
+                                    })
+                       animated:YES
+                     completion:nil];
+    }
   }
 }
+
+#ifndef RENAME_IN_SWIPE
+- (void)renameTapped {
+  [self.navigationController
+      presentViewController:texts_alert(kRename, nil, @[ _playlist.partialName ], @[ @"" ],
+                                        ^(NSArray<UITextField *> *textFields) {
+                                          // ...check if valid.
+                                          NSString *newPartialName = textFields.firstObject.text;
+                                          [[THFileCenter sharedInstance]
+                                               renamePlaylist:_playlist
+                                              withPartialName:newPartialName];
+                                          self.title = newPartialName;
+                                        })
+                   animated:YES
+                 completion:nil];
+}
+#endif
 
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
-  if ((!_depot || !_playlist) && !self.tableView.editing) {
-    self.toolbarItems = @[ _padding, _middle, _padding ];
-  } else {
-    self.toolbarItems = @[ _left, _padding, _middle, _padding, _right ];
+  switch (_situation) {
+    case THWordsViewControllerDepot:
+      if (!self.tableView.editing) {
+        self.toolbarItems = @[ _padding, _middle, _padding ];
+        break;
+      }
+    default:
+      self.toolbarItems = @[ _left, _padding, _middle, _padding, _right ];
+      break;
   }
   [self refreshDataSource];
   [self.tableView reloadData];
@@ -262,10 +345,13 @@ static CGFloat kWordHeight = 50;
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
-  cell = [cell initWithStyle:UITableViewCellStyleValue2 reuseIdentifier:kCellIdentifier];
+  if (!cell) {
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2
+                                  reuseIdentifier:kCellIdentifier];
+  }
   NSInteger row = indexPath.row;
   cell.textLabel.text = [_keys objectAtIndex:row];
-  cell.textLabel.font = [UIFont fontWithName:@"" size:24];
+  cell.textLabel.font = [UIFont fontWithName:@"" size:30];
   // ...object should change.
   cell.detailTextLabel.text = [_objects objectAtIndex:row];
   if (indexPath.row < _nSelected) {
@@ -344,9 +430,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                    NSUInteger row = indexPath.row;
                    [self.navigationController
                        presentViewController:
-                           basic_alert([NSString stringWithFormat:kRemoveDialogTitleNormal,
-                                                                  [_keys objectAtIndex:row]],
-                                       nil,
+                           basic_alert(remove_dialog_title_normal([_keys objectAtIndex:row]), nil,
                                        ^() {
                                          [_fileRW removeObjectForKey:[_keys objectAtIndex:row]];
                                          [_keys removeObjectAtIndex:row];

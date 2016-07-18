@@ -39,7 +39,6 @@ static CGFloat kPlaylistHeight = 80;
 - (instancetype)init {
   self = [super initWithStyle:UITableViewStylePlain];
   if (self) {
-    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:kCellIdentifier];
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -61,8 +60,7 @@ static CGFloat kPlaylistHeight = 80;
 
 - (void)showDialogForPlaylist:(THPlaylist *)playlist {
   [self.navigationController
-      presentViewController:basic_alert([NSString stringWithFormat:kPlayImmediatelyDialogTitle,
-                                                                   playlist.partialName],
+      presentViewController:basic_alert(play_immediately_dialog_title(playlist.partialName),
                                         kPlayImmediatelyDialogMessage,
                                         ^() {
                                           [self playWithPlaylist:playlist];
@@ -185,7 +183,10 @@ static CGFloat kPlaylistHeight = 80;
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
-  cell = [cell initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:kCellIdentifier];
+  if (!cell) {
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
+                                  reuseIdentifier:kCellIdentifier];
+  }
   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
   cell.textLabel.text = playlist.partialName;
   // cell.textLabel.font = [UIFont fontWithName:@"" size:24];
@@ -215,25 +216,26 @@ static CGFloat kPlaylistHeight = 80;
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
   [self.navigationController
-      presentViewController:basic_alert(
-                                [NSString stringWithFormat:kPlayDialogTitle, playlist.partialName],
-                                nil,
-                                ^() {
-                                  [self playWithPlaylist:playlist];
-                                })
+      presentViewController:basic_alert(play_dialog_title(playlist.partialName), nil,
+                                        ^() {
+                                          [self playWithPlaylist:playlist];
+                                        })
                    animated:YES
                  completion:nil];
 }
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
                   editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-  UITableViewRowAction *recite = [UITableViewRowAction
+#ifndef RENAME_IN_SWIPE
+  UITableViewRowAction *play = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kPlay
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    [self playWithPlaylist:[_playlists objectAtIndex:indexPath.row]];
                  }];
-  recite.backgroundColor = [UIColor brownColor];
+  play.backgroundColor = [UIColor brownColor];
+#endif
+
   UITableViewRowAction *view = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kView
@@ -244,6 +246,39 @@ static CGFloat kPlaylistHeight = 80;
                                                                    objectAtIndex:indexPath.row]]
                                  animated:YES];
                  }];
+#ifdef RENAME_IN_SWIPE
+  view.backgroundColor = [UIColor brownColor];
+#else
+  view.backgroundColor = [UIColor lightGrayColor];
+#endif
+
+#ifdef RENAME_IN_SWIPE
+  UITableViewRowAction *rename = [UITableViewRowAction
+      rowActionWithStyle:UITableViewRowActionStyleNormal
+                   title:kRename
+                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
+                   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
+                   [self.navigationController
+                       presentViewController:texts_alert(
+                                                 kRename, nil, @[ playlist.partialName ], @[ @"" ],
+                                                 ^(NSArray<UITextField *> *textFields) {
+                                                   // ...check if valid.
+                                                   NSString *newPartialName =
+                                                       textFields.firstObject.text;
+                                                   [[THFileCenter sharedInstance]
+                                                        renamePlaylist:playlist
+                                                       withPartialName:newPartialName];
+                                                   UITableViewCell *cell =
+                                                       [tableView cellForRowAtIndexPath:indexPath];
+                                                   cell.textLabel.text = newPartialName;
+                                                   // ...how to exit the editing state?
+                                                 })
+                                    animated:YES
+                                  completion:nil];
+                 }];
+  rename.backgroundColor = [UIColor lightGrayColor];
+#endif
+
   UITableViewRowAction *remove = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kRemove
@@ -252,9 +287,7 @@ static CGFloat kPlaylistHeight = 80;
                    THPlaylist *playlist = [_playlists objectAtIndex:row];
                    [self.navigationController
                        presentViewController:
-                           basic_alert([NSString stringWithFormat:kRemoveDialogTitleNormal,
-                                                                  playlist.partialName],
-                                       nil,
+                           basic_alert(remove_dialog_title_normal(playlist.partialName), nil,
                                        ^() {
                                          [[THFileCenter sharedInstance] deletePlaylist:playlist];
                                          [_playlists removeObjectAtIndex:row];
@@ -266,7 +299,11 @@ static CGFloat kPlaylistHeight = 80;
                                   completion:nil];
                  }];
   remove.backgroundColor = [UIColor redColor];
-  return @[ remove, view, recite ];
+
+#ifdef RENAME_IN_SWIPE
+  return @[ remove, rename, view ];
+#endif
+  return @[ remove, view, play ];
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {

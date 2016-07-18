@@ -3,12 +3,13 @@
 
 static NSString *kDepotTitle = @"Depot";
 static NSString *kPlaylistsTitle = @"Playlists";
-static NSString *kPlaylistTitle = @"Current: %@";
-static NSString *kAddWordsTitle = @"Select to add to \"%@\"";
+static NSString *kPlaylistTitle = @"%@";
+static NSString *kAddToPlaylistTitle = @"Select to add to \"%@\"";
 
 static NSString *kPlay = @"Play";
 static NSString *kConfirm = @"Confirm";
 static NSString *kCancel = @"Cancel";
+static NSString *kRename = @"Rename";
 static NSString *kEdit = @"Edit";
 static NSString *kView = @"View";
 static NSString *kRemove = @"Remove";

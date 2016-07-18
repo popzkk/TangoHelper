@@ -19,6 +19,8 @@
 
 // - (THPlaylist *)tmpPlaylist;
 
+- (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName;
+
 - (void)deletePlaylist:(THPlaylist *)playlist;
 
 @end
