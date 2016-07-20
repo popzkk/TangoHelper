@@ -68,6 +68,7 @@ static NSUInteger thres = 20;
 
 - (void)flushWithThres:(NSUInteger)thres {
   if (self.diff > thres) {
+    NSLog(@"flush \"%@\"", _filename);
     if ([_content writeToFile:_path atomically:NO]) {
       _diff = 0;
     } else {

@@ -180,7 +180,7 @@ static CGFloat kWordHeight = 50;
       if (self.tableView.isEditing) {
         title = remove_dialog_title_from_playlist(_playlist.partialName);
       } else {
-        title = play_dialog_title(_playlist.partialName);
+        title = remove_dialog_title_normal(_playlist.partialName);
       }
     }
     if ((_situation == THWordsViewControllerPlaylist && self.tableView.isEditing) ||
