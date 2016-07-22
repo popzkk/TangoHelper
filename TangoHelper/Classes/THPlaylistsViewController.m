@@ -29,7 +29,7 @@ static CGFloat kPlaylistHeight = 80;
   UIBarButtonItem *_edit;
   UIBarButtonItem *_done;
   UIBarButtonItem *_trash;
-  UIBarButtonItem *_toDepot;
+  UIBarButtonItem *_browserDepot;
   UIBarButtonItem *_play;
   UIBarButtonItem *_add;
   UIBarButtonItem *_padding;
@@ -50,7 +50,7 @@ static CGFloat kPlaylistHeight = 80;
     _edit = system_item(UIBarButtonSystemItemEdit, self, @selector(startEditing));
     _done = system_item(UIBarButtonSystemItemDone, self, @selector(endEditing));
     _trash = system_item(UIBarButtonSystemItemTrash, self, @selector(trashTapped));
-    _toDepot =
+    _browserDepot =
         custom_item(kBrowserDepot, UIBarButtonItemStylePlain, self, @selector(browserDepotTapped));
     _play = system_item(UIBarButtonSystemItemPlay, self, @selector(playTapped));
     _add = system_item(UIBarButtonSystemItemAdd, self, @selector(addTapped));
@@ -80,7 +80,7 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)endEditing {
-  [self setToolbarItems:@[ _toDepot, _padding, _add ] animated:YES];
+  [self setToolbarItems:@[ _browserDepot, _padding, _add ] animated:YES];
   self.navigationItem.rightBarButtonItem = _edit;
   [self.tableView setEditing:NO animated:YES];
 }
@@ -179,7 +179,7 @@ static CGFloat kPlaylistHeight = 80;
 
 - (void)viewWillAppear:(BOOL)animated {
   self.navigationController.toolbarHidden = NO;
-  self.toolbarItems = @[ _toDepot, _padding, _add ];
+  self.toolbarItems = @[ _browserDepot, _padding, _add ];
   _playlists = [[THFileCenter sharedInstance] playlists];
   [self.tableView reloadData];
 }

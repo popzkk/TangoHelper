@@ -44,7 +44,6 @@
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UINavigationController *navController = [[UINavigationController alloc]
       initWithRootViewController:[[THPlaylistsViewController alloc] init]];
-  navController.toolbarHidden = NO;
   self.window.rootViewController = navController;
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
