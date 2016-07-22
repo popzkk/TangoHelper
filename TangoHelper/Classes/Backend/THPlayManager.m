@@ -82,7 +82,8 @@
   if (![_current isEqualToString:input]) {
     [_errors addObject:_current];
     if (!_config.lazyAssert) {
-      [_delegate showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current), nil, nextStep)];
+      [_delegate
+          showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current), nil, nextStep)];
     }
   } else {
     NSNumber *remaining = [_available objectForKey:_current];

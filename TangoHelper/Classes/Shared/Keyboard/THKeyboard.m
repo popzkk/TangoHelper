@@ -10,18 +10,18 @@
  */
 
 typedef NS_ENUM(NSUInteger, THKeyboardTouchState) {
-  kTHKeyboardTouchStateNoTouch = 0, // no touch
-  kTHKeyboardTouchStateNormal,      // already touched, but not a char cell
-  kTHKeyboardTouchStateMoving,      // already touched, and is a char cell
+  kTHKeyboardTouchStateNoTouch = 0,  // no touch
+  kTHKeyboardTouchStateNormal,       // already touched, but not a char cell
+  kTHKeyboardTouchStateMoving,       // already touched, and is a char cell
 };
 
 typedef NS_ENUM(NSUInteger, THKeyboardTouchResult) {
-  kTHKeyboardTouchResultUnknown = 0, // not implemented
-  kTHKeyboardTouchResultText,        // add or delete text
-  kTHKeyboardTouchResultSelf,        // touched on a cell related to the keyboard itself
-  kTHKeyboardTouchResultLeft,        // touched on the left cell
-  kTHKeyboardTouchResultRight,       // touched on the right cell
-  kTHKeyboardTouchResultAction,      // touched on the action cell
+  kTHKeyboardTouchResultUnknown = 0,  // not implemented
+  kTHKeyboardTouchResultText,         // add or delete text
+  kTHKeyboardTouchResultSelf,         // touched on a cell related to the keyboard itself
+  kTHKeyboardTouchResultLeft,         // touched on the left cell
+  kTHKeyboardTouchResultRight,        // touched on the right cell
+  kTHKeyboardTouchResultAction,       // touched on the action cell
 };
 
 static const NSUInteger numberCellIndex = 5;
@@ -231,8 +231,8 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       break;
     case kTHKeyboardTouchResultLeft:
       // NSLog(@"left cell tapped");
-      [_delegate changeLastInputTo:[transformer(_keyboardType)
-                                       nextFormOfContent:[_delegate lastInput]]];
+      [_delegate
+          changeLastInputTo:[transformer(_keyboardType) nextFormOfContent:[_delegate lastInput]]];
       break;
     case kTHKeyboardTouchResultSelf:
       // NSLog(@"will change keyboard to %@", object);
@@ -256,7 +256,8 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 
 - (void)setFrame:(CGRect)frame {
   CGFloat height = frame.size.height / 4;
-  [super setFrame:CGRectMake(frame.origin.x, frame.origin.y - height, frame.size.width, frame.size.height + height)];
+  [super setFrame:CGRectMake(frame.origin.x, frame.origin.y - height, frame.size.width,
+                             frame.size.height + height)];
 }
 
 - (void)layoutSubviews {

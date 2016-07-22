@@ -3,7 +3,7 @@
 #import "THKeyboardJaConstants.h"
 
 @implementation THKeyboardCharTransformer {
-  NSArray *_sources; // of NSString
+  NSArray *_sources;  // of NSString
 }
 
 - (NSString *)nextFormOfContent:(NSString *)content {

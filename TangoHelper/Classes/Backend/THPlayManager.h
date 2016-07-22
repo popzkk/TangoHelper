@@ -3,7 +3,7 @@
 @class THPlaylist;
 @class UIAlertController;
 
-@interface THPlayConfig : NSObject <NSCopying>
+@interface THPlayConfig : NSObject<NSCopying>
 
 @property(nonatomic, assign) NSUInteger repeat;
 
@@ -17,7 +17,7 @@
 
 @end
 
-@protocol THPlayManagerDelegate <NSObject>
+@protocol THPlayManagerDelegate<NSObject>
 
 - (void)showWithText:(NSString *)text;
 

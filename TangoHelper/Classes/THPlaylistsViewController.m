@@ -50,7 +50,8 @@ static CGFloat kPlaylistHeight = 80;
     _edit = system_item(UIBarButtonSystemItemEdit, self, @selector(startEditing));
     _done = system_item(UIBarButtonSystemItemDone, self, @selector(endEditing));
     _trash = system_item(UIBarButtonSystemItemTrash, self, @selector(trashTapped));
-    _toDepot = custom_item(kBrowserDepot, UIBarButtonItemStylePlain, self, @selector(browserDepotTapped));
+    _toDepot =
+        custom_item(kBrowserDepot, UIBarButtonItemStylePlain, self, @selector(browserDepotTapped));
     _play = system_item(UIBarButtonSystemItemPlay, self, @selector(playTapped));
     _add = system_item(UIBarButtonSystemItemAdd, self, @selector(addTapped));
 
@@ -168,8 +169,10 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)playWithPlaylist:(THPlaylist *)playlist {
-  //NSLog(@"Will play: %@", playlist.partialName);
-  [self.navigationController pushViewController:[[THPlayViewController alloc] initWithPlaylist:playlist] animated:YES];
+  // NSLog(@"Will play: %@", playlist.partialName);
+  [self.navigationController
+      pushViewController:[[THPlayViewController alloc] initWithPlaylist:playlist]
+                animated:YES];
 }
 
 #pragma mark - UIViewController

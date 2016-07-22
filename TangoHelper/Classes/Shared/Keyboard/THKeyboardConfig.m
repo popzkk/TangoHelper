@@ -53,7 +53,7 @@ typedef void (^onceBlock)(NSMutableArray *, NSMutableArray *);
     for (NSUInteger i = 0; i < 10; ++i) {
       [texts addObject:[source substringWithRange:NSMakeRange(i * 5, 1)]];
     }
-    [texts insertObject:@"変換"/*@"　゛　゜\n小"*/ atIndex:texts.count - 1];
+    [texts insertObject:@"変換" /*@"　゛　゜\n小"*/ atIndex:texts.count - 1];
     [texts addObject:@"♪"];
     // arrow for each cell
     for (NSUInteger i = 0; i < 10; ++i) {

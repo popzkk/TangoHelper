@@ -2,9 +2,9 @@
 
 @interface THKeyboardConfig : NSObject
 
-- (NSArray *)texts; // of NSString
+- (NSArray *)texts;  // of NSString
 
-- (NSArray *)arrows; // of NSString
+- (NSArray *)arrows;  // of NSString
 
 + (instancetype)hiraganaConfig;
 

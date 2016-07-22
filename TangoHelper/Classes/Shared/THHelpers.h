@@ -30,8 +30,9 @@ UIAlertController *basic_alert(NSString *title, NSString *message, THBasicAlertA
 UIAlertController *texts_alert(NSString *title, NSString *message, NSArray *texts,
                                NSArray *placeholders, THTextsAlertAction block);
 
-  UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NSArray *texts,
-                                 NSArray *placeholders, THTextsAlertAction cancel_block, THTextsAlertAction confirm_block);
+UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NSArray *texts,
+                                          NSArray *placeholders, THTextsAlertAction cancel_block,
+                                          THTextsAlertAction confirm_block);
 UIFont *ja_normal_small();
 UIFont *ja_normal_big();
 UIFont *ja_bold_small();

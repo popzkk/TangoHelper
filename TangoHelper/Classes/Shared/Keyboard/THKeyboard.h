@@ -9,7 +9,7 @@ typedef NS_ENUM(NSUInteger, THKeyboardType) {
   kTHKeyboardKatakana
 };
 
-@protocol THKeyboardDelegate <NSObject>
+@protocol THKeyboardDelegate<NSObject>
 
 - (void)actionCellTapped;
 
