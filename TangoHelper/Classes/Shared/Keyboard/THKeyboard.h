@@ -21,6 +21,8 @@ typedef NS_ENUM(NSUInteger, THKeyboardType) {
 
 - (void)changeLastInputTo:(NSString *)content;
 
+- (void)showNotImplementedDialog;
+
 @end
 
 // after getting the shared instance, set these properties immediately!

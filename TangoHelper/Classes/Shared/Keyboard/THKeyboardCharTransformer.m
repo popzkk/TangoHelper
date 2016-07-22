@@ -10,11 +10,14 @@
   if (!content) {
     return nil;
   }
-  NSUInteger cur = 0, index = NSNotFound;
-  for (; cur < _sources.count && index == NSNotFound; ++cur) {
+  NSUInteger cur = 0, index = [_sources.firstObject rangeOfString:content].location;
+  while (index == NSNotFound) {
+    if (++cur >= _sources.count) {
+      break;
+    }
     index = [[_sources objectAtIndex:cur] rangeOfString:content].location;
   }
-  // not in the charset of this language, return the original
+  // not in the charset of this language, return the original.
   if (index == NSNotFound) {
     return content;
   }
@@ -28,7 +31,7 @@
     }
   } while (cur != tmp);
 
-  NSLog(@"ERROR: transformer doesn't work...will return the original.");
+  // this char doesn't have any variants, return the original.
   return content;
 }
 

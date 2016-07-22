@@ -10,20 +10,19 @@
  */
 
 typedef NS_ENUM(NSUInteger, THKeyboardTouchState) {
-  kTHKeyboardTouchStateNoTouch = 0,  // no touch
-  kTHKeyboardTouchStateNormal,       // already touched, but not a char cell
-  kTHKeyboardTouchStateMoving,       // already touched, and is a char cell
+  kTHKeyboardTouchStateNoTouch = 0, // no touch
+  kTHKeyboardTouchStateNormal,      // already touched, but not a char cell
+  kTHKeyboardTouchStateMoving,      // already touched, and is a char cell
 };
 
 typedef NS_ENUM(NSUInteger, THKeyboardTouchResult) {
-  kTHKeyboardTouchResultText = 0,  // add or delete text
-  kTHKeyboardTouchResultSelf,      // touched on a cell related to the keyboard itself
-  kTHKeyboardTouchResultLeft,      // touched on the left cell
-  kTHKeyboardTouchResultRight,     // touched on the right cell
-  kTHKeyboardTouchResultAction,    // touched on the action cell
+  kTHKeyboardTouchResultUnknown = 0, // not implemented
+  kTHKeyboardTouchResultText,        // add or delete text
+  kTHKeyboardTouchResultSelf,        // touched on a cell related to the keyboard itself
+  kTHKeyboardTouchResultLeft,        // touched on the left cell
+  kTHKeyboardTouchResultRight,       // touched on the right cell
+  kTHKeyboardTouchResultAction,      // touched on the action cell
 };
-
-static CGFloat kPadding = 3;
 
 static const NSUInteger numberCellIndex = 5;
 static const NSUInteger englishCellIndex = 10;
@@ -218,6 +217,10 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 
 - (void)commitTouchResult:(THKeyboardTouchResult)result object:(id)object {
   switch (result) {
+    // show a nice dialog to explain.
+    case kTHKeyboardTouchResultUnknown:
+      [_delegate showNotImplementedDialog];
+      break;
     // right cell has no function currently...
     case kTHKeyboardTouchResultRight:
       // NSLog(@"right cell tapped");
@@ -228,7 +231,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       break;
     case kTHKeyboardTouchResultLeft:
       // NSLog(@"left cell tapped");
-      [_delegate changeLastInputTo:[transformer(self.keyboardType)
+      [_delegate changeLastInputTo:[transformer(_keyboardType)
                                        nextFormOfContent:[_delegate lastInput]]];
       break;
     case kTHKeyboardTouchResultSelf:
@@ -241,7 +244,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       if ([object isEqualToString:@"⌫"]) {
         [_delegate backCellTapped];
       } else if ([object isEqualToString:@"空白"]) {
-        [_delegate addContent:space_for_keyboard(self.keyboardType)];
+        [_delegate addContent:space_for_keyboard(_keyboardType)];
       } else {
         [_delegate addContent:object];
       }
@@ -251,13 +254,18 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 
 #pragma mark - UIView
 
+- (void)setFrame:(CGRect)frame {
+  CGFloat height = frame.size.height / 4;
+  [super setFrame:CGRectMake(frame.origin.x, frame.origin.y - height, frame.size.width, frame.size.height + height)];
+}
+
 - (void)layoutSubviews {
   CGRect frame = self.bounds;
-  CGFloat width = (frame.size.width - 2 * kPadding) / 5;
-  CGFloat height = (frame.size.height - 2 * kPadding) / 5;
+  CGFloat width = frame.size.width / 5;
+  CGFloat height = frame.size.height / 5;
   for (NSUInteger i = 0; i < 25; ++i) {
     NSUInteger r = i / 5, c = i % 5;
-    _cells[i].frame = CGRectMake(kPadding + width * c, kPadding + height * r, width, height);
+    _cells[i].frame = CGRectMake(width * c, height * r, width, height);
   }
   _actionCell.frame =
       CGRectMake(_cells[19].frame.origin.x, _cells[19].frame.origin.y, width, 2 * height);
@@ -354,11 +362,11 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
         [self commitTouchResult:kTHKeyboardTouchResultAction object:nil];
       }
     } else {
-      if (_startIndex != self.keyboardType * 5) {
+      if (_startIndex != _keyboardType * 5) {
         _cells[_startIndex].state = kTHKeyboardCellStateNormal;
       }
       if (index == _startIndex) {
-        THKeyboardTouchResult result = kTHKeyboardTouchResultText;
+        THKeyboardTouchResult result = kTHKeyboardTouchResultUnknown;
         id object = nil;
         switch (index) {
           case leftCellIndex:
@@ -369,13 +377,15 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
             break;
           case hiraganaCellIndex:
           case katakanaCellIndex:
-          case numberCellIndex:
-          case englishCellIndex:
             result = kTHKeyboardTouchResultSelf;
             object = _cells[index].text;
             break;
+          case numberCellIndex:
+          case englishCellIndex:
+            break;
           // default means back cell, space cell, or any other char cell.
           default:
+            result = kTHKeyboardTouchResultText;
             object = _cells[index].text;
             break;
         }

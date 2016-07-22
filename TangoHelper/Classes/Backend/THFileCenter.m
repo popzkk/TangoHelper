@@ -36,7 +36,7 @@
 }
 
 - (THDepot *)depot {
-  return [self fileRWForClass:[THDepot class] filename:@"test.depot" create:YES];
+  return [self fileRWForClass:[THDepot class] filename:@"depot" create:YES];
 }
 
 - (NSMutableArray *)playlists {

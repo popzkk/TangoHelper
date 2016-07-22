@@ -6,6 +6,7 @@
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
 #import "THPlaylistsViewController.h"
+#import "THPlayViewController.h"
 
 /** TODO
  * save selected rows when switched out.
@@ -265,7 +266,8 @@ static CGFloat kWordHeight = 50;
     [self.navigationController
         presentViewController:basic_alert(play_dialog_title(_playlist.partialName), nil,
                                           ^() {
-                                            NSLog(@"Will play %@", _playlist.partialName);
+                                            //NSLog(@"Will play %@", _playlist.partialName);
+                                            [self.navigationController pushViewController:[[THPlayViewController alloc] initWithPlaylist:_playlist] animated:YES];
                                           })
                      animated:YES
                    completion:nil];
@@ -327,6 +329,7 @@ static CGFloat kWordHeight = 50;
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
+  self.navigationController.toolbarHidden = NO;
   switch (_situation) {
     case THWordsViewControllerDepot:
       if (!self.tableView.editing) {

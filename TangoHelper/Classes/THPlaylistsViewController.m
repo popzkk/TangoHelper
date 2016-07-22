@@ -4,6 +4,7 @@
 #import "Backend/THPlaylist.h"
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
+#import "THPlayViewController.h"
 #import "THWordsViewController.h"
 
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
@@ -49,7 +50,7 @@ static CGFloat kPlaylistHeight = 80;
     _edit = system_item(UIBarButtonSystemItemEdit, self, @selector(startEditing));
     _done = system_item(UIBarButtonSystemItemDone, self, @selector(endEditing));
     _trash = system_item(UIBarButtonSystemItemTrash, self, @selector(trashTapped));
-    _toDepot = custom_item(kToDepot, UIBarButtonItemStylePlain, self, @selector(toDepotTapped));
+    _toDepot = custom_item(kBrowserDepot, UIBarButtonItemStylePlain, self, @selector(browserDepotTapped));
     _play = system_item(UIBarButtonSystemItemPlay, self, @selector(playTapped));
     _add = system_item(UIBarButtonSystemItemAdd, self, @selector(addTapped));
 
@@ -107,7 +108,7 @@ static CGFloat kPlaylistHeight = 80;
                  completion:nil];
 }
 
-- (void)toDepotTapped {
+- (void)browserDepotTapped {
   [self.navigationController pushViewController:[[THWordsViewController alloc] initUsingDepot]
                                        animated:YES];
 }
@@ -167,12 +168,14 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)playWithPlaylist:(THPlaylist *)playlist {
-  NSLog(@"Will play: %@", playlist.partialName);
+  //NSLog(@"Will play: %@", playlist.partialName);
+  [self.navigationController pushViewController:[[THPlayViewController alloc] initWithPlaylist:playlist] animated:YES];
 }
 
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
+  self.navigationController.toolbarHidden = NO;
   self.toolbarItems = @[ _toDepot, _padding, _add ];
   _playlists = [[THFileCenter sharedInstance] playlists];
   [self.tableView reloadData];

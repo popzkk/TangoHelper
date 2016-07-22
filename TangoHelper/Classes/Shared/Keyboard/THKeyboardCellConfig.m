@@ -1,7 +1,6 @@
 #import "THKeyboardCellConfig.h"
 
-static NSString *ja_font_normal = @"HiraKakuProN-W3";
-static NSString *ja_font_bold = @"HiraKakuProN-W6";
+#import "../THHelpers.h"
 
 @implementation THKeyboardCellConfig {
   UIFont *_font[numberOfKeyboardCellStates];
@@ -149,45 +148,6 @@ static NSString *ja_font_bold = @"HiraKakuProN-W6";
 
 - (void)setBorderColor:(UIColor *)color state:(THKeyboardCellState)state {
   _borderColor[state] = color;
-}
-
-#pragma mark - helpers
-
-static UIFont *ja_normal_small() {
-  return [UIFont fontWithName:ja_font_normal size:16];
-}
-
-static UIFont *ja_normal_big() {
-  return [UIFont fontWithName:ja_font_normal size:24];
-}
-
-/*
-static UIFont *ja_bold_small() {
-  return [UIFont fontWithName:ja_font_bold size:16];
-}
-*/
-
-static UIFont *ja_bold_big() {
-  return [UIFont fontWithName:ja_font_bold size:24];
-}
-
-static UIColor *blue_color() {
-  // modified from 007aff
-  return [UIColor colorWithRed:0.00 green:0.60 blue:1.00 alpha:1];
-}
-
-static UIColor *light_blue_color() {
-  // 5ac8fa
-  return [UIColor colorWithRed:0.35 green:0.78 blue:0.98 alpha:0.6];
-}
-
-static UIColor *grey_color() {
-  // c7c7cc
-  return [UIColor colorWithRed:0.78 green:0.78 blue:0.80 alpha:1.0];
-}
-
-static UIColor *grey_color_half() {
-  return [UIColor colorWithRed:0.78 green:0.78 blue:0.80 alpha:0.5];
 }
 
 @end

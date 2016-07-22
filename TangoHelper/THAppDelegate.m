@@ -4,7 +4,7 @@
 #import "Classes/THPlaylistsViewController.h"
 
 #define SETUP_
-#define CLEANUP_
+#define CLEANUP
 
 #if defined(CLEANUP) || defined(SETUP)
 #import "THFileCenter.h"
@@ -21,7 +21,7 @@
   [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
     NSString *extension = filename.pathExtension;
-    if (![extension isEqualToString:@"depot"] && ![extension isEqualToString:@"playlist"]) {
+    if (![filename isEqualToString:@"depot"] && ![extension isEqualToString:@"playlist"]) {
       NSLog(@"removing '%@'", filename);
       [[NSFileManager defaultManager]
           removeItemAtPath:[path stringByAppendingPathComponent:filename]
