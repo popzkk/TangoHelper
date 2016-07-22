@@ -4,7 +4,7 @@
 #import "Classes/THPlaylistsViewController.h"
 
 #define SETUP_
-#define CLEANUP
+#define CLEANUP_
 
 #if defined(CLEANUP) || defined(SETUP)
 #import "THFileCenter.h"
