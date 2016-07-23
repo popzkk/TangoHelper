@@ -5,7 +5,7 @@ static NSString *kDepotTitle = @"Depot";
 static NSString *kPlaylistsTitle = @"Playlists";
 static NSString *kPlaylistTitle = @"%@";
 static NSString *kAddToPlaylistTitle = @"Select to add to \"%@\"";
-static NSString *kPlayingTitle = @"%@";
+static NSString *kPlayingTitle = @"Playing \"%@\"";
 
 static NSString *kPlay = @"Play";
 static NSString *kConfirm = @"Confirm";
@@ -37,8 +37,8 @@ static NSString *kWordDialogKeyTextField = @"Word";
 static NSString *kWordDialogObjectTextField = @"Explanation";
 // Playlist copied.
 static NSString *kPlaylistDialogTextField = @"Playlist title";
-static NSString *kPlayWrongAnswerDialogTitle = @"Correct answer: \"%@\"";
-static NSString *kPlayWrongAnswerDialogMessage = @"Your answer: \"%@\"";
+static NSString *kPlayWrongAnswerDialogTitle = @"Correct answer:\"%@\"";
+static NSString *kPlayWrongAnswerDialogMessage = @"Your answer:\"%@\"";
 static NSString *kPlayFinishMistakeDialogTitle = @"Finished...However there were some mistakes";
 // Playlist copied.
 static NSString *kPlayFinishMistakeDialogMessage = @"Create a Playlist for these Words?";
