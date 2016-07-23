@@ -59,6 +59,7 @@ static CGFloat kTextFieldHeight = 35;
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = YES;
 }
 
@@ -80,6 +81,7 @@ static CGFloat kTextFieldHeight = 35;
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
   if (!_manager.isPlaying) {
     [_manager start];
   }
