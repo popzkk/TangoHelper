@@ -332,6 +332,7 @@ static CGFloat kWordHeight = 50;
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = NO;
   switch (_situation) {
     case THWordsViewControllerDepot:

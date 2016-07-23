@@ -178,6 +178,7 @@ static CGFloat kPlaylistHeight = 80;
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = NO;
   self.toolbarItems = @[ _browserDepot, _padding, _add ];
   _playlists = [[THFileCenter sharedInstance] playlists];
