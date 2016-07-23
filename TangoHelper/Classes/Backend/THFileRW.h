@@ -6,19 +6,19 @@
 
 @property(nonatomic, readonly) NSUInteger count;
 
-- (NSMutableArray *)allKeys;
+- (NSArray *)allKeys;
 
-- (NSMutableArray *)objectsForKeys:(NSArray *)keys;
+- (NSArray *)objectsForKeys:(NSArray *)keys;
 
 - (id)objectForKey:(NSString *)key;
 
 - (void)removeObjectForKey:(NSString *)key;
 
-- (void)setObject:(NSString *)object forKey:(id)key;
+- (void)setObject:(id)object forKey:(id)key;
 
 - (void)setObjects:(NSArray *)objects forKeys:(NSArray *)keys;
 
-- (void)addFromFileRW:(THFileRW *)otherFileRW;
+- (void)addFromFileRW:(THFileRW *)anotherFileRW;
 
 // force writing immediately.
 - (void)flush;

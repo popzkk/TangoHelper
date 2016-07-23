@@ -1,5 +1,6 @@
 #import <Foundation/Foundation.h>
 
+@class THFileRW;
 @class THDepot;
 @class THPlaylist;
 
@@ -22,5 +23,11 @@
 - (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName;
 
 - (void)deletePlaylist:(THPlaylist *)playlist;
+
+// if this update should align the same arcoss all files, this method must be called.
+- (void)fileRW:(THFileRW *)fileRW
+ updatedOldKey:(NSString *)oldKey
+       withKey:(NSString *)key
+        object:(id)object;
 
 @end

@@ -60,18 +60,11 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
                                       delegate:(id<THKeyboardDelegate>)delegate {
   THKeyboard *sharedInstance = [self sharedInstance];
   [sharedInstance setKeyboardType:type];
-  [sharedInstance setActionText:actionText];
+  if (actionText.length) {
+    [sharedInstance setActionText:actionText];
+  }
   sharedInstance->_delegate = delegate;
   return sharedInstance;
-}
-
-+ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
-                                    actionText:(NSString *)actionText {
-  return [self sharedInstanceWithKeyboardType:type actionText:actionText delegate:nil];
-}
-
-+ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type {
-  return [self sharedInstanceWithKeyboardType:type actionText:nil delegate:nil];
 }
 
 - (void)setKeyboardType:(THKeyboardType)keyboardType {
@@ -121,10 +114,6 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 
 - (void)setActionText:(NSString *)actionText {
   _actionCell.text = actionText;
-}
-
-- (void)setDelegate:(id<THKeyboardDelegate>)delegate {
-  _delegate = delegate;
 }
 
 #pragma mark - private
@@ -221,26 +210,20 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
     case kTHKeyboardTouchResultUnknown:
       [_delegate showNotImplementedDialog];
       break;
-    // right cell has no function currently...
+    // ...right cell has some secret function?
     case kTHKeyboardTouchResultRight:
-      // NSLog(@"right cell tapped");
       break;
     case kTHKeyboardTouchResultAction:
-      // NSLog(@"action cell tapped");
       [_delegate actionCellTapped];
       break;
     case kTHKeyboardTouchResultLeft:
-      // NSLog(@"left cell tapped");
       [_delegate
           changeLastInputTo:[transformer(_keyboardType) nextFormOfContent:[_delegate lastInput]]];
       break;
     case kTHKeyboardTouchResultSelf:
-      // NSLog(@"will change keyboard to %@", object);
       self.keyboardType = keyboard_type(object);
       break;
-    // kTHKeyboardTouchResultText
-    default:
-      // NSLog(@"will add text: %@", object);
+    default: // kTHKeyboardTouchResultText
       if ([object isEqualToString:@"⌫"]) {
         [_delegate backCellTapped];
       } else if ([object isEqualToString:@"空白"]) {
@@ -315,7 +298,8 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   NSUInteger index = [self touchedIndex:point];
 
   if (_state != kTHKeyboardTouchStateMoving) {
-    if (is_char_cell(index_to_core_index(_startIndex))) {
+    // only show the cross if the touch moves out of the start index.
+    if (index != _startIndex && is_char_cell(index_to_core_index(_startIndex))) {
       _state = kTHKeyboardTouchStateMoving;
     }
   }

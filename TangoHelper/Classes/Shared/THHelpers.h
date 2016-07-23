@@ -18,6 +18,7 @@ NSString *play_dialog_title(NSString *partial_name);
 NSString *play_immediately_dialog_title(NSString *partial_name);
 NSString *playing_title(NSString *partial_name);
 NSString *play_wrong_answer_dialog_title(NSString *answer);
+NSString *play_wrong_answer_dialog_message(NSString *answer);
 
 UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action);
 UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action);
@@ -27,9 +28,9 @@ UIAlertController *basic_alert_two_blocks(NSString *title, NSString *message,
                                           THBasicAlertAction cancel_block,
                                           THBasicAlertAction confirm_block);
 UIAlertController *basic_alert(NSString *title, NSString *message, THBasicAlertAction block);
+// all buttons are enabled by default.
 UIAlertController *texts_alert(NSString *title, NSString *message, NSArray *texts,
                                NSArray *placeholders, THTextsAlertAction block);
-
 UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NSArray *texts,
                                           NSArray *placeholders, THTextsAlertAction cancel_block,
                                           THTextsAlertAction confirm_block);

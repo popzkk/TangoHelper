@@ -21,28 +21,26 @@ static NSUInteger thres = 20;
   return _content.count;
 }
 
-- (NSMutableArray *)allKeys {
-  return [NSMutableArray arrayWithArray:_content.allKeys];
+- (NSArray *)allKeys {
+  return _content.allKeys;
 }
 
-- (NSMutableArray *)objectsForKeys:(NSArray *)keys {
-  return [NSMutableArray arrayWithArray:[_content objectsForKeys:keys notFoundMarker:@""]];
+- (NSArray *)objectsForKeys:(NSArray *)keys {
+  return [_content objectsForKeys:keys notFoundMarker:@""];
 }
 
-- (NSString *)objectForKey:(NSString *)key {
+- (id)objectForKey:(NSString *)key {
   return [_content objectForKey:key];
 }
 
 - (void)removeObjectForKey:(NSString *)key {
   [_content removeObjectForKey:key];
   ++self.diff;
-  // ...sync playlists with depot?
 }
 
-- (void)setObject:(NSString *)object forKey:(NSString *)key {
+- (void)setObject:(id)object forKey:(NSString *)key {
   [_content setObject:object forKey:key];
   ++self.diff;
-  // ...sync depot with playlists, though no need to sync adding.
 }
 
 - (void)setObjects:(NSArray *)objects forKeys:(NSArray *)keys {
@@ -50,9 +48,9 @@ static NSUInteger thres = 20;
   self.diff += keys.count;
 }
 
-- (void)addFromFileRW:(THFileRW *)otherFileRW {
-  [_content addEntriesFromDictionary:otherFileRW.content];
-  self.diff += otherFileRW.count;
+- (void)addFromFileRW:(THFileRW *)anotherFileRW {
+  [_content addEntriesFromDictionary:anotherFileRW.content];
+  self.diff += anotherFileRW.count;
 }
 
 - (void)flush {

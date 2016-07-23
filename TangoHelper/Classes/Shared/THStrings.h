@@ -5,7 +5,7 @@ static NSString *kDepotTitle = @"Depot";
 static NSString *kPlaylistsTitle = @"Playlists";
 static NSString *kPlaylistTitle = @"%@";
 static NSString *kAddToPlaylistTitle = @"Select to add to \"%@\"";
-static NSString *kPlayingTitle = @"Playing: %@";
+static NSString *kPlayingTitle = @"%@";
 
 static NSString *kPlay = @"Play";
 static NSString *kConfirm = @"Confirm";
@@ -37,15 +37,15 @@ static NSString *kWordDialogKeyTextField = @"Word";
 static NSString *kWordDialogObjectTextField = @"Explanation";
 // Playlist copied.
 static NSString *kPlaylistDialogTextField = @"Playlist title";
-static NSString *kPlayWrongAnsertDialogTitle = @"Correct answer: %@";
-static NSString *kPlayFinishMistakeDialogTitle = @"Oops...there were some mistakes";
+static NSString *kPlayWrongAnswerDialogTitle = @"Correct answer: \"%@\"";
+static NSString *kPlayWrongAnswerDialogMessage = @"Your answer: \"%@\"";
+static NSString *kPlayFinishMistakeDialogTitle = @"Finished...However there were some mistakes";
 // Playlist copied.
 static NSString *kPlayFinishMistakeDialogMessage = @"Create a Playlist for these Words?";
 static NSString *kPlayFinishNoMistakeDialogTitle = @"Wow...No mistakes!";
-// Playlist copied.
 static NSString *kPlayFinishNoMistakeDialogMessage = @"Congratulations!";
-
-static NSString *kNotImplementedDialogTitle = @"Oops...Please be patient.";
+static NSString *kNotImplementedDialogTitle = @"Oops...Please be patient";
 static NSString *kNotImplementedDialogMessage = @"Kaikai is working on this feature day and night.";
+static NSString *kPlayEmptyPlaylistTitle = @"Please add some Words first";
 
 #endif

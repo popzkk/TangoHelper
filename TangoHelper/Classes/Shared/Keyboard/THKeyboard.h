@@ -25,22 +25,14 @@ typedef NS_ENUM(NSUInteger, THKeyboardType) {
 
 @end
 
-// after getting the shared instance, set these properties immediately!
 @interface THKeyboard : UIView
 
 @property(nonatomic) THKeyboardType keyboardType;
 
 @property(nonatomic, copy) NSString *actionText;
 
-+ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type;
-
-+ (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
-                                    actionText:(NSString *)actionText;
-
 + (instancetype)sharedInstanceWithKeyboardType:(THKeyboardType)type
                                     actionText:(NSString *)actionText
                                       delegate:(id<THKeyboardDelegate>)delegate;
-
-- (void)setDelegate:(id<THKeyboardDelegate>)delegate;
 
 @end

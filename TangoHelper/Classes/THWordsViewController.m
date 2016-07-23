@@ -8,10 +8,6 @@
 #import "THPlaylistsViewController.h"
 #import "THPlayViewController.h"
 
-/** TODO
- * save selected rows when switched out.
- */
-
 typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
   THWordsViewControllerDepot = 0,
   THWordsViewControllerPlaylist,
@@ -41,6 +37,7 @@ static CGFloat kWordHeight = 50;
   NSMutableArray *_keys;
   NSMutableArray *_objects;
   NSUInteger _nSelected;
+  NSString *_oldKey;  // when a cell is being editted, it records the cell's original key.
 
   UIBarButtonItem *_edit;
   UIBarButtonItem *_done;
@@ -68,18 +65,18 @@ static CGFloat kWordHeight = 50;
 
 - (void)refreshDataSource {
   if (_depot && !_playlist) {
-    _keys = [_depot allKeys];
-    _objects = [_depot objectsForKeys:_keys];
+    _keys = [NSMutableArray arrayWithArray:[_depot allKeys]];
+    _objects = [NSMutableArray arrayWithArray:[_depot objectsForKeys:_keys]];
     _nSelected = 0;
   } else if (!_depot && _playlist) {
-    _keys = [_playlist allKeys];
-    _objects = [_playlist objectsForKeys:_keys];
+    _keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
+    _objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:_keys]];
     _nSelected = 0;
   } else {
     // must be _depot && _playlist
-    NSMutableArray *keys = [_playlist allKeys];
+    NSMutableArray *keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
     _nSelected = keys.count;
-    NSMutableArray *objects = [_playlist objectsForKeys:keys];
+    NSMutableArray *objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:keys]];
     NSArray *tmpKeys = [_depot allKeys];
     for (NSString *key in tmpKeys) {
       if (![_playlist objectForKey:key]) {
@@ -110,10 +107,11 @@ static CGFloat kWordHeight = 50;
       _fileRW = _depot;
       self.title = add_to_playlist_title(_playlist.partialName);
     } else {
-      NSLog(@"both depot and playlist are nil!");
+      NSLog(@"Internal error: both depot and playlist are nil!");
       return nil;
     }
 
+    self.tableView.rowHeight = kWordHeight;
     self.tableView.allowsSelection = NO;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.dataSource = self;
@@ -131,13 +129,9 @@ static CGFloat kWordHeight = 50;
     if (_situation == THWordsViewControllerDepot) {
       self.navigationItem.rightBarButtonItem = _edit;
     } else if (_situation == THWordsViewControllerPlaylist) {
-#ifdef RENAME_IN_SWIPE
-      self.navigationItem.rightBarButtonItem = _edit;
-#else
       UIBarButtonItem *rename =
           custom_item(kRename, UIBarButtonItemStylePlain, self, @selector(renameTapped));
       self.navigationItem.rightBarButtonItems = @[ _edit, rename ];
-#endif
     } else {  // THWordsViewControllerAddingToPlaylist
       self.navigationItem.hidesBackButton = YES;
       self.tableView.editing = YES;
@@ -188,7 +182,7 @@ static CGFloat kWordHeight = 50;
         _situation == THWordsViewControllerDepot) {
       // if it is a depot or a non-editing playlist, remove selected.
       NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
-      if (!indexPaths) {
+      if (!indexPaths.count) {
         return;
       }
       // _nSelected is 0 here.
@@ -239,22 +233,23 @@ static CGFloat kWordHeight = 50;
   } else {
     // otherwise, it means adding a word.
     [self.navigationController
-        presentViewController:texts_alert(kWordDialogTitleAdd, nil, @[ @"", @"" ],
-                                          @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
-                                          ^(NSArray<UITextField *> *textFields) {
-                                            // check if valid.
-                                            NSString *key = textFields.firstObject.text;
-                                            // ...object should change.
-                                            NSString *object = [textFields objectAtIndex:1].text;
-                                            [_fileRW setObject:object forKey:key];
-                                            [_keys insertObject:key atIndex:_nSelected];
-                                            [_objects insertObject:object atIndex:_nSelected];
-                                            [self.tableView
-                                                insertRowsAtIndexPaths:@[
-                                                  [NSIndexPath indexPathForRow:_nSelected]
-                                                ]
-                                                      withRowAnimation:UITableViewRowAnimationNone];
-                                          })
+        presentViewController:
+            [self wrapWordDialogAdd:texts_alert(
+                                        kWordDialogTitleAdd, nil, @[ @"", @"" ],
+                                        @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
+                                        ^(NSArray<UITextField *> *textFields) {
+                                          NSString *key = textFields.firstObject.text;
+                                          // ...object should change.
+                                          NSString *object = [textFields objectAtIndex:1].text;
+                                          [_fileRW setObject:object forKey:key];
+                                          [_keys insertObject:key atIndex:_nSelected];
+                                          [_objects insertObject:object atIndex:_nSelected];
+                                          [self.tableView
+                                              insertRowsAtIndexPaths:@[
+                                                [NSIndexPath indexPathForRow:_nSelected]
+                                              ]
+                                                    withRowAnimation:UITableViewRowAnimationNone];
+                                        })]
                      animated:YES
                    completion:nil];
   }
@@ -266,7 +261,6 @@ static CGFloat kWordHeight = 50;
     [self.navigationController
         presentViewController:basic_alert(play_dialog_title(_playlist.partialName), nil,
                                           ^() {
-                                            // NSLog(@"Will play %@", _playlist.partialName);
                                             [self.navigationController
                                                 pushViewController:[[THPlayViewController alloc]
                                                                        initWithPlaylist:_playlist]
@@ -284,50 +278,151 @@ static CGFloat kWordHeight = 50;
         [indexSet addIndex:indexPath.row];
       }
     }
+    if (!indexSet.count) {
+      return;
+    }
     if (_situation == THWordsViewControllerAddingToPlaylist) {
       [_playlist setObjects:[_objects objectsAtIndexes:indexSet]
                     forKeys:[_keys objectsAtIndexes:indexSet]];
       [self.navigationController popViewControllerAnimated:YES];
     } else {
       [self.navigationController
-          presentViewController:texts_alert(
-                                    kPlaylistDialogTitle, nil, @[ @"" ],
-                                    @[ kPlaylistDialogTextField ],
-                                    ^(NSArray<UITextField *> *texts) {
-                                      NSString *partialName = texts.firstObject.text;
-                                      THPlaylist *playlist = [[THFileCenter sharedInstance]
-                                          playlistWithPartialName:partialName
-                                                           create:YES];
-                                      [playlist setObjects:[_objects objectsAtIndexes:indexSet]
-                                                   forKeys:[_keys objectsAtIndexes:indexSet]];
-                                      [self.navigationController
-                                          popToRootViewControllerAnimated:YES];
-                                      [(THPlaylistsViewController *)
-                                              self.navigationController.viewControllers.firstObject
-                                          showDialogForPlaylist:playlist];
-                                    })
+          presentViewController:
+              [self wrapPlaylistDialogAdd:texts_alert(
+                                              kPlaylistDialogTitle, nil, @[ @"" ],
+                                              @[ kPlaylistDialogTextField ],
+                                              ^(NSArray<UITextField *> *texts) {
+                                                NSString *partialName = texts.firstObject.text;
+                                                THPlaylist *playlist =
+                                                    [[THFileCenter sharedInstance]
+                                                        playlistWithPartialName:partialName
+                                                                         create:YES];
+                                                [playlist
+                                                    setObjects:[_objects objectsAtIndexes:indexSet]
+                                                       forKeys:[_keys objectsAtIndexes:indexSet]];
+                                                [self.navigationController
+                                                    popToRootViewControllerAnimated:YES];
+                                                [(THPlaylistsViewController *)
+                                                        self.navigationController.viewControllers
+                                                            .firstObject
+                                                    showDialogForPlaylist:playlist];
+                                              })]
                        animated:YES
                      completion:nil];
     }
   }
 }
 
-#ifndef RENAME_IN_SWIPE
 - (void)renameTapped {
   [self.navigationController
-      presentViewController:texts_alert(kRename, nil, @[ _playlist.partialName ], @[ @"" ],
-                                        ^(NSArray<UITextField *> *textFields) {
-                                          // ...check if valid.
-                                          NSString *newPartialName = textFields.firstObject.text;
-                                          [[THFileCenter sharedInstance]
-                                               renamePlaylist:_playlist
-                                              withPartialName:newPartialName];
-                                          self.title = newPartialName;
-                                        })
+      presentViewController:[self
+                                wrapPlaylistDialogRename:texts_alert(
+                                                             kRename, nil,
+                                                             @[ _playlist.partialName ],
+                                                             @[ kPlaylistDialogTextField ],
+                                                             ^(NSArray<UITextField *> *textFields) {
+                                                               NSString *newPartialName =
+                                                                   textFields.firstObject.text;
+                                                               [[THFileCenter sharedInstance]
+                                                                    renamePlaylist:_playlist
+                                                                   withPartialName:newPartialName];
+                                                               self.title = newPartialName;
+                                                             })]
                    animated:YES
                  completion:nil];
 }
-#endif
+
+- (BOOL)canAddKey:(NSString *)key {
+  return ![_fileRW objectForKey:key];
+}
+
+- (BOOL)canEditOldKey:(NSString *)oldKey toKey:(NSString *)key {
+  return [key isEqualToString:oldKey] || [self canAddKey:key];
+}
+
+- (BOOL)canAddPlaylistWithPartialName:(NSString *)partialName {
+  return ![[THFileCenter sharedInstance] playlistWithPartialName:partialName create:NO];
+}
+
+- (BOOL)canRenamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName {
+  return [playlist.partialName isEqualToString:partialName] ||
+         [self canAddPlaylistWithPartialName:partialName];
+}
+
+- (void)wordDialogAddTextFieldDidChange {
+  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+  if (alertController) {
+    NSString *key = alertController.textFields.firstObject.text;
+    NSString *object = [alertController.textFields objectAtIndex:1].text;
+    UIAlertAction *action = alertController.actions.lastObject;
+    action.enabled = key.length && object.length && [self canAddKey:key];
+  }
+}
+
+- (void)wordDialogEditTextFieldDidChange {
+  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+  if (alertController) {
+    NSString *key = alertController.textFields.firstObject.text;
+    NSString *object = [alertController.textFields objectAtIndex:1].text;
+    UIAlertAction *action = alertController.actions.lastObject;
+    action.enabled = key.length && object.length && [self canEditOldKey:_oldKey toKey:key];
+  }
+}
+
+- (void)playlistDialogAddTextFieldDidChange {
+  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+  if (alertController) {
+    NSString *partialName = alertController.textFields.firstObject.text;
+    UIAlertAction *action = alertController.actions.lastObject;
+    action.enabled = partialName.length && [self canAddPlaylistWithPartialName:partialName];
+  }
+}
+
+- (void)playlistDialogRenameTextFieldDidChange {
+  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+  if (alertController) {
+    NSString *partialName = alertController.textFields.firstObject.text;
+    UIAlertAction *action = alertController.actions.lastObject;
+    action.enabled =
+        partialName.length && [self canRenamePlaylist:_playlist withPartialName:partialName];
+  }
+}
+
+- (UIAlertController *)wrapWordDialogAdd:(UIAlertController *)alert {
+  alert.actions.lastObject.enabled = NO;
+  for (UITextField *textField in alert.textFields) {
+    [textField addTarget:self
+                  action:@selector(wordDialogAddTextFieldDidChange)
+        forControlEvents:UIControlEventEditingChanged];
+  }
+  return alert;
+}
+
+- (UIAlertController *)wrapWordDialogEdit:(UIAlertController *)alert {
+  alert.actions.lastObject.enabled = YES;
+  for (UITextField *textField in alert.textFields) {
+    [textField addTarget:self
+                  action:@selector(wordDialogEditTextFieldDidChange)
+        forControlEvents:UIControlEventEditingChanged];
+  }
+  return alert;
+}
+
+- (UIAlertController *)wrapPlaylistDialogAdd:(UIAlertController *)alert {
+  alert.actions.lastObject.enabled = NO;
+  [alert.textFields.firstObject addTarget:self
+                                   action:@selector(playlistDialogAddTextFieldDidChange)
+                         forControlEvents:UIControlEventEditingChanged];
+  return alert;
+}
+
+- (UIAlertController *)wrapPlaylistDialogRename:(UIAlertController *)alert {
+  alert.actions.lastObject.enabled = YES;
+  [alert.textFields.firstObject addTarget:self
+                                   action:@selector(playlistDialogRenameTextFieldDidChange)
+                         forControlEvents:UIControlEventEditingChanged];
+  return alert;
+}
 
 #pragma mark - UIViewController
 
@@ -354,14 +449,15 @@ static CGFloat kWordHeight = 50;
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
   if (!cell) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue2
+    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1
                                   reuseIdentifier:kCellIdentifier];
   }
   NSInteger row = indexPath.row;
   cell.textLabel.text = [_keys objectAtIndex:row];
-  cell.textLabel.font = [UIFont fontWithName:@"" size:30];
+  cell.textLabel.font = [UIFont fontWithName:@"" size:24];
   // ...object should change.
   cell.detailTextLabel.text = [_objects objectAtIndex:row];
+  cell.detailTextLabel.numberOfLines = 0;
   if (indexPath.row < _nSelected) {
     // ...config a different style.
   }
@@ -378,10 +474,6 @@ static CGFloat kWordHeight = 50;
 }
 
 #pragma mark - UITableViewDelegate
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  return kWordHeight;
-}
 
 - (void)tableView:(UITableView *)tableView
   willDisplayCell:(UITableViewCell *)cell
@@ -407,27 +499,32 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                    title:kEdit
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    NSUInteger row = indexPath.row;
-                   NSString *oldKey = [_keys objectAtIndex:row];
+                   _oldKey = [_keys objectAtIndex:row];
                    // ...object should change.
                    NSString *oldExplanation = [_objects objectAtIndex:row];
                    [self.navigationController
                        presentViewController:
-                           texts_alert(kWordDialogTitleEdit, nil, @[ oldKey, oldExplanation ],
-                                       @[ @"", @"" ],
-                                       ^(NSArray<UITextField *> *textFields) {
-                                         // check if valid.
-                                         NSString *key = textFields.firstObject.text;
-                                         NSString *object = [textFields objectAtIndex:1].text;
-                                         if (![oldKey isEqualToString:key]) {
-                                           [_fileRW removeObjectForKey:oldKey];
-                                         }
-                                         [_fileRW setObject:object forKey:key];
-                                         [_keys setObject:key atIndexedSubscript:row];
-                                         [_objects setObject:object atIndexedSubscript:row];
-                                         [self.tableView
-                                             reloadRowsAtIndexPaths:@[ indexPath ]
-                                                   withRowAnimation:UITableViewRowAnimationNone];
-                                       })
+                           [self wrapWordDialogEdit:
+                                     texts_alert(
+                                         kWordDialogTitleEdit, nil, @[ _oldKey, oldExplanation ],
+                                         @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
+                                         ^(NSArray<UITextField *> *textFields) {
+                                           NSString *key = textFields.firstObject.text;
+                                           NSString *object = [textFields objectAtIndex:1].text;
+                                           if (![_oldKey isEqualToString:key]) {
+                                             [_fileRW removeObjectForKey:_oldKey];
+                                           }
+                                           [_fileRW setObject:object forKey:key];
+                                           [[THFileCenter sharedInstance] fileRW:_fileRW
+                                                                   updatedOldKey:_oldKey
+                                                                         withKey:key
+                                                                          object:object];
+                                           [_keys setObject:key atIndexedSubscript:row];
+                                           [_objects setObject:object atIndexedSubscript:row];
+                                           [self.tableView
+                                               reloadRowsAtIndexPaths:@[ indexPath ]
+                                                     withRowAnimation:UITableViewRowAnimationNone];
+                                         })]
                                     animated:YES
                                   completion:nil];
                  }];

@@ -17,7 +17,7 @@
 
 @implementation THFileCenter {
   NSString *_path;
-  NSMutableDictionary *_openedFiles;
+  NSMutableDictionary<NSString *, THFileRW *> *_openedFiles;
 }
 
 #pragma mark - public
@@ -48,12 +48,15 @@
                      filename:[partialName stringByAppendingPathExtension:@"playlist"]
                        create:create];
 }
-
+/*
 - (THPlaylist *)tmpPlaylist {
   return [self fileRWForClass:[THPlaylist class] filename:@"playlist" create:YES];
 }
-
+*/
 - (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName {
+  if ([playlist.partialName isEqualToString:partialName]) {
+    return;
+  }
   NSString *filename = [partialName stringByAppendingPathExtension:@"playlist"];
   [_openedFiles removeObjectForKey:playlist.filename];
   [[NSFileManager defaultManager]
@@ -74,6 +77,31 @@
 - (void)flushAll {
   for (THFileRW *fileRW in _openedFiles.allValues) {
     [fileRW flush];
+  }
+}
+
+- (void)fileRW:(THFileRW *)fileRW
+ updatedOldKey:(NSString *)oldKey
+       withKey:(NSString *)key
+        object:(id)object {
+  if ([_openedFiles objectForKey:fileRW.filename] != fileRW) {
+    NSLog(@"Internal error: fileRW not found!");
+    return;
+  }
+
+  NSMutableArray *files = [NSMutableArray array];
+  for (THFileRW *anotherFileRW in [self allFiles]) {
+    if (anotherFileRW != fileRW && [anotherFileRW objectForKey:oldKey]) {
+      [files addObject:anotherFileRW];
+    }
+  }
+  if (![key isEqualToString:oldKey]) {
+    for (THFileRW *anotherFileRW in files) {
+      [anotherFileRW removeObjectForKey:oldKey];
+    }
+  }
+  for (THFileRW *anotherFileRW in files) {
+    [anotherFileRW setObject:object forKey:key];
   }
 }
 
@@ -117,6 +145,12 @@
       [files addObject:[self fileRWForClass:[THPlaylist class] filename:filename create:NO]];
     }
   }];
+  return files;
+}
+
+- (NSMutableArray *)allFiles {
+  NSMutableArray *files = [self playlists];
+  [files addObject:[self depot]];
   return files;
 }
 

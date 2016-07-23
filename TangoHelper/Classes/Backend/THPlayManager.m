@@ -79,11 +79,14 @@
       [self finish];
     }
   };
+
   if (![_current isEqualToString:input]) {
     [_errors addObject:_current];
     if (!_config.lazyAssert) {
       [_delegate
-          showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current), nil, nextStep)];
+          showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current), play_wrong_answer_dialog_message(input), nextStep)];
+    } else {
+      nextStep();
     }
   } else {
     NSNumber *remaining = [_available objectForKey:_current];
@@ -92,8 +95,8 @@
     } else {
       [_available setObject:@(remaining.integerValue - 1) forKey:_current];
     }
+    nextStep();
   }
-  nextStep();
 }
 
 #pragma mark - private

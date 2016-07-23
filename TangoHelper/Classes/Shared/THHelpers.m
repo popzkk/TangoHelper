@@ -37,7 +37,11 @@ NSString *playing_title(NSString *partial_name) {
 }
 
 NSString *play_wrong_answer_dialog_title(NSString *answer) {
-  return [NSString stringWithFormat:kPlayWrongAnsertDialogTitle, answer];
+  return [NSString stringWithFormat:kPlayWrongAnswerDialogTitle, answer];
+}
+
+NSString *play_wrong_answer_dialog_message(NSString *answer) {
+  return [NSString stringWithFormat:kPlayWrongAnswerDialogMessage, answer];
 }
 
 UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action) {
@@ -127,11 +131,8 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
   for (NSUInteger i = 0; i < texts.count; ++i) {
     NSString *text = texts[i];
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
-      if (text.length == 0) {
-        textField.placeholder = placeholders[i];
-      } else {
-        textField.text = text;
-      }
+      textField.placeholder = placeholders[i];
+      textField.text = text;
     }];
   }
   [alert addAction:[UIAlertAction actionWithTitle:kCancel

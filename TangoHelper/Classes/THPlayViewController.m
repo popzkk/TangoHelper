@@ -28,10 +28,13 @@ static CGFloat kTextFieldHeight = 35;
 
 #pragma mark - public
 
-// ...check if playlist is nil or empty
 - (instancetype)initWithPlaylist:(THPlaylist *)playlist {
   self = [super init];
   if (self) {
+    if (!playlist) {
+      NSLog(@"Internal error: try to play a nil playlist");
+      return nil;
+    }
     _manager = [[THPlayManager alloc] initWithPlaylist:playlist
                                                 config:[[THPlayConfig alloc] init]
                                               delegate:self];
@@ -54,6 +57,29 @@ static CGFloat kTextFieldHeight = 35;
     self.title = playing_title(playlist.partialName);
   }
   return self;
+}
+
+#pragma mark - private
+
+- (BOOL)canAddPlaylistWithPartialName:(NSString *)partialName {
+  return ![[THFileCenter sharedInstance] playlistWithPartialName:partialName create:NO];
+}
+
+- (void)playlistDialogAddTextFieldDidChange {
+  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+  if (alertController) {
+    NSString *partialName = alertController.textFields.firstObject.text;
+    UIAlertAction *action = alertController.actions.lastObject;
+    action.enabled = partialName.length && [self canAddPlaylistWithPartialName:partialName];
+  }
+}
+
+- (UIAlertController *)wrapPlaylistDialogAdd:(UIAlertController *)alert {
+  alert.actions.lastObject.enabled = NO;
+  [alert.textFields.firstObject addTarget:self
+                                   action:@selector(playlistDialogAddTextFieldDidChange)
+                         forControlEvents:UIControlEventEditingChanged];
+  return alert;
 }
 
 #pragma mark - UIViewController
@@ -82,8 +108,19 @@ static CGFloat kTextFieldHeight = 35;
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  if (!_manager.isPlaying) {
-    [_manager start];
+  if (!_manager.playlist.count) {
+    [self.navigationController
+        presentViewController:super_basic_alert(kPlayEmptyPlaylistTitle, nil,
+                                                ^() {
+                                                  [self.navigationController
+                                                      popViewControllerAnimated:YES];
+                                                })
+                     animated:YES
+                   completion:nil];
+  } else {
+    if (!_manager.isPlaying) {
+      [_manager start];
+    }
   }
 }
 
@@ -94,14 +131,12 @@ static CGFloat kTextFieldHeight = 35;
 }
 
 - (void)backCellTapped {
-  //[_textField deleteBackward];
   if ([_textField hasText]) {
     _textField.text = [_textField.text substringToIndex:_textField.text.length - 1];
   }
 }
 
 - (void)addContent:(NSString *)content {
-  //[_textField insertText:content];
   _textField.text = [_textField.text stringByAppendingString:content];
 }
 
@@ -142,26 +177,31 @@ static CGFloat kTextFieldHeight = 35;
 - (void)playFinishedWithResult:(THPlayResult *)result {
   if (result.errors.count) {
     [self.navigationController
-        presentViewController:texts_alert_two_blocks(
-                                  kPlayFinishMistakeDialogTitle, kPlayFinishMistakeDialogMessage,
-                                  @[ @"" ], @[ kPlaylistDialogTextField ],
-                                  ^(NSArray<UITextField *> *textFields) {
-                                    [self.navigationController popViewControllerAnimated:YES];
-                                  },
-                                  ^(NSArray<UITextField *> *textFields) {
-                                    // ...check if valid.
-                                    NSString *partialName = textFields.firstObject.text;
-                                    THPlaylist *playlist = [[THFileCenter sharedInstance]
-                                        playlistWithPartialName:partialName
-                                                         create:YES];
-                                    NSArray *keys = [result.errors allObjects];
-                                    [playlist setObjects:[_manager.playlist objectsForKeys:keys]
-                                                 forKeys:keys];
-                                    [self.navigationController popToRootViewControllerAnimated:YES];
-                                    [(THPlaylistsViewController *)
-                                            self.navigationController.viewControllers.firstObject
-                                        showDialogForPlaylist:playlist];
-                                  })
+        presentViewController:
+            [self
+                wrapPlaylistDialogAdd:texts_alert_two_blocks(
+                                          kPlayFinishMistakeDialogTitle,
+                                          kPlayFinishMistakeDialogMessage, @[ @"" ],
+                                          @[ kPlaylistDialogTextField ],
+                                          ^(NSArray<UITextField *> *textFields) {
+                                            [self.navigationController
+                                                popViewControllerAnimated:YES];
+                                          },
+                                          ^(NSArray<UITextField *> *textFields) {
+                                            NSString *partialName = textFields.firstObject.text;
+                                            THPlaylist *playlist = [[THFileCenter sharedInstance]
+                                                playlistWithPartialName:partialName
+                                                                 create:YES];
+                                            NSArray *keys = [result.errors allObjects];
+                                            [playlist
+                                                setObjects:[_manager.playlist objectsForKeys:keys]
+                                                   forKeys:keys];
+                                            [self.navigationController
+                                                popToRootViewControllerAnimated:YES];
+                                            [(THPlaylistsViewController *)self.navigationController
+                                                    .viewControllers.firstObject
+                                                showDialogForPlaylist:playlist];
+                                          })]
                      animated:YES
                    completion:nil];
   } else {

@@ -40,6 +40,7 @@ static CGFloat kPlaylistHeight = 80;
 - (instancetype)init {
   self = [super initWithStyle:UITableViewStylePlain];
   if (self) {
+    self.tableView.rowHeight = kPlaylistHeight;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
     self.tableView.dataSource = self;
     self.tableView.delegate = self;
@@ -116,10 +117,10 @@ static CGFloat kPlaylistHeight = 80;
 
 - (void)addTapped {
   [self.navigationController
-      presentViewController:texts_alert(
-                                kPlaylistDialogTitle, nil, @[ @"" ], @[ kPlaylistDialogTextField ],
+      presentViewController:
+          [self wrapPlaylistDialogAdd:
+                    texts_alert(kPlaylistDialogTitle, nil, @[ @"" ], @[ kPlaylistDialogTextField ],
                                 ^(NSArray<UITextField *> *texts) {
-                                  // check if valid.
                                   NSString *partialName = texts.firstObject.text;
                                   THPlaylist *playlist =
                                       [self newPlaylistWithPartialName:partialName atRow:0];
@@ -127,34 +128,32 @@ static CGFloat kPlaylistHeight = 80;
                                       pushViewController:[[THWordsViewController alloc]
                                                              initUsingDepotWithPlaylist:playlist]
                                                 animated:NO];
-                                })
+                                })]
                    animated:YES
                  completion:nil];
 }
 
 - (void)playTapped {
   [self.navigationController
-      presentViewController:texts_alert(
-                                kPlaylistDialogTitle, nil, @[ @"" ], @[ kPlaylistDialogTextField ],
-                                ^(NSArray<UITextField *> *texts) {
-                                  // check if valid.
-                                  NSString *partialName = texts.firstObject.text;
-                                  THPlaylist *playlist =
-                                      [self newPlaylistWithPartialName:partialName atRow:0];
-                                  for (NSIndexPath *indexPath in self.tableView
-                                           .indexPathsForSelectedRows) {
-                                    [playlist
-                                        addFromFileRW:[_playlists objectAtIndex:indexPath.row]];
-                                  }
-                                  [self.navigationController
-                                      presentViewController:basic_alert(
-                                                                kPlayDialogTitle, nil,
+      presentViewController:
+          [self wrapPlaylistDialogAdd:
+                    texts_alert(
+                        kPlaylistDialogTitle, nil, @[ @"" ], @[ kPlaylistDialogTextField ],
+                        ^(NSArray<UITextField *> *texts) {
+                          NSString *partialName = texts.firstObject.text;
+                          THPlaylist *playlist =
+                              [self newPlaylistWithPartialName:partialName atRow:0];
+                          for (NSIndexPath *indexPath in self.tableView.indexPathsForSelectedRows) {
+                            [playlist addFromFileRW:[_playlists objectAtIndex:indexPath.row]];
+                          }
+                          [self.navigationController
+                              presentViewController:basic_alert(kPlayDialogTitle, nil,
                                                                 ^() {
                                                                   [self playWithPlaylist:playlist];
                                                                 })
-                                                   animated:YES
-                                                 completion:nil];
-                                })
+                                           animated:YES
+                                         completion:nil];
+                        })]
                    animated:YES
                  completion:nil];
 }
@@ -169,10 +168,30 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)playWithPlaylist:(THPlaylist *)playlist {
-  // NSLog(@"Will play: %@", playlist.partialName);
   [self.navigationController
       pushViewController:[[THPlayViewController alloc] initWithPlaylist:playlist]
                 animated:YES];
+}
+
+- (BOOL)canAddPlaylistWithPartialName:(NSString *)partialName {
+  return ![[THFileCenter sharedInstance] playlistWithPartialName:partialName create:NO];
+}
+
+- (void)playlistDialogAddTextFieldDidChange {
+  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
+  if (alertController) {
+    NSString *partialName = alertController.textFields.firstObject.text;
+    UIAlertAction *action = alertController.actions.lastObject;
+    action.enabled = partialName.length && [self canAddPlaylistWithPartialName:partialName];
+  }
+}
+
+- (UIAlertController *)wrapPlaylistDialogAdd:(UIAlertController *)alert {
+  alert.actions.lastObject.enabled = NO;
+  [alert.textFields.firstObject addTarget:self
+                                   action:@selector(playlistDialogAddTextFieldDidChange)
+                         forControlEvents:UIControlEventEditingChanged];
+  return alert;
 }
 
 #pragma mark - UIViewController
@@ -196,7 +215,6 @@ static CGFloat kPlaylistHeight = 80;
   }
   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
   cell.textLabel.text = playlist.partialName;
-  // cell.textLabel.font = [UIFont fontWithName:@"" size:24];
   cell.detailTextLabel.text = playlist.desc;
   return cell;
 }
@@ -211,10 +229,6 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 #pragma mark - UITableViewDelegate
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  return kPlaylistHeight;
-}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if (tableView.isEditing) {
@@ -233,7 +247,6 @@ static CGFloat kPlaylistHeight = 80;
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
                   editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
-#ifndef RENAME_IN_SWIPE
   UITableViewRowAction *play = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kPlay
@@ -241,7 +254,6 @@ static CGFloat kPlaylistHeight = 80;
                    [self playWithPlaylist:[_playlists objectAtIndex:indexPath.row]];
                  }];
   play.backgroundColor = [UIColor brownColor];
-#endif
 
   UITableViewRowAction *view = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
@@ -253,38 +265,7 @@ static CGFloat kPlaylistHeight = 80;
                                                                    objectAtIndex:indexPath.row]]
                                  animated:YES];
                  }];
-#ifdef RENAME_IN_SWIPE
-  view.backgroundColor = [UIColor brownColor];
-#else
   view.backgroundColor = [UIColor lightGrayColor];
-#endif
-
-#ifdef RENAME_IN_SWIPE
-  UITableViewRowAction *rename = [UITableViewRowAction
-      rowActionWithStyle:UITableViewRowActionStyleNormal
-                   title:kRename
-                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                   THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
-                   [self.navigationController
-                       presentViewController:texts_alert(
-                                                 kRename, nil, @[ playlist.partialName ], @[ @"" ],
-                                                 ^(NSArray<UITextField *> *textFields) {
-                                                   // ...check if valid.
-                                                   NSString *newPartialName =
-                                                       textFields.firstObject.text;
-                                                   [[THFileCenter sharedInstance]
-                                                        renamePlaylist:playlist
-                                                       withPartialName:newPartialName];
-                                                   UITableViewCell *cell =
-                                                       [tableView cellForRowAtIndexPath:indexPath];
-                                                   cell.textLabel.text = newPartialName;
-                                                   // ...how to exit the editing state?
-                                                 })
-                                    animated:YES
-                                  completion:nil];
-                 }];
-  rename.backgroundColor = [UIColor lightGrayColor];
-#endif
 
   UITableViewRowAction *remove = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
@@ -307,9 +288,6 @@ static CGFloat kPlaylistHeight = 80;
                  }];
   remove.backgroundColor = [UIColor redColor];
 
-#ifdef RENAME_IN_SWIPE
-  return @[ remove, rename, view ];
-#endif
   return @[ remove, view, play ];
 }
 
