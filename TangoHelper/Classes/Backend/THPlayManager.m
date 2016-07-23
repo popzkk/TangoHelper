@@ -83,8 +83,8 @@
   if (![_current isEqualToString:input]) {
     [_errors addObject:_current];
     if (!_config.lazyAssert) {
-      [_delegate
-          showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current), play_wrong_answer_dialog_message(input), nextStep)];
+      [_delegate showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current),
+                                             play_wrong_answer_dialog_message(input), nextStep)];
     } else {
       nextStep();
     }
@@ -106,7 +106,7 @@
     NSLog(@"Internal error: calling next when all words are done.");
     return;
   }
-  _current = [_available.allKeys objectAtIndex:random() % _available.allKeys.count];
+  _current = [_available.allKeys objectAtIndex:arc4random_uniform((int)_available.allKeys.count)];
   [_delegate showWithText:[_playlist objectForKey:_current]];
 }
 
