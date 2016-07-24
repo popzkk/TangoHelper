@@ -90,7 +90,7 @@
   }
 
   NSMutableArray *files = [NSMutableArray array];
-  for (THFileRW *anotherFileRW in [self allFiles]) {
+  for (THFileRW *anotherFileRW in [self wordsFiles]) {
     if (anotherFileRW != fileRW && [anotherFileRW objectForKey:oldKey]) {
       [files addObject:anotherFileRW];
     }
@@ -103,6 +103,10 @@
   for (THFileRW *anotherFileRW in files) {
     [anotherFileRW setObject:object forKey:key];
   }
+}
+
+- (THFileRW *)secretFile {
+  return [self fileRWForClass:[THFileRW class] filename:@"secret" create:YES];
 }
 
 #pragma mark - private
@@ -148,7 +152,7 @@
   return files;
 }
 
-- (NSMutableArray *)allFiles {
+- (NSMutableArray *)wordsFiles {
   NSMutableArray *files = [self playlists];
   [files addObject:[self depot]];
   return files;

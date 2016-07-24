@@ -23,7 +23,7 @@ static NSString *kBrowserDepot = @"Browser Depot";
 // Depot copied.
 static NSString *kRemoveDialogTitleFromDepot = @"Remove the selected from Depot?";
 // Playlists copied.
-static NSString *kRemoveDialogTitleFromPlaylists = @"Remove the selected from Playlists?";
+static NSString *kRemoveDialogTitleFromPlaylists = @"Remove the selected Playlists?";
 static NSString *kRemoveDialogTitleFromPlaylist = @"Remove the selected from \"%@\"?";
 static NSString *kRemoveDialogTitleNormal = @"Remove \"%@\"?";
 // Playlist copied.

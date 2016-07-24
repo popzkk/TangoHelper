@@ -249,6 +249,13 @@ static CGFloat kWordHeight = 50;
                                                 [NSIndexPath indexPathForRow:_nSelected]
                                               ]
                                                     withRowAnimation:UITableViewRowAnimationNone];
+                                          if (_situation == THWordsViewControllerAddingToPlaylist) {
+                                            [self.tableView
+                                                selectRowAtIndexPath:[NSIndexPath
+                                                                         indexPathForRow:_nSelected]
+                                                            animated:YES
+                                                      scrollPosition:UITableViewScrollPositionNone];
+                                          }
                                         })]
                      animated:YES
                    completion:nil];

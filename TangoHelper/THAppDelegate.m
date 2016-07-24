@@ -31,9 +31,8 @@
 #endif  // CLEANUP
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
-  UINavigationController *navController = [[UINavigationController alloc]
+  self.window.rootViewController = [[UINavigationController alloc]
       initWithRootViewController:[[THPlaylistsViewController alloc] init]];
-  self.window.rootViewController = navController;
   self.window.backgroundColor = [UIColor whiteColor];
   [self.window makeKeyAndVisible];
   return YES;

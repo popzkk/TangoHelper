@@ -125,7 +125,7 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
                                           message:message
                                    preferredStyle:UIAlertControllerStyleAlert];
   if (texts.count != placeholders.count) {
-    NSLog(@"cannot create 'texts_alert': inconsistant number of elements");
+    NSLog(@"cannot create 'texts_alert': inconsistant number of elements.");
     return nil;
   }
   for (NSUInteger i = 0; i < texts.count; ++i) {

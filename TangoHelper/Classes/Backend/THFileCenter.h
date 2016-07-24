@@ -30,4 +30,6 @@
        withKey:(NSString *)key
         object:(id)object;
 
+- (THFileRW *)secretFile;
+
 @end
