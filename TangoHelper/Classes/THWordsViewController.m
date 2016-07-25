@@ -45,6 +45,8 @@ static CGFloat kWordHeight = 50;
   UIBarButtonItem *_middle;
   UIBarButtonItem *_right;
   UIBarButtonItem *_padding;
+
+  BOOL _middleSecondTap; // whether the next tap is the second tap on the middle button.
 }
 
 #pragma mark - public
@@ -124,6 +126,7 @@ static CGFloat kWordHeight = 50;
         system_item(_depot && _playlist ? UIBarButtonSystemItemCancel : UIBarButtonSystemItemTrash,
                     self, @selector(leftTapped));
     _middle = system_item(UIBarButtonSystemItemAdd, self, @selector(middleTapped));
+    _middleSecondTap = 0;
     _right = system_item(UIBarButtonSystemItemPlay, self, @selector(rightTapped));
 
     if (_situation == THWordsViewControllerDepot) {
@@ -224,12 +227,48 @@ static CGFloat kWordHeight = 50;
   }
 }
 
+- (void)clearMiddleTaps {
+  if (_middleSecondTap) {
+    [self.navigationController
+        presentViewController:
+            [self wrapWordDialogAdd:texts_alert(
+                                        kWordDialogTitleAdd, nil, @[ @"", @"" ],
+                                        @[ kWordDialogKeyTextField, kWordDialogObjectTextField ],
+                                        ^(NSArray<UITextField *> *textFields) {
+                                          NSString *key = textFields.firstObject.text;
+                                          // ...object should change.
+                                          NSString *object = [textFields objectAtIndex:1].text;
+                                          [_fileRW setObject:object forKey:key];
+                                          [_keys insertObject:key atIndex:_nSelected];
+                                          [_objects insertObject:object atIndex:_nSelected];
+                                          [self.tableView
+                                              insertRowsAtIndexPaths:@[
+                                                [NSIndexPath indexPathForRow:_nSelected]
+                                              ]
+                                                    withRowAnimation:UITableViewRowAnimationNone];
+                                        })]
+                     animated:YES
+                   completion:nil];
+  }
+  _middleSecondTap = NO;
+}
+
 - (void)middleTapped {
   if (_situation == THWordsViewControllerPlaylist) {
-    // if it is showing a playlist, then add words from the depot.
-    [self.navigationController
-        pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:_playlist]
-                  animated:NO];
+    // if it is showing a playlist, then add words directly or from the depot.
+    if (_middleSecondTap) {
+      _middleSecondTap = NO;
+      [self.navigationController
+          pushViewController:[[THWordsViewController alloc] initUsingDepotWithPlaylist:_playlist]
+                    animated:NO];
+    } else {  // it is the first tap
+      _middleSecondTap = YES;
+      [NSTimer scheduledTimerWithTimeInterval:0.2
+                                       target:self
+                                     selector:@selector(clearMiddleTaps)
+                                     userInfo:nil
+                                      repeats:NO];
+    }
   } else {
     // otherwise, it means adding a word.
     [self.navigationController

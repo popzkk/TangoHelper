@@ -29,7 +29,7 @@ static CGFloat kPlaylistHeight = 80;
   UIBarButtonItem *_edit;
   UIBarButtonItem *_done;
   UIBarButtonItem *_trash;
-  UIBarButtonItem *_browserDepot;
+  UIBarButtonItem *_browseDepot;
   UIBarButtonItem *_play;
   UIBarButtonItem *_add;
   UIBarButtonItem *_padding;
@@ -51,8 +51,8 @@ static CGFloat kPlaylistHeight = 80;
     _edit = system_item(UIBarButtonSystemItemEdit, self, @selector(startEditing));
     _done = system_item(UIBarButtonSystemItemDone, self, @selector(endEditing));
     _trash = system_item(UIBarButtonSystemItemTrash, self, @selector(trashTapped));
-    _browserDepot =
-        custom_item(kBrowserDepot, UIBarButtonItemStylePlain, self, @selector(browserDepotTapped));
+    _browseDepot =
+        custom_item(kBrowseDepot, UIBarButtonItemStylePlain, self, @selector(browseDepotTapped));
     _play = system_item(UIBarButtonSystemItemPlay, self, @selector(playTapped));
     _add = system_item(UIBarButtonSystemItemAdd, self, @selector(addTapped));
 
@@ -81,7 +81,7 @@ static CGFloat kPlaylistHeight = 80;
 }
 
 - (void)endEditing {
-  [self setToolbarItems:@[ _browserDepot, _padding, _add ] animated:YES];
+  [self setToolbarItems:@[ _browseDepot, _padding, _add ] animated:YES];
   self.navigationItem.rightBarButtonItem = _edit;
   [self.tableView setEditing:NO animated:YES];
 }
@@ -93,7 +93,7 @@ static CGFloat kPlaylistHeight = 80;
   }
   [self.navigationController
       presentViewController:basic_alert(
-                                kRemoveDialogTitleFromPlaylists, nil,
+                                kRemoveDialogTitlePlaylists, nil,
                                 ^() {
                                   NSMutableIndexSet *indexSet = [NSMutableIndexSet indexSet];
                                   for (NSIndexPath *indexPath in indexPaths) {
@@ -110,7 +110,7 @@ static CGFloat kPlaylistHeight = 80;
                  completion:nil];
 }
 
-- (void)browserDepotTapped {
+- (void)browseDepotTapped {
   [self.navigationController pushViewController:[[THWordsViewController alloc] initUsingDepot]
                                        animated:YES];
 }
@@ -199,7 +199,7 @@ static CGFloat kPlaylistHeight = 80;
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = NO;
-  self.toolbarItems = @[ _browserDepot, _padding, _add ];
+  self.toolbarItems = @[ _browseDepot, _padding, _add ];
   _playlists = [[THFileCenter sharedInstance] playlists];
   [self.tableView reloadData];
 }
@@ -235,14 +235,10 @@ static CGFloat kPlaylistHeight = 80;
     return;
   }
   [tableView deselectRowAtIndexPath:indexPath animated:YES];
-  THPlaylist *playlist = [_playlists objectAtIndex:indexPath.row];
   [self.navigationController
-      presentViewController:basic_alert(play_dialog_title(playlist.partialName), nil,
-                                        ^() {
-                                          [self playWithPlaylist:playlist];
-                                        })
-                   animated:YES
-                 completion:nil];
+      pushViewController:[[THWordsViewController alloc]
+                             initWithPlaylist:[_playlists objectAtIndex:indexPath.row]]
+                animated:YES];
 }
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView
@@ -253,19 +249,7 @@ static CGFloat kPlaylistHeight = 80;
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    [self playWithPlaylist:[_playlists objectAtIndex:indexPath.row]];
                  }];
-  play.backgroundColor = [UIColor brownColor];
-
-  UITableViewRowAction *view = [UITableViewRowAction
-      rowActionWithStyle:UITableViewRowActionStyleNormal
-                   title:kView
-                 handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                   [self.navigationController
-                       pushViewController:[[THWordsViewController alloc]
-                                              initWithPlaylist:[_playlists
-                                                                   objectAtIndex:indexPath.row]]
-                                 animated:YES];
-                 }];
-  view.backgroundColor = [UIColor lightGrayColor];
+  play.backgroundColor = [UIColor lightGrayColor];
 
   UITableViewRowAction *remove = [UITableViewRowAction
       rowActionWithStyle:UITableViewRowActionStyleNormal
@@ -288,7 +272,7 @@ static CGFloat kPlaylistHeight = 80;
                  }];
   remove.backgroundColor = [UIColor redColor];
 
-  return @[ remove, view, play ];
+  return @[ remove, play ];
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
