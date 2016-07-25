@@ -234,7 +234,6 @@ static CGFloat kPlaylistHeight = 80;
   if (tableView.isEditing) {
     return;
   }
-  [tableView deselectRowAtIndexPath:indexPath animated:YES];
   [self.navigationController
       pushViewController:[[THWordsViewController alloc]
                              initWithPlaylist:[_playlists objectAtIndex:indexPath.row]]
