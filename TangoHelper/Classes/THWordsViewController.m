@@ -9,9 +9,9 @@
 #import "THPlayViewController.h"
 
 typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
-  THWordsViewControllerDepot = 0,
-  THWordsViewControllerPlaylist,
-  THWordsViewControllerAddingToPlaylist,
+  kTHWordsViewControllerDepot = 0,
+  kTHWordsViewControllerPlaylist,
+  kTHWordsViewControllerAddingToPlaylist,
 };
 
 static NSString *kCellIdentifier = @"WordsViewCell";
@@ -44,9 +44,11 @@ static CGFloat kWordHeight = 50;
   UIBarButtonItem *_left;
   UIBarButtonItem *_middle;
   UIBarButtonItem *_right;
+  UIBarButtonItem *_rename;
   UIBarButtonItem *_padding;
 
-  BOOL _middleSecondTap; // whether the next tap is the second tap on the middle button.
+  NSLock *lock;
+  BOOL _middleSecondTap;  // whether the next tap is the second tap on the middle button.
 }
 
 #pragma mark - public
@@ -97,15 +99,15 @@ static CGFloat kWordHeight = 50;
     _depot = depot;
     _playlist = playlist;
     if (_depot && !_playlist) {
-      _situation = THWordsViewControllerDepot;
+      _situation = kTHWordsViewControllerDepot;
       _fileRW = _depot;
       self.title = kDepotTitle;
     } else if (!_depot && _playlist) {
-      _situation = THWordsViewControllerPlaylist;
+      _situation = kTHWordsViewControllerPlaylist;
       _fileRW = _playlist;
       self.title = playlist_title(_playlist.partialName);
     } else if (_depot && _playlist) {
-      _situation = THWordsViewControllerAddingToPlaylist;
+      _situation = kTHWordsViewControllerAddingToPlaylist;
       _fileRW = _depot;
       self.title = add_to_playlist_title(_playlist.partialName);
     } else {
@@ -129,12 +131,11 @@ static CGFloat kWordHeight = 50;
     _middleSecondTap = 0;
     _right = system_item(UIBarButtonSystemItemPlay, self, @selector(rightTapped));
 
-    if (_situation == THWordsViewControllerDepot) {
+    if (_situation == kTHWordsViewControllerDepot) {
       self.navigationItem.rightBarButtonItem = _edit;
-    } else if (_situation == THWordsViewControllerPlaylist) {
-      UIBarButtonItem *rename =
-          custom_item(kRename, UIBarButtonItemStylePlain, self, @selector(renameTapped));
-      self.navigationItem.rightBarButtonItems = @[ _edit, rename ];
+    } else if (_situation == kTHWordsViewControllerPlaylist) {
+      _rename = custom_item(kRename, UIBarButtonItemStylePlain, self, @selector(renameTapped));
+      self.navigationItem.rightBarButtonItems = @[ _edit, _rename ];
     } else {  // THWordsViewControllerAddingToPlaylist
       self.navigationItem.hidesBackButton = YES;
       self.tableView.editing = YES;
@@ -150,29 +151,37 @@ static CGFloat kWordHeight = 50;
 
 - (void)startEditing {
   [self.tableView setEditing:YES animated:YES];
-  self.navigationItem.rightBarButtonItem = _done;
+  if (_situation == kTHWordsViewControllerPlaylist) {
+    self.navigationItem.rightBarButtonItems = @[ _done, _rename ];
+  } else {
+    self.navigationItem.rightBarButtonItem = _done;
+  }
   // if showing a playlist, there are always three items so we don't change it.
-  if (_situation != THWordsViewControllerPlaylist) {
+  if (_situation != kTHWordsViewControllerPlaylist) {
     [self setToolbarItems:@[ _left, _padding, _middle, _padding, _right ] animated:YES];
   }
 }
 
 - (void)endEditing {
   // if showing a playlist, there are always three items so we don't change it.
-  if (_situation != THWordsViewControllerPlaylist) {
+  if (_situation != kTHWordsViewControllerPlaylist) {
     [self setToolbarItems:@[ _padding, _middle, _padding ] animated:YES];
   }
-  self.navigationItem.rightBarButtonItem = _edit;
+  if (_situation == kTHWordsViewControllerPlaylist) {
+    self.navigationItem.rightBarButtonItems = @[ _edit, _rename ];
+  } else {
+    self.navigationItem.rightBarButtonItem = _edit;
+  }
   [self.tableView setEditing:NO animated:YES];
 }
 
 - (void)leftTapped {
   // for "adding to playlist", it is a cancel button.
-  if (_situation == THWordsViewControllerAddingToPlaylist) {
+  if (_situation == kTHWordsViewControllerAddingToPlaylist) {
     [self.navigationController popViewControllerAnimated:NO];
   } else {
     NSString *title;
-    if (_situation == THWordsViewControllerDepot) {
+    if (_situation == kTHWordsViewControllerDepot) {
       title = kRemoveDialogTitleFromDepot;
     } else {  // THWordsViewControllerPlaylist
       if (self.tableView.isEditing) {
@@ -181,8 +190,8 @@ static CGFloat kWordHeight = 50;
         title = remove_dialog_title_normal(_playlist.partialName);
       }
     }
-    if ((_situation == THWordsViewControllerPlaylist && self.tableView.isEditing) ||
-        _situation == THWordsViewControllerDepot) {
+    if ((_situation == kTHWordsViewControllerPlaylist && self.tableView.isEditing) ||
+        _situation == kTHWordsViewControllerDepot) {
       // if it is a depot or a non-editing playlist, remove selected.
       NSArray *indexPaths = self.tableView.indexPathsForSelectedRows;
       if (!indexPaths.count) {
@@ -228,6 +237,7 @@ static CGFloat kWordHeight = 50;
 }
 
 - (void)clearMiddleTaps {
+  [lock lock];
   if (_middleSecondTap) {
     [self.navigationController
         presentViewController:
@@ -251,11 +261,13 @@ static CGFloat kWordHeight = 50;
                    completion:nil];
   }
   _middleSecondTap = NO;
+  [lock unlock];
 }
 
 - (void)middleTapped {
-  if (_situation == THWordsViewControllerPlaylist) {
+  if (_situation == kTHWordsViewControllerPlaylist) {
     // if it is showing a playlist, then add words directly or from the depot.
+    [lock lock];
     if (_middleSecondTap) {
       _middleSecondTap = NO;
       [self.navigationController
@@ -269,6 +281,7 @@ static CGFloat kWordHeight = 50;
                                      userInfo:nil
                                       repeats:NO];
     }
+    [lock unlock];
   } else {
     // otherwise, it means adding a word.
     [self.navigationController
@@ -288,7 +301,8 @@ static CGFloat kWordHeight = 50;
                                                 [NSIndexPath indexPathForRow:_nSelected]
                                               ]
                                                     withRowAnimation:UITableViewRowAnimationNone];
-                                          if (_situation == THWordsViewControllerAddingToPlaylist) {
+                                          if (_situation ==
+                                              kTHWordsViewControllerAddingToPlaylist) {
                                             [self.tableView
                                                 selectRowAtIndexPath:[NSIndexPath
                                                                          indexPathForRow:_nSelected]
@@ -302,7 +316,7 @@ static CGFloat kWordHeight = 50;
 }
 
 - (void)rightTapped {
-  if (_situation == THWordsViewControllerPlaylist && !self.tableView.isEditing) {
+  if (_situation == kTHWordsViewControllerPlaylist && !self.tableView.isEditing) {
     // if it is a non-editing playlist, go to play.
     [self.navigationController
         presentViewController:basic_alert(play_dialog_title(_playlist.partialName), nil,
@@ -327,7 +341,7 @@ static CGFloat kWordHeight = 50;
     if (!indexSet.count) {
       return;
     }
-    if (_situation == THWordsViewControllerAddingToPlaylist) {
+    if (_situation == kTHWordsViewControllerAddingToPlaylist) {
       [_playlist setObjects:[_objects objectsAtIndexes:indexSet]
                     forKeys:[_keys objectsAtIndexes:indexSet]];
       [self.navigationController popViewControllerAnimated:YES];
@@ -476,7 +490,7 @@ static CGFloat kWordHeight = 50;
   [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = NO;
   switch (_situation) {
-    case THWordsViewControllerDepot:
+    case kTHWordsViewControllerDepot:
       if (!self.tableView.editing) {
         self.toolbarItems = @[ _padding, _middle, _padding ];
         break;
@@ -500,10 +514,10 @@ static CGFloat kWordHeight = 50;
   }
   NSInteger row = indexPath.row;
   cell.textLabel.text = [_keys objectAtIndex:row];
-  cell.textLabel.font = [UIFont fontWithName:@"" size:24];
+  cell.textLabel.font = ja_normal_small();
   // ...object should change.
   cell.detailTextLabel.text = [_objects objectAtIndex:row];
-  cell.detailTextLabel.numberOfLines = 0;
+  cell.detailTextLabel.font = zh_light_small();
   if (indexPath.row < _nSelected) {
     // ...config a different style.
   }
@@ -598,11 +612,19 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)tableView:(UITableView *)tableView willBeginEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-  self.navigationItem.rightBarButtonItem = nil;
+  if (_situation == kTHWordsViewControllerPlaylist ) {
+    self.navigationItem.rightBarButtonItems = nil;
+  } else {
+    self.navigationItem.rightBarButtonItem = nil;
+  }
 }
 
 - (void)tableView:(UITableView *)tableView didEndEditingRowAtIndexPath:(NSIndexPath *)indexPath {
-  self.navigationItem.rightBarButtonItem = _edit;
+  if (_situation == kTHWordsViewControllerPlaylist) {
+    self.navigationItem.rightBarButtonItems = @[ _edit, _rename ];
+  } else {
+    self.navigationItem.rightBarButtonItem = _edit;
+  }
 }
 
 @end

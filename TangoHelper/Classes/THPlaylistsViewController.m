@@ -9,7 +9,7 @@
 
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
 
-static CGFloat kPlaylistHeight = 80;
+static CGFloat kPlaylistHeight = 77;
 
 @interface NSIndexPath (THPlaylistsViewController)
 

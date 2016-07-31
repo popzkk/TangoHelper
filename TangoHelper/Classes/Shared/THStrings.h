@@ -18,7 +18,7 @@ static NSString *kEdit = @"Edit";
 static NSString *kView = @"View";
 static NSString *kRemove = @"Remove";
 static NSString *kAdd = @"Add";
-static NSString *kNext = @"Next";
+static NSString *kNext = @"次へ";
 static NSString *kWrong = @"Wrong";
 static NSString *kBrowseDepot = @"Browse Depot";
 

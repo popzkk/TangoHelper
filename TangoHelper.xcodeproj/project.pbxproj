@@ -1,0 +1,423 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 793C5E6C1D429B2D00922EB7 /* THPlayManager.m */; };
+		79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B361D3A7EBD00FF42AA /* THFileCenter.m */; };
+		79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B391D3A8F8500FF42AA /* THPlaylist.m */; };
+		79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3C1D3A90A000FF42AA /* THDepot.m */; };
+		79487B401D3C430F00FF42AA /* THHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3F1D3C430F00FF42AA /* THHelpers.m */; };
+		794FBCFC1D45D78500055E21 /* THKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF21D45D78500055E21 /* THKeyboard.m */; };
+		794FBCFD1D45D78500055E21 /* THKeyboardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF41D45D78500055E21 /* THKeyboardCell.m */; };
+		794FBCFE1D45D78500055E21 /* THKeyboardCellConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF61D45D78500055E21 /* THKeyboardCellConfig.m */; };
+		794FBCFF1D45D78500055E21 /* THKeyboardCharTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */; };
+		794FBD001D45D78500055E21 /* THKeyboardConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */; };
+		79A760911D23058E009C0859 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A760901D23058E009C0859 /* main.m */; };
+		79A760941D23058E009C0859 /* THAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A760931D23058E009C0859 /* THAppDelegate.m */; };
+		79A7609C1D23058E009C0859 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79A7609B1D23058E009C0859 /* Assets.xcassets */; };
+		79A7609F1D23058E009C0859 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79A7609D1D23058E009C0859 /* LaunchScreen.storyboard */; };
+		79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A762F81D28F4EA009C0859 /* THFileRW.m */; };
+		79A766991D2D4142009C0859 /* THPlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A766981D2D4142009C0859 /* THPlaylistsViewController.m */; };
+		79A78D9C1D3820CE009C0859 /* THWordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A78D9B1D3820CE009C0859 /* THWordsViewController.m */; };
+		79A86F951D400D960093DBC4 /* THPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A86F941D400D960093DBC4 /* THPlayViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		793C5E6B1D42925400922EB7 /* THPlayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlayManager.h; path = Classes/Backend/THPlayManager.h; sourceTree = "<group>"; };
+		793C5E6C1D429B2D00922EB7 /* THPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayManager.m; path = Classes/Backend/THPlayManager.m; sourceTree = "<group>"; };
+		79487B351D3A7EAA00FF42AA /* THFileCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THFileCenter.h; path = Classes/Backend/THFileCenter.h; sourceTree = "<group>"; };
+		79487B361D3A7EBD00FF42AA /* THFileCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileCenter.m; path = Classes/Backend/THFileCenter.m; sourceTree = "<group>"; };
+		79487B381D3A8F7400FF42AA /* THPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylist.h; path = Classes/Backend/THPlaylist.h; sourceTree = "<group>"; };
+		79487B391D3A8F8500FF42AA /* THPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlaylist.m; path = Classes/Backend/THPlaylist.m; sourceTree = "<group>"; };
+		79487B3B1D3A909100FF42AA /* THDepot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THDepot.h; path = Classes/Backend/THDepot.h; sourceTree = "<group>"; };
+		79487B3C1D3A90A000FF42AA /* THDepot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THDepot.m; path = Classes/Backend/THDepot.m; sourceTree = "<group>"; };
+		79487B3E1D3BBFB000FF42AA /* THHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THHelpers.h; path = Classes/Shared/THHelpers.h; sourceTree = "<group>"; };
+		79487B3F1D3C430F00FF42AA /* THHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THHelpers.m; path = Classes/Shared/THHelpers.m; sourceTree = "<group>"; };
+		794FBCF11D45D78500055E21 /* THKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboard.h; path = Classes/Keyboard/THKeyboard.h; sourceTree = "<group>"; };
+		794FBCF21D45D78500055E21 /* THKeyboard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboard.m; path = Classes/Keyboard/THKeyboard.m; sourceTree = "<group>"; };
+		794FBCF31D45D78500055E21 /* THKeyboardCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardCell.h; path = Classes/Keyboard/THKeyboardCell.h; sourceTree = "<group>"; };
+		794FBCF41D45D78500055E21 /* THKeyboardCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboardCell.m; path = Classes/Keyboard/THKeyboardCell.m; sourceTree = "<group>"; };
+		794FBCF51D45D78500055E21 /* THKeyboardCellConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardCellConfig.h; path = Classes/Keyboard/THKeyboardCellConfig.h; sourceTree = "<group>"; };
+		794FBCF61D45D78500055E21 /* THKeyboardCellConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboardCellConfig.m; path = Classes/Keyboard/THKeyboardCellConfig.m; sourceTree = "<group>"; };
+		794FBCF71D45D78500055E21 /* THKeyboardCharTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardCharTransformer.h; path = Classes/Keyboard/THKeyboardCharTransformer.h; sourceTree = "<group>"; };
+		794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboardCharTransformer.m; path = Classes/Keyboard/THKeyboardCharTransformer.m; sourceTree = "<group>"; };
+		794FBCF91D45D78500055E21 /* THKeyboardConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardConfig.h; path = Classes/Keyboard/THKeyboardConfig.h; sourceTree = "<group>"; };
+		794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboardConfig.m; path = Classes/Keyboard/THKeyboardConfig.m; sourceTree = "<group>"; };
+		794FBCFB1D45D78500055E21 /* THKeyboardJaConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardJaConstants.h; path = Classes/Keyboard/THKeyboardJaConstants.h; sourceTree = "<group>"; };
+		79A7608C1D23058E009C0859 /* TangoHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TangoHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		79A760901D23058E009C0859 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		79A760921D23058E009C0859 /* THAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = THAppDelegate.h; sourceTree = "<group>"; };
+		79A760931D23058E009C0859 /* THAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = THAppDelegate.m; sourceTree = "<group>"; };
+		79A7609B1D23058E009C0859 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		79A7609E1D23058E009C0859 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		79A760A01D23058E009C0859 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		79A762F81D28F4EA009C0859 /* THFileRW.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileRW.m; path = Classes/Backend/THFileRW.m; sourceTree = "<group>"; };
+		79A762FA1D28F517009C0859 /* THFileRW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THFileRW.h; path = Classes/Backend/THFileRW.h; sourceTree = "<group>"; };
+		79A766971D2D412F009C0859 /* THPlaylistsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylistsViewController.h; path = Classes/THPlaylistsViewController.h; sourceTree = "<group>"; };
+		79A766981D2D4142009C0859 /* THPlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlaylistsViewController.m; path = Classes/THPlaylistsViewController.m; sourceTree = "<group>"; };
+		79A78D991D357E77009C0859 /* THStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THStrings.h; path = Classes/Shared/THStrings.h; sourceTree = "<group>"; };
+		79A78D9A1D3820B6009C0859 /* THWordsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THWordsViewController.h; path = Classes/THWordsViewController.h; sourceTree = "<group>"; };
+		79A78D9B1D3820CE009C0859 /* THWordsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THWordsViewController.m; path = Classes/THWordsViewController.m; sourceTree = "<group>"; };
+		79A86F931D400D960093DBC4 /* THPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THPlayViewController.h; path = Classes/THPlayViewController.h; sourceTree = "<group>"; };
+		79A86F941D400D960093DBC4 /* THPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayViewController.m; path = Classes/THPlayViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		79A760891D23058E009C0859 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		794FBCF01D45D76D00055E21 /* Keyboard */ = {
+			isa = PBXGroup;
+			children = (
+				794FBCF11D45D78500055E21 /* THKeyboard.h */,
+				794FBCF21D45D78500055E21 /* THKeyboard.m */,
+				794FBCF31D45D78500055E21 /* THKeyboardCell.h */,
+				794FBCF41D45D78500055E21 /* THKeyboardCell.m */,
+				794FBCF51D45D78500055E21 /* THKeyboardCellConfig.h */,
+				794FBCF61D45D78500055E21 /* THKeyboardCellConfig.m */,
+				794FBCF71D45D78500055E21 /* THKeyboardCharTransformer.h */,
+				794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */,
+				794FBCF91D45D78500055E21 /* THKeyboardConfig.h */,
+				794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */,
+				794FBCFB1D45D78500055E21 /* THKeyboardJaConstants.h */,
+			);
+			name = Keyboard;
+			sourceTree = "<group>";
+		};
+		79A760831D23058E009C0859 = {
+			isa = PBXGroup;
+			children = (
+				79A7608E1D23058E009C0859 /* TangoHelper */,
+				79A7608D1D23058E009C0859 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		79A7608D1D23058E009C0859 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				79A7608C1D23058E009C0859 /* TangoHelper.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		79A7608E1D23058E009C0859 /* TangoHelper */ = {
+			isa = PBXGroup;
+			children = (
+				79A761C71D24518F009C0859 /* Classes */,
+				79A760921D23058E009C0859 /* THAppDelegate.h */,
+				79A760931D23058E009C0859 /* THAppDelegate.m */,
+				79A7609B1D23058E009C0859 /* Assets.xcassets */,
+				79A7609D1D23058E009C0859 /* LaunchScreen.storyboard */,
+				79A760A01D23058E009C0859 /* Info.plist */,
+				79A7608F1D23058E009C0859 /* Supporting Files */,
+			);
+			path = TangoHelper;
+			sourceTree = "<group>";
+		};
+		79A7608F1D23058E009C0859 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				79A760901D23058E009C0859 /* main.m */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		79A761C71D24518F009C0859 /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				79A762F61D287375009C0859 /* Backend */,
+				79A761C81D2451D1009C0859 /* Shared */,
+				794FBCF01D45D76D00055E21 /* Keyboard */,
+				79A766971D2D412F009C0859 /* THPlaylistsViewController.h */,
+				79A766981D2D4142009C0859 /* THPlaylistsViewController.m */,
+				79A86F931D400D960093DBC4 /* THPlayViewController.h */,
+				79A86F941D400D960093DBC4 /* THPlayViewController.m */,
+				79A78D9A1D3820B6009C0859 /* THWordsViewController.h */,
+				79A78D9B1D3820CE009C0859 /* THWordsViewController.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+		79A761C81D2451D1009C0859 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				79A78D991D357E77009C0859 /* THStrings.h */,
+				79487B3E1D3BBFB000FF42AA /* THHelpers.h */,
+				79487B3F1D3C430F00FF42AA /* THHelpers.m */,
+			);
+			name = Shared;
+			sourceTree = "<group>";
+		};
+		79A762F61D287375009C0859 /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+				79487B351D3A7EAA00FF42AA /* THFileCenter.h */,
+				79487B361D3A7EBD00FF42AA /* THFileCenter.m */,
+				79A762FA1D28F517009C0859 /* THFileRW.h */,
+				79A762F81D28F4EA009C0859 /* THFileRW.m */,
+				79487B3B1D3A909100FF42AA /* THDepot.h */,
+				79487B3C1D3A90A000FF42AA /* THDepot.m */,
+				79487B381D3A8F7400FF42AA /* THPlaylist.h */,
+				79487B391D3A8F8500FF42AA /* THPlaylist.m */,
+				793C5E6B1D42925400922EB7 /* THPlayManager.h */,
+				793C5E6C1D429B2D00922EB7 /* THPlayManager.m */,
+			);
+			name = Backend;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		79A7608B1D23058E009C0859 /* TangoHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 79A760A31D23058E009C0859 /* Build configuration list for PBXNativeTarget "TangoHelper" */;
+			buildPhases = (
+				79A760881D23058E009C0859 /* Sources */,
+				79A760891D23058E009C0859 /* Frameworks */,
+				79A7608A1D23058E009C0859 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TangoHelper;
+			productName = TangoHelper;
+			productReference = 79A7608C1D23058E009C0859 /* TangoHelper.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		79A760841D23058E009C0859 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0730;
+				ORGANIZATIONNAME = "Kaikai Zhu";
+				TargetAttributes = {
+					79A7608B1D23058E009C0859 = {
+						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = PNK26M7ANE;
+					};
+				};
+			};
+			buildConfigurationList = 79A760871D23058E009C0859 /* Build configuration list for PBXProject "TangoHelper" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 79A760831D23058E009C0859;
+			productRefGroup = 79A7608D1D23058E009C0859 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				79A7608B1D23058E009C0859 /* TangoHelper */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		79A7608A1D23058E009C0859 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				79A7609F1D23058E009C0859 /* LaunchScreen.storyboard in Resources */,
+				79A7609C1D23058E009C0859 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		79A760881D23058E009C0859 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				794FBD001D45D78500055E21 /* THKeyboardConfig.m in Sources */,
+				794FBCFC1D45D78500055E21 /* THKeyboard.m in Sources */,
+				79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */,
+				79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */,
+				79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */,
+				794FBCFE1D45D78500055E21 /* THKeyboardCellConfig.m in Sources */,
+				79A766991D2D4142009C0859 /* THPlaylistsViewController.m in Sources */,
+				79487B401D3C430F00FF42AA /* THHelpers.m in Sources */,
+				793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */,
+				79A760941D23058E009C0859 /* THAppDelegate.m in Sources */,
+				794FBCFD1D45D78500055E21 /* THKeyboardCell.m in Sources */,
+				79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */,
+				79A78D9C1D3820CE009C0859 /* THWordsViewController.m in Sources */,
+				794FBCFF1D45D78500055E21 /* THKeyboardCharTransformer.m in Sources */,
+				79A760911D23058E009C0859 /* main.m in Sources */,
+				79A86F951D400D960093DBC4 /* THPlayViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		79A7609D1D23058E009C0859 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				79A7609E1D23058E009C0859 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		79A760A11D23058E009C0859 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		79A760A21D23058E009C0859 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		79A760A41D23058E009C0859 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = TangoHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kaikaizhu.TangoHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		79A760A51D23058E009C0859 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				INFOPLIST_FILE = TangoHelper/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.kaikaizhu.TangoHelper;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		79A760871D23058E009C0859 /* Build configuration list for PBXProject "TangoHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79A760A11D23058E009C0859 /* Debug */,
+				79A760A21D23058E009C0859 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		79A760A31D23058E009C0859 /* Build configuration list for PBXNativeTarget "TangoHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				79A760A41D23058E009C0859 /* Debug */,
+				79A760A51D23058E009C0859 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 79A760841D23058E009C0859 /* Project object */;
+}

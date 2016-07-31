@@ -1,7 +1,6 @@
 #import <UIKit/UIKit.h>
 
 @class THPlaylist;
-@class THPlayConfig;
 
 @interface THPlayViewController : UIViewController
 

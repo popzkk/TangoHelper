@@ -38,6 +38,8 @@
   NSMutableDictionary *_available;
   // current key
   NSString *_current;
+  // the correct answer of the current key
+  NSString *_currentAnswer;
   NSMutableSet *_errors;
   __weak id<THPlayManagerDelegate> _delegate;
 }
@@ -80,10 +82,10 @@
     }
   };
 
-  if (![_current isEqualToString:input]) {
+  if (![_currentAnswer isEqualToString:input]) {
     [_errors addObject:_current];
     if (!_config.lazyAssert) {
-      [_delegate showAlert:super_basic_alert(play_wrong_answer_dialog_title(_current),
+      [_delegate showAlert:super_basic_alert(play_wrong_answer_dialog_title(_currentAnswer),
                                              play_wrong_answer_dialog_message(input), nextStep)];
     } else {
       nextStep();
@@ -108,6 +110,8 @@
   }
   _current = [_available.allKeys objectAtIndex:arc4random_uniform((int)_available.allKeys.count)];
   [_delegate showWithText:[_playlist objectForKey:_current]];
+  _currentAnswer =
+      [_current substringToIndex:MIN(_current.length, [_current rangeOfString:@"「"].location)];
 }
 
 - (void)finish {

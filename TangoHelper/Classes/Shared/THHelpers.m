@@ -7,6 +7,8 @@ extern "C" {
 
 static NSString *ja_font_normal = @"HiraKakuProN-W3";
 static NSString *ja_font_bold = @"HiraKakuProN-W6";
+static NSString *zh_font_light = @"STHeitiSC-Light";
+static NSString *zh_font_medium = @"STHeitiSC-Medium";
 
 NSString *playlist_title(NSString *partial_name) {
   return [NSString stringWithFormat:kPlaylistTitle, partial_name];
@@ -148,13 +150,21 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
   return alert;
 }
 
-UIFont *ja_normal_small() { return [UIFont fontWithName:ja_font_normal size:16]; }
+UIFont *ja_normal(CGFloat size) { return [UIFont fontWithName:ja_font_normal size:size]; }
 
-UIFont *ja_normal_big() { return [UIFont fontWithName:ja_font_normal size:24]; }
+UIFont *ja_normal_small() { return ja_normal(16); }
+
+UIFont *ja_normal_big() { return ja_normal(24); }
 
 UIFont *ja_bold_small() { return [UIFont fontWithName:ja_font_bold size:16]; }
 
 UIFont *ja_bold_big() { return [UIFont fontWithName:ja_font_bold size:24]; }
+
+UIFont *zh_light(CGFloat size) { return [UIFont fontWithName:zh_font_light size:size]; }
+
+UIFont *zh_light_small() { return zh_light(15); }
+
+UIFont *zh_medium_big() { return [UIFont fontWithName:zh_font_medium size:24]; }
 
 UIColor *blue_color() {
   // modified from 007aff

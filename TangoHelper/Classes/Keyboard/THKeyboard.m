@@ -51,6 +51,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   CGPoint _startPoint;        // touch point at the beginning.
   NSUInteger _previousIndex;  // the previous index of the cell when the user is moving.
   NSUInteger _currentIndex;   // index of the cell when the user is moving.
+  NSTimeInterval _startTime;  // start time of the touch.
 }
 
 #pragma mark - public
@@ -59,7 +60,9 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
                                     actionText:(NSString *)actionText
                                       delegate:(id<THKeyboardDelegate>)delegate {
   THKeyboard *sharedInstance = [self sharedInstance];
-  [sharedInstance setKeyboardType:type];
+  if (type != kTHKeyboardUnknown) {
+    [sharedInstance setKeyboardType:type];
+  }
   if (actionText.length) {
     [sharedInstance setActionText:actionText];
   }
@@ -162,6 +165,9 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   // the default action text.
   self.actionText = @"確認";
   _actionCell.config = [THKeyboardCellConfig actionCellConfig];
+
+  // by default, starts with hiragana.
+  self.keyboardType = kTHKeyboardHiragana;
 }
 
 - (void)touchedCharCellWillMove {
@@ -174,9 +180,6 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
     [_cells[i] save];
   }
 
-  for (NSUInteger i = 0; i < 25; ++i) {
-    //[_cells[i] onlySetState:kTHKeyboardCellStateFaded];
-  }
   THKeyboardCell *cell = _cells[_startIndex];
   [cell onlySetState:kTHKeyboardCellStateFocused];
 
@@ -205,13 +208,18 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 }
 
 - (void)commitTouchResult:(THKeyboardTouchResult)result object:(id)object {
+  NSTimeInterval interval = [NSDate timeIntervalSinceReferenceDate] - _startTime;
   switch (result) {
     // show a nice dialog to explain.
     case kTHKeyboardTouchResultUnknown:
       [_delegate showNotImplementedDialog];
       break;
-    // ...right cell has some secret function?
+    // the right cell has some secret function?
     case kTHKeyboardTouchResultRight:
+      // holding the right cell longer than 3s will be regarded as a long tap.
+      if (interval > 3) {
+        [_delegate rightCellLongTapped];
+      }
       break;
     case kTHKeyboardTouchResultAction:
       [_delegate actionCellTapped];
@@ -268,6 +276,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   }
 
   _startPoint = [[touches anyObject] locationInView:self];
+  _startTime = [NSDate timeIntervalSinceReferenceDate];
   _currentIndex = _startIndex = [self touchedIndex:_startPoint];
   _previousIndex = NSNotFound;
   // touch is on the padding area or the first row.
@@ -384,6 +393,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 
 - (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
   // for any reason, we set it back to |NoTouch| so a new touch can begin.
+  NSLog(@"touches cancelled!");
   _state = kTHKeyboardTouchStateNoTouch;
   [self touchedCharCellReleased];
 }

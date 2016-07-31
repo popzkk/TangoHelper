@@ -1,6 +1,6 @@
 #import "THKeyboardCellConfig.h"
 
-#import "../THHelpers.h"
+#import "../Shared/THHelpers.h"
 
 @implementation THKeyboardCellConfig {
   UIFont *_font[numberOfKeyboardCellStates];

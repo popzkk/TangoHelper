@@ -3,21 +3,23 @@
 #import "Classes/Backend/THFileCenter.h"
 #import "Classes/THPlaylistsViewController.h"
 
-#define CLEANUP_
+#define ADMIN_
 
-#if defined(CLEANUP)
-#import "THFileCenter.h"
-#import "THDepot.h"
-#endif
+#ifdef ADMIN
+#import "Classes/Backend/THFileCenter.h"
+#import "Classes/Backend/THFileRW.h"
+#import "Classes/Backend/THDepot.h"
+#import "Classes/Backend/THPlaylist.h"
+#endif  // ADMIN
 
 @implementation THAppDelegate
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-#ifdef CLEANUP
+#ifdef ADMIN
   NSString *path = [THFileCenter sharedInstance].directoryPath;
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
-  [files enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+  id removeOtherFiles = ^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
     NSString *extension = filename.pathExtension;
     if (![filename isEqualToString:@"depot"] && ![extension isEqualToString:@"playlist"]) {
@@ -26,9 +28,22 @@
           removeItemAtPath:[path stringByAppendingPathComponent:filename]
                      error:nil];
     }
-  }];
+  };
+  id changeWordKeyFormatBlock = ^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *filename = (NSString *)obj;
+    NSString *fullPath = [path stringByAppendingPathComponent:filename];
+    NSMutableDictionary *oldContent = [NSMutableDictionary dictionaryWithContentsOfFile:fullPath];
+    NSMutableDictionary *newContent = [NSMutableDictionary dictionaryWithCapacity:oldContent.count];
+    for (NSString *oldKey in oldContent.allKeys) {
+      NSString *newKey = [oldKey stringByReplacingOccurrencesOfString:@"〈" withString:@"「"];
+      newKey = [newKey stringByReplacingOccurrencesOfString:@"〉" withString:@"」"];
+      [newContent setObject:[oldContent objectForKey:oldKey] forKey:newKey];
+    }
+    [newContent writeToFile:fullPath atomically:YES];
+  };
+  [files enumerateObjectsUsingBlock:changeWordKeyFormatBlock];
   exit(0);
-#endif  // CLEANUP
+#endif  // ADMIN
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   self.window.rootViewController = [[UINavigationController alloc]

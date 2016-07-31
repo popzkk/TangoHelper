@@ -34,10 +34,15 @@ UIAlertController *texts_alert(NSString *title, NSString *message, NSArray *text
 UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NSArray *texts,
                                           NSArray *placeholders, THTextsAlertAction cancel_block,
                                           THTextsAlertAction confirm_block);
+UIFont *ja_normal(CGFloat size);
 UIFont *ja_normal_small();
 UIFont *ja_normal_big();
 UIFont *ja_bold_small();
 UIFont *ja_bold_big();
+UIFont *zh_light(CGFloat size);
+UIFont *zh_light_small();
+UIFont *zh_medium_big();
+
 UIColor *blue_color();
 UIColor *light_blue_color();
 UIColor *grey_color();

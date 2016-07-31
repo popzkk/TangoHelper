@@ -3,7 +3,7 @@
 #import "Backend/THFileCenter.h"
 #import "Backend/THPlayManager.h"
 #import "Backend/THPlaylist.h"
-#import "Shared/Keyboard/THKeyboard.h"
+#import "Keyboard/THKeyboard.h"
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
 #import "THPlaylistsViewController.h"
@@ -39,16 +39,17 @@ static CGFloat kTextFieldHeight = 35;
                                                 config:[[THPlayConfig alloc] init]
                                               delegate:self];
     _textView = [[UITextView alloc] initWithFrame:CGRectZero];
-    _textView.font = ja_bold_big();
+    _textView.font = zh_medium_big();
     _textView.layer.borderWidth = 1;
     _textView.layer.borderColor = grey_color().CGColor;
     _textView.textAlignment = NSTextAlignmentCenter;
+    _textView.userInteractionEnabled = NO;
     _textField = [[UITextField alloc] initWithFrame:CGRectZero];
     _textField.font = ja_normal_small();
     _textField.textAlignment = NSTextAlignmentCenter;
     _textField.layer.borderWidth = 1;
     _textField.layer.borderColor = grey_color().CGColor;
-    _keyboard = [THKeyboard sharedInstanceWithKeyboardType:kTHKeyboardHiragana
+    _keyboard = [THKeyboard sharedInstanceWithKeyboardType:kTHKeyboardUnknown
                                                 actionText:kNext
                                                   delegate:self];
     [self.view addSubview:_textView];
@@ -161,6 +162,10 @@ static CGFloat kTextFieldHeight = 35;
                                               kNotImplementedDialogMessage, nil)
                    animated:YES
                  completion:nil];
+}
+
+- (void)rightCellLongTapped {
+  // ...shows nice sentences?
 }
 
 #pragma mark - THPlayManagerDelegate
