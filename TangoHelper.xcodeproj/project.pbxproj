@@ -109,10 +109,10 @@
 				794FBCF41D45D78500055E21 /* THKeyboardCell.m */,
 				794FBCF51D45D78500055E21 /* THKeyboardCellConfig.h */,
 				794FBCF61D45D78500055E21 /* THKeyboardCellConfig.m */,
-				794FBCF71D45D78500055E21 /* THKeyboardCharTransformer.h */,
-				794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */,
 				794FBCF91D45D78500055E21 /* THKeyboardConfig.h */,
 				794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */,
+				794FBCF71D45D78500055E21 /* THKeyboardCharTransformer.h */,
+				794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */,
 				794FBCFB1D45D78500055E21 /* THKeyboardJaConstants.h */,
 			);
 			name = Keyboard;
@@ -161,14 +161,14 @@
 				79A762F61D287375009C0859 /* Backend */,
 				79A761C81D2451D1009C0859 /* Shared */,
 				794FBCF01D45D76D00055E21 /* Keyboard */,
+				794195481D4D82E200918B38 /* THAppDelegate.h */,
+				794195491D4D82E200918B38 /* THAppDelegate.m */,
 				79A766971D2D412F009C0859 /* THPlaylistsViewController.h */,
 				79A766981D2D4142009C0859 /* THPlaylistsViewController.m */,
 				79A86F931D400D960093DBC4 /* THPlayViewController.h */,
 				79A86F941D400D960093DBC4 /* THPlayViewController.m */,
 				79A78D9A1D3820B6009C0859 /* THWordsViewController.h */,
 				79A78D9B1D3820CE009C0859 /* THWordsViewController.m */,
-				794195481D4D82E200918B38 /* THAppDelegate.h */,
-				794195491D4D82E200918B38 /* THAppDelegate.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -176,9 +176,9 @@
 		79A761C81D2451D1009C0859 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				79A78D991D357E77009C0859 /* THStrings.h */,
 				79487B3E1D3BBFB000FF42AA /* THHelpers.h */,
 				79487B3F1D3C430F00FF42AA /* THHelpers.m */,
+				79A78D991D357E77009C0859 /* THStrings.h */,
 			);
 			name = Shared;
 			sourceTree = "<group>";
@@ -186,12 +186,12 @@
 		79A762F61D287375009C0859 /* Backend */ = {
 			isa = PBXGroup;
 			children = (
+				79487B3B1D3A909100FF42AA /* THDepot.h */,
+				79487B3C1D3A90A000FF42AA /* THDepot.m */,
 				79487B351D3A7EAA00FF42AA /* THFileCenter.h */,
 				79487B361D3A7EBD00FF42AA /* THFileCenter.m */,
 				79A762FA1D28F517009C0859 /* THFileRW.h */,
 				79A762F81D28F4EA009C0859 /* THFileRW.m */,
-				79487B3B1D3A909100FF42AA /* THDepot.h */,
-				79487B3C1D3A90A000FF42AA /* THDepot.m */,
 				79487B381D3A8F7400FF42AA /* THPlaylist.h */,
 				79487B391D3A8F8500FF42AA /* THPlaylist.m */,
 				793C5E6B1D42925400922EB7 /* THPlayManager.h */,
