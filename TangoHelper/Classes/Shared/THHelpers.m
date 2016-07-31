@@ -5,8 +5,9 @@
 extern "C" {
 #endif
 
-static NSString *ja_font_normal = @"HiraKakuProN-W3";
-static NSString *ja_font_bold = @"HiraKakuProN-W6";
+static NSString *ja_font_regular = @"NotoSansCJKjp-Regular";
+static NSString *ja_font_bold = @"NotoSansCJKjp-Bold";
+
 static NSString *zh_font_light = @"STHeitiSC-Light";
 static NSString *zh_font_medium = @"STHeitiSC-Medium";
 
@@ -150,21 +151,33 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
   return alert;
 }
 
-UIFont *ja_normal(CGFloat size) { return [UIFont fontWithName:ja_font_normal size:size]; }
+/*
+UIFont *ja_light(CGFloat size) { return [UIFont fontWithName:ja_font_light size:size]; }
 
-UIFont *ja_normal_small() { return ja_normal(16); }
+UIFont *ja_light_small() { return ja_light(16); }
 
-UIFont *ja_normal_big() { return ja_normal(24); }
+UIFont *ja_light_big() { return ja_light(24); }
+*/
 
-UIFont *ja_bold_small() { return [UIFont fontWithName:ja_font_bold size:16]; }
+UIFont *ja_regular(CGFloat size) { return [UIFont fontWithName:ja_font_regular size:size]; }
 
-UIFont *ja_bold_big() { return [UIFont fontWithName:ja_font_bold size:24]; }
+UIFont *ja_regular_small() { return ja_regular(16); }
+
+UIFont *ja_regular_big() { return ja_regular(24); }
+
+UIFont *ja_bold(CGFloat size) { return [UIFont fontWithName:ja_font_bold size:size]; }
+
+UIFont *ja_bold_small() { return ja_bold(16); }
+
+UIFont *ja_bold_big() { return ja_bold(24); }
 
 UIFont *zh_light(CGFloat size) { return [UIFont fontWithName:zh_font_light size:size]; }
 
 UIFont *zh_light_small() { return zh_light(15); }
 
-UIFont *zh_medium_big() { return [UIFont fontWithName:zh_font_medium size:24]; }
+UIFont *zh_medium(CGFloat size) { return [UIFont fontWithName:zh_font_medium size:size]; }
+
+UIFont *zh_medium_big() { return zh_medium(24); }
 
 UIColor *blue_color() {
   // modified from 007aff

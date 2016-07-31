@@ -514,7 +514,7 @@ static CGFloat kWordHeight = 50;
   }
   NSInteger row = indexPath.row;
   cell.textLabel.text = [_keys objectAtIndex:row];
-  cell.textLabel.font = ja_normal_small();
+  cell.textLabel.font = ja_regular_small();
   // ...object should change.
   cell.detailTextLabel.text = [_objects objectAtIndex:row];
   cell.detailTextLabel.font = zh_light_small();

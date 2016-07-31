@@ -42,7 +42,7 @@
 
 + (instancetype)hiraganaCharCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
-  [instance setFont:ja_normal_big() state:kTHKeyboardCellStatePopped];
+  [instance setFont:ja_regular_big() state:kTHKeyboardCellStatePopped];
   [instance setFont:ja_bold_big() state:kTHKeyboardCellStateFocused];
   [instance setBackgroundColor:blue_color() state:kTHKeyboardCellStateFocused];
   [instance setBackgroundColor:light_blue_color() state:kTHKeyboardCellStatePopped];
@@ -99,11 +99,11 @@
   static THKeyboardCellConfig *instance = nil;
   dispatch_once(&once, ^{
     instance = [[self alloc] init];
-    [instance setFont:ja_normal_small() state:kTHKeyboardCellStateNormal];
+    [instance setFont:ja_regular_small() state:kTHKeyboardCellStateNormal];
     [instance setTextColor:[UIColor blackColor] state:kTHKeyboardCellStateNormal];
     [instance setTextColor:[UIColor lightGrayColor] state:kTHKeyboardCellStateFaded];
     [instance setBackgroundColor:[UIColor clearColor] state:kTHKeyboardCellStateNormal];
-    //[instance setBorderWidth:1 state:kTHKeyboardCellStateNormal];
+    //[instance setBorderWidth:0 state:kTHKeyboardCellStateNormal];
     [instance setBorderColor:[UIColor lightGrayColor] state:kTHKeyboardCellStateNormal];
   });
   return instance;
@@ -119,16 +119,6 @@
 }
 
 #pragma mark - private
-
-- (instancetype)init {
-  self = [super init];
-  if (self) {
-    for (NSUInteger i = 0; i < numberOfKeyboardCellStates; ++i) {
-      _borderWidth[i] = -1;
-    }
-  }
-  return self;
-}
 
 - (void)setFont:(UIFont *)font state:(THKeyboardCellState)state {
   _font[state] = font;

@@ -106,7 +106,7 @@
     if (backgroundColor) {
       self.backgroundColor = backgroundColor;
     }
-    if (borderWidth >= 0) {
+    if (borderWidth > 0) {
       self.layer.borderWidth = borderWidth;
     }
     if (borderColor) {

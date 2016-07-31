@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 793C5E6C1D429B2D00922EB7 /* THPlayManager.m */; };
+		794195471D4D82AE00918B38 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 794195461D4D82AE00918B38 /* main.m */; };
+		7941954A1D4D82E200918B38 /* THAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 794195491D4D82E200918B38 /* THAppDelegate.m */; };
+		7941954C1D4D832700918B38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7941954B1D4D832700918B38 /* Assets.xcassets */; };
+		794195551D4D841F00918B38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 794195541D4D841F00918B38 /* LaunchScreen.storyboard */; };
+		794195591D4D85CD00918B38 /* NotoSansCJKjp-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 794195571D4D85CD00918B38 /* NotoSansCJKjp-Regular.otf */; };
+		7941955B1D4D88B100918B38 /* NotoSansCJKjp-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7941955A1D4D88B100918B38 /* NotoSansCJKjp-Bold.otf */; };
 		79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B361D3A7EBD00FF42AA /* THFileCenter.m */; };
 		79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B391D3A8F8500FF42AA /* THPlaylist.m */; };
 		79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3C1D3A90A000FF42AA /* THDepot.m */; };
@@ -17,10 +23,6 @@
 		794FBCFE1D45D78500055E21 /* THKeyboardCellConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF61D45D78500055E21 /* THKeyboardCellConfig.m */; };
 		794FBCFF1D45D78500055E21 /* THKeyboardCharTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */; };
 		794FBD001D45D78500055E21 /* THKeyboardConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */; };
-		79A760911D23058E009C0859 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A760901D23058E009C0859 /* main.m */; };
-		79A760941D23058E009C0859 /* THAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A760931D23058E009C0859 /* THAppDelegate.m */; };
-		79A7609C1D23058E009C0859 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 79A7609B1D23058E009C0859 /* Assets.xcassets */; };
-		79A7609F1D23058E009C0859 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 79A7609D1D23058E009C0859 /* LaunchScreen.storyboard */; };
 		79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A762F81D28F4EA009C0859 /* THFileRW.m */; };
 		79A766991D2D4142009C0859 /* THPlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A766981D2D4142009C0859 /* THPlaylistsViewController.m */; };
 		79A78D9C1D3820CE009C0859 /* THWordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A78D9B1D3820CE009C0859 /* THWordsViewController.m */; };
@@ -30,6 +32,14 @@
 /* Begin PBXFileReference section */
 		793C5E6B1D42925400922EB7 /* THPlayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlayManager.h; path = Classes/Backend/THPlayManager.h; sourceTree = "<group>"; };
 		793C5E6C1D429B2D00922EB7 /* THPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayManager.m; path = Classes/Backend/THPlayManager.m; sourceTree = "<group>"; };
+		794195461D4D82AE00918B38 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Supporting Files/main.m"; sourceTree = "<group>"; };
+		794195481D4D82E200918B38 /* THAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THAppDelegate.h; path = Classes/THAppDelegate.h; sourceTree = "<group>"; };
+		794195491D4D82E200918B38 /* THAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THAppDelegate.m; path = Classes/THAppDelegate.m; sourceTree = "<group>"; };
+		7941954B1D4D832700918B38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Supporting Files/Assets.xcassets"; sourceTree = "<group>"; };
+		7941954D1D4D834000918B38 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Supporting Files/Info.plist"; sourceTree = "<group>"; };
+		794195541D4D841F00918B38 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "Supporting Files/LaunchScreen.storyboard"; sourceTree = "<group>"; };
+		794195571D4D85CD00918B38 /* NotoSansCJKjp-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NotoSansCJKjp-Regular.otf"; path = "Resources/NotoSansCJKjp-Regular.otf"; sourceTree = "<group>"; };
+		7941955A1D4D88B100918B38 /* NotoSansCJKjp-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NotoSansCJKjp-Bold.otf"; path = "Resources/NotoSansCJKjp-Bold.otf"; sourceTree = "<group>"; };
 		79487B351D3A7EAA00FF42AA /* THFileCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THFileCenter.h; path = Classes/Backend/THFileCenter.h; sourceTree = "<group>"; };
 		79487B361D3A7EBD00FF42AA /* THFileCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileCenter.m; path = Classes/Backend/THFileCenter.m; sourceTree = "<group>"; };
 		79487B381D3A8F7400FF42AA /* THPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylist.h; path = Classes/Backend/THPlaylist.h; sourceTree = "<group>"; };
@@ -50,12 +60,6 @@
 		794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboardConfig.m; path = Classes/Keyboard/THKeyboardConfig.m; sourceTree = "<group>"; };
 		794FBCFB1D45D78500055E21 /* THKeyboardJaConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardJaConstants.h; path = Classes/Keyboard/THKeyboardJaConstants.h; sourceTree = "<group>"; };
 		79A7608C1D23058E009C0859 /* TangoHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TangoHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		79A760901D23058E009C0859 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		79A760921D23058E009C0859 /* THAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = THAppDelegate.h; sourceTree = "<group>"; };
-		79A760931D23058E009C0859 /* THAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = THAppDelegate.m; sourceTree = "<group>"; };
-		79A7609B1D23058E009C0859 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		79A7609E1D23058E009C0859 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		79A760A01D23058E009C0859 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		79A762F81D28F4EA009C0859 /* THFileRW.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileRW.m; path = Classes/Backend/THFileRW.m; sourceTree = "<group>"; };
 		79A762FA1D28F517009C0859 /* THFileRW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THFileRW.h; path = Classes/Backend/THFileRW.h; sourceTree = "<group>"; };
 		79A766971D2D412F009C0859 /* THPlaylistsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylistsViewController.h; path = Classes/THPlaylistsViewController.h; sourceTree = "<group>"; };
@@ -78,6 +82,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7941954F1D4D836800918B38 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				794195501D4D837900918B38 /* Base.lproj */,
+				7941955A1D4D88B100918B38 /* NotoSansCJKjp-Bold.otf */,
+				794195571D4D85CD00918B38 /* NotoSansCJKjp-Regular.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+		};
+		794195501D4D837900918B38 /* Base.lproj */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Base.lproj;
+			path = Resources/Base.lproj;
+			sourceTree = "<group>";
+		};
 		794FBCF01D45D76D00055E21 /* Keyboard */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,11 +138,7 @@
 			isa = PBXGroup;
 			children = (
 				79A761C71D24518F009C0859 /* Classes */,
-				79A760921D23058E009C0859 /* THAppDelegate.h */,
-				79A760931D23058E009C0859 /* THAppDelegate.m */,
-				79A7609B1D23058E009C0859 /* Assets.xcassets */,
-				79A7609D1D23058E009C0859 /* LaunchScreen.storyboard */,
-				79A760A01D23058E009C0859 /* Info.plist */,
+				7941954F1D4D836800918B38 /* Resources */,
 				79A7608F1D23058E009C0859 /* Supporting Files */,
 			);
 			path = TangoHelper;
@@ -129,7 +147,10 @@
 		79A7608F1D23058E009C0859 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				79A760901D23058E009C0859 /* main.m */,
+				794195541D4D841F00918B38 /* LaunchScreen.storyboard */,
+				7941954D1D4D834000918B38 /* Info.plist */,
+				7941954B1D4D832700918B38 /* Assets.xcassets */,
+				794195461D4D82AE00918B38 /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -146,6 +167,8 @@
 				79A86F941D400D960093DBC4 /* THPlayViewController.m */,
 				79A78D9A1D3820B6009C0859 /* THWordsViewController.h */,
 				79A78D9B1D3820CE009C0859 /* THWordsViewController.m */,
+				794195481D4D82E200918B38 /* THAppDelegate.h */,
+				794195491D4D82E200918B38 /* THAppDelegate.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -235,8 +258,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				79A7609F1D23058E009C0859 /* LaunchScreen.storyboard in Resources */,
-				79A7609C1D23058E009C0859 /* Assets.xcassets in Resources */,
+				794195551D4D841F00918B38 /* LaunchScreen.storyboard in Resources */,
+				794195591D4D85CD00918B38 /* NotoSansCJKjp-Regular.otf in Resources */,
+				7941955B1D4D88B100918B38 /* NotoSansCJKjp-Bold.otf in Resources */,
+				7941954C1D4D832700918B38 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +274,7 @@
 			files = (
 				794FBD001D45D78500055E21 /* THKeyboardConfig.m in Sources */,
 				794FBCFC1D45D78500055E21 /* THKeyboard.m in Sources */,
+				7941954A1D4D82E200918B38 /* THAppDelegate.m in Sources */,
 				79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */,
 				79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */,
 				79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */,
@@ -256,28 +282,16 @@
 				79A766991D2D4142009C0859 /* THPlaylistsViewController.m in Sources */,
 				79487B401D3C430F00FF42AA /* THHelpers.m in Sources */,
 				793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */,
-				79A760941D23058E009C0859 /* THAppDelegate.m in Sources */,
 				794FBCFD1D45D78500055E21 /* THKeyboardCell.m in Sources */,
 				79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */,
+				794195471D4D82AE00918B38 /* main.m in Sources */,
 				79A78D9C1D3820CE009C0859 /* THWordsViewController.m in Sources */,
 				794FBCFF1D45D78500055E21 /* THKeyboardCharTransformer.m in Sources */,
-				79A760911D23058E009C0859 /* main.m in Sources */,
 				79A86F951D400D960093DBC4 /* THPlayViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		79A7609D1D23058E009C0859 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				79A7609E1D23058E009C0859 /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		79A760A11D23058E009C0859 /* Debug */ = {
@@ -372,7 +386,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = TangoHelper/Info.plist;
+				INFOPLIST_FILE = "TangoHelper/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kaikaizhu.TangoHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -387,7 +401,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				INFOPLIST_FILE = TangoHelper/Info.plist;
+				INFOPLIST_FILE = "TangoHelper/Supporting Files/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.kaikaizhu.TangoHelper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
