@@ -85,19 +85,10 @@
 		7941954F1D4D836800918B38 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				794195501D4D837900918B38 /* Base.lproj */,
 				799064CF1D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf */,
 				799064CC1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf */,
 			);
 			name = Resources;
-			sourceTree = "<group>";
-		};
-		794195501D4D837900918B38 /* Base.lproj */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Base.lproj;
-			path = Resources/Base.lproj;
 			sourceTree = "<group>";
 		};
 		794FBCF01D45D76D00055E21 /* Keyboard */ = {
