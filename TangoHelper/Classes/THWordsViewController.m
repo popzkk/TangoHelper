@@ -15,7 +15,7 @@ typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
 };
 
 static NSString *kCellIdentifier = @"WordsViewCell";
-static CGFloat kWordHeight = 50;
+static CGFloat kWordHeight = 40;
 
 @interface NSIndexPath (THWordsViewController)
 

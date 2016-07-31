@@ -164,7 +164,7 @@ UIFont *ja_light_big() { return ja_light(24); }
 
 UIFont *cj_regular(CGFloat size) { return [UIFont fontWithName:cj_font_regular size:size]; }
 
-UIFont *cj_regular_small() { return cj_regular(16); }
+UIFont *cj_regular_small() { return cj_regular(15); }
 
 UIFont *cj_regular_big() { return cj_regular(24); }
 
@@ -176,13 +176,13 @@ UIFont *cj_bold_big() { return cj_bold(24); }
 
 UIFont *zh_light(CGFloat size) { return [UIFont fontWithName:zh_font_light size:size]; }
 
-UIFont *zh_light_small() { return zh_light(15); }
+UIFont *zh_light_small() { return zh_light(14); }
 
 UIFont *zh_medium(CGFloat size) { return [UIFont fontWithName:zh_font_medium size:size]; }
 
 UIFont *zh_medium_big() { return zh_medium(24); }
 
-UIFont *zh_bold_large() { return [UIFont fontWithName:cj_font_bold size:30]; }
+UIFont *zh_bold_large() { return [UIFont fontWithName:cj_font_bold size:27]; }
 
 UIColor *blue_color() {
   // modified from 007aff

@@ -41,17 +41,16 @@
     }
     [newContent writeToFile:fullPath atomically:YES];
   };
-
-  for (NSString* family in [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)])
-  {
+/*
+  for (NSString *family in [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)]) {
     NSLog(@"%@", family);
-
-    for (NSString* name in [[UIFont fontNamesForFamilyName:family] sortedArrayUsingSelector:@selector(compare:)])
-    {
+    for (NSString *name in
+         [[UIFont fontNamesForFamilyName:family] sortedArrayUsingSelector:@selector(compare:)]) {
       NSLog(@"  %@", name);
     }
   }
   exit(0);
+*/
   [files enumerateObjectsUsingBlock:changeWordKeyFormatBlock];
   exit(0);
 #endif  // ADMIN
