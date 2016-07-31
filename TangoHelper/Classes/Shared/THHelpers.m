@@ -5,8 +5,10 @@
 extern "C" {
 #endif
 
-static NSString *ja_font_regular = @"NotoSansCJKjp-Regular";
-static NSString *ja_font_bold = @"NotoSansCJKjp-Bold";
+// Japanese version of Noto Sans will display Chinese Characters in Japanese style...
+// So use Simplified version of Noto Sans here.
+static NSString *cj_font_regular = @"NotoSansCJKsc-Regular";
+static NSString *cj_font_bold = @"NotoSansCJKsc-Bold";
 
 static NSString *zh_font_light = @"STHeitiSC-Light";
 static NSString *zh_font_medium = @"STHeitiSC-Medium";
@@ -136,6 +138,7 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
       textField.placeholder = placeholders[i];
       textField.text = text;
+      textField.font = cj_regular_small();
     }];
   }
   [alert addAction:[UIAlertAction actionWithTitle:kCancel
@@ -159,17 +162,17 @@ UIFont *ja_light_small() { return ja_light(16); }
 UIFont *ja_light_big() { return ja_light(24); }
 */
 
-UIFont *ja_regular(CGFloat size) { return [UIFont fontWithName:ja_font_regular size:size]; }
+UIFont *cj_regular(CGFloat size) { return [UIFont fontWithName:cj_font_regular size:size]; }
 
-UIFont *ja_regular_small() { return ja_regular(16); }
+UIFont *cj_regular_small() { return cj_regular(16); }
 
-UIFont *ja_regular_big() { return ja_regular(24); }
+UIFont *cj_regular_big() { return cj_regular(24); }
 
-UIFont *ja_bold(CGFloat size) { return [UIFont fontWithName:ja_font_bold size:size]; }
+UIFont *cj_bold(CGFloat size) { return [UIFont fontWithName:cj_font_bold size:size]; }
 
-UIFont *ja_bold_small() { return ja_bold(16); }
+UIFont *cj_bold_small() { return cj_bold(16); }
 
-UIFont *ja_bold_big() { return ja_bold(24); }
+UIFont *cj_bold_big() { return cj_bold(24); }
 
 UIFont *zh_light(CGFloat size) { return [UIFont fontWithName:zh_font_light size:size]; }
 
@@ -178,6 +181,8 @@ UIFont *zh_light_small() { return zh_light(15); }
 UIFont *zh_medium(CGFloat size) { return [UIFont fontWithName:zh_font_medium size:size]; }
 
 UIFont *zh_medium_big() { return zh_medium(24); }
+
+UIFont *zh_bold_large() { return [UIFont fontWithName:cj_font_bold size:30]; }
 
 UIColor *blue_color() {
   // modified from 007aff

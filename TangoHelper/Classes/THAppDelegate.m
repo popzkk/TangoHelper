@@ -55,7 +55,6 @@
   [files enumerateObjectsUsingBlock:changeWordKeyFormatBlock];
   exit(0);
 #endif  // ADMIN
-
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   self.window.rootViewController = [[UINavigationController alloc]
       initWithRootViewController:[[THPlaylistsViewController alloc] init]];

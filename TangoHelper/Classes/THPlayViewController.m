@@ -39,13 +39,13 @@ static CGFloat kTextFieldHeight = 35;
                                                 config:[[THPlayConfig alloc] init]
                                               delegate:self];
     _textView = [[UITextView alloc] initWithFrame:CGRectZero];
-    _textView.font = zh_medium_big();
+    _textView.font = zh_bold_large();
     _textView.layer.borderWidth = 1;
     _textView.layer.borderColor = grey_color().CGColor;
     _textView.textAlignment = NSTextAlignmentCenter;
     _textView.userInteractionEnabled = NO;
     _textField = [[UITextField alloc] initWithFrame:CGRectZero];
-    _textField.font = ja_regular_small();
+    _textField.font = cj_regular_small();
     _textField.textAlignment = NSTextAlignmentCenter;
     _textField.layer.borderWidth = 1;
     _textField.layer.borderColor = grey_color().CGColor;

@@ -4,8 +4,8 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>NotoSansCJKjp-Regular.otf</string>
-		<string>NotoSansCJKjp-Bold.otf</string>
+		<string>NotoSansCJKsc-Regular.otf</string>
+		<string>NotoSansCJKsc-Bold.otf</string>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en_US</string>

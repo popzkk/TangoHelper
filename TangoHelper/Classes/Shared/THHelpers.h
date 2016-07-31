@@ -36,13 +36,14 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
                                           THTextsAlertAction confirm_block);
 //UIFont *ja_light_small();
 //UIFont *ja_light_big();
-UIFont *ja_regular_small();
-UIFont *ja_regular_big();
-UIFont *ja_bold_small();
-UIFont *ja_bold_big();
+UIFont *cj_regular_small();
+UIFont *cj_regular_big();
+UIFont *cj_bold_small();
+UIFont *cj_bold_big();
 
 UIFont *zh_light_small();
 UIFont *zh_medium_big();
+UIFont *zh_bold_large();
 
 UIColor *blue_color();
 UIColor *light_blue_color();
