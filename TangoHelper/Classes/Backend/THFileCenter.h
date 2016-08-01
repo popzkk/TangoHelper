@@ -12,6 +12,8 @@
 
 - (void)flushAll;
 
+- (void)flushAllWithThres:(NSUInteger)thres;
+
 - (THDepot *)depot;
 
 - (NSMutableArray *)playlists;

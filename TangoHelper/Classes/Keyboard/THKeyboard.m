@@ -235,7 +235,8 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       if ([object isEqualToString:@"⌫"]) {
         [_delegate backCellTapped];
       } else if ([object isEqualToString:@"空白"]) {
-        [_delegate addContent:space_for_keyboard(_keyboardType)];
+        // not sure if we should always use the english space.
+        [_delegate addContent:@" "];
       } else {
         [_delegate addContent:object];
       }
@@ -520,16 +521,6 @@ static THKeyboardType keyboard_type(NSString *cell_name) {
     return kTHKeyboardKatakana;
   } else {
     return kTHKeyboardUnknown;
-  }
-}
-
-static NSString *space_for_keyboard(THKeyboardType type) {
-  switch (type) {
-    case kTHKeyboardHiragana:
-    case kTHKeyboardKatakana:
-      return @"　";
-    default:
-      return @" ";
   }
 }
 

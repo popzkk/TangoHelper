@@ -80,6 +80,12 @@
   }
 }
 
+- (void)flushAllWithThres:(NSUInteger)thres {
+  for (THFileRW *fileRW in _openedFiles.allValues) {
+    [fileRW flushWithThres:thres];
+  }
+}
+
 - (void)fileRW:(THFileRW *)fileRW
  updatedOldKey:(NSString *)oldKey
        withKey:(NSString *)key

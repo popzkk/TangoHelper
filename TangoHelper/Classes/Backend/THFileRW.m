@@ -53,17 +53,6 @@ static NSUInteger thres = 20;
   self.diff += anotherFileRW.count;
 }
 
-- (void)flush {
-  [self flushWithThres:0];
-}
-
-#pragma mark - private
-
-- (void)setDiff:(NSUInteger)diff {
-  _diff = diff;
-  [self flushWithThres:thres];
-}
-
 - (void)flushWithThres:(NSUInteger)thres {
   if (self.diff > thres) {
     NSLog(@"flush \"%@\"", _filename);
@@ -73,6 +62,17 @@ static NSUInteger thres = 20;
       NSLog(@"writing to %@ fails.", _filename);
     }
   }
+}
+
+- (void)flush {
+  [self flushWithThres:0];
+}
+
+#pragma mark - private
+
+- (void)setDiff:(NSUInteger)diff {
+  _diff = diff;
+  [self flushWithThres:thres];
 }
 
 // only called internally, and thus ensures that this file does exist!

@@ -20,6 +20,8 @@
 
 - (void)addFromFileRW:(THFileRW *)anotherFileRW;
 
+- (void)flushWithThres:(NSUInteger)thres;
+
 // force writing immediately.
 - (void)flush;
 
