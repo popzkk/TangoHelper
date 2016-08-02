@@ -110,8 +110,7 @@
   }
   _current = [_available.allKeys objectAtIndex:arc4random_uniform((int)_available.allKeys.count)];
   [_delegate showWithText:[_playlist objectForKey:_current]];
-  _currentAnswer =
-      [_current substringToIndex:MIN(_current.length, [_current rangeOfString:@"「"].location)];
+  _currentAnswer = core_part(_current);
 }
 
 - (void)finish {

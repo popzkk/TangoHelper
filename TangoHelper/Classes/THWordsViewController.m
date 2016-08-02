@@ -521,6 +521,7 @@ static CGFloat kWordHeight = 40;
   if (indexPath.row < _nSelected) {
     // ...config a different style.
   }
+  cell.accessibilityLabel = core_part(cell.textLabel.text);
   return cell;
 }
 

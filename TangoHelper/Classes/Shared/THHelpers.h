@@ -50,6 +50,8 @@ UIColor *light_blue_color();
 UIColor *grey_color();
 UIColor *grey_color_half();
 
+NSString *core_part(NSString *);
+
 #if __cplusplus
 }  // Extern C
 #endif

@@ -65,7 +65,7 @@
 - (void)applicationDidEnterBackground:(UIApplication *)application {
   // seems switching out to the dictionary is normal when adding words.
   // set a threshold to avoid frequent writing to the phone.
-  [[THFileCenter sharedInstance] flushAllWithThres:7];
+  [[THFileCenter sharedInstance] flushAll];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

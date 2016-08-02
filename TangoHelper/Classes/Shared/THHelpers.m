@@ -201,6 +201,10 @@ UIColor *grey_color() {
 
 UIColor *grey_color_half() { return [UIColor colorWithRed:0.78 green:0.78 blue:0.80 alpha:0.5]; }
 
+NSString *core_part(NSString *str) {
+  return [str substringToIndex:MIN(str.length, [str rangeOfString:@"「"].location)];
+}
+
 #if __cplusplus
 }  // Extern C
 #endif
