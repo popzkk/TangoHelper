@@ -10,7 +10,7 @@
 @property(nonatomic, assign) BOOL lazyAssert;
 
 // (0, 1] means portions, > 1 means the exact number.
-@property(nonatomic, assign) double part;
+@property(nonatomic, assign) double portion;
 
 @end
 

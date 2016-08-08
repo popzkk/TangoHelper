@@ -70,10 +70,12 @@ static CGFloat kWordHeight = 40;
 - (void)refreshDataSource {
   if (_depot && !_playlist) {
     _keys = [NSMutableArray arrayWithArray:[_depot allKeys]];
+    shuffle(_keys);
     _objects = [NSMutableArray arrayWithArray:[_depot objectsForKeys:_keys]];
     _nSelected = 0;
   } else if (!_depot && _playlist) {
     _keys = [NSMutableArray arrayWithArray:[_playlist allKeys]];
+    shuffle(_keys);
     _objects = [NSMutableArray arrayWithArray:[_playlist objectsForKeys:_keys]];
     _nSelected = 0;
   } else {

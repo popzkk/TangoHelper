@@ -62,11 +62,16 @@
   return YES;
 }
 
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-  // seems switching out to the dictionary is normal when adding words.
-  // set a threshold to avoid frequent writing to the phone.
+- (void)applicationDidReceiveMemoryWarning:(UIApplication *)application {
   [[THFileCenter sharedInstance] flushAll];
 }
+
+#ifdef DEBUG
+// ...convenient method to save all the files - not needed when launched.
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+  [[THFileCenter sharedInstance] flushAll];
+}
+#endif  // DEBUG
 
 - (void)applicationWillTerminate:(UIApplication *)application {
   [[THFileCenter sharedInstance] flushAll];

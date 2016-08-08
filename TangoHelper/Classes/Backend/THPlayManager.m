@@ -108,7 +108,7 @@
     NSLog(@"Internal error: calling next when all words are done.");
     return;
   }
-  _current = [_available.allKeys objectAtIndex:arc4random_uniform((int)_available.allKeys.count)];
+  _current = [_available.allKeys objectAtIndex:arc4random_uniform((int)_available.count)];
   [_delegate showWithText:[_playlist objectForKey:_current]];
   _currentAnswer = core_part(_current);
 }

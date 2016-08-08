@@ -205,6 +205,12 @@ NSString *core_part(NSString *str) {
   return [str substringToIndex:MIN(str.length, [str rangeOfString:@"「"].location)];
 }
 
+void shuffle(NSMutableArray *array) {
+  for (NSUInteger i = array.count; i > 1; --i) {
+    [array exchangeObjectAtIndex:i - 1 withObjectAtIndex:arc4random_uniform((int)i)];
+  }
+}
+
 #if __cplusplus
 }  // Extern C
 #endif

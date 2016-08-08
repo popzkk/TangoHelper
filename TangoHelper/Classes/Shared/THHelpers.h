@@ -52,6 +52,8 @@ UIColor *grey_color_half();
 
 NSString *core_part(NSString *);
 
+void shuffle(NSMutableArray *);
+
 #if __cplusplus
 }  // Extern C
 #endif
