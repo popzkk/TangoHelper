@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7913E8101D590C0800A76893 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7913E80F1D590C0800A76893 /* LaunchScreen.xib */; };
 		793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 793C5E6C1D429B2D00922EB7 /* THPlayManager.m */; };
 		794195471D4D82AE00918B38 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 794195461D4D82AE00918B38 /* main.m */; };
 		7941954A1D4D82E200918B38 /* THAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 794195491D4D82E200918B38 /* THAppDelegate.m */; };
 		7941954C1D4D832700918B38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7941954B1D4D832700918B38 /* Assets.xcassets */; };
-		794195551D4D841F00918B38 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 794195541D4D841F00918B38 /* LaunchScreen.storyboard */; };
 		79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B361D3A7EBD00FF42AA /* THFileCenter.m */; };
 		79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B391D3A8F8500FF42AA /* THPlaylist.m */; };
 		79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3C1D3A90A000FF42AA /* THDepot.m */; };
@@ -30,6 +30,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7913E80F1D590C0800A76893 /* LaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = LaunchScreen.xib; path = "Supporting Files/LaunchScreen.xib"; sourceTree = "<group>"; };
 		793C5E6B1D42925400922EB7 /* THPlayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlayManager.h; path = Classes/Backend/THPlayManager.h; sourceTree = "<group>"; };
 		793C5E6C1D429B2D00922EB7 /* THPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayManager.m; path = Classes/Backend/THPlayManager.m; sourceTree = "<group>"; };
 		794195461D4D82AE00918B38 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Supporting Files/main.m"; sourceTree = "<group>"; };
@@ -37,7 +38,6 @@
 		794195491D4D82E200918B38 /* THAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THAppDelegate.m; path = Classes/THAppDelegate.m; sourceTree = "<group>"; };
 		7941954B1D4D832700918B38 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "Supporting Files/Assets.xcassets"; sourceTree = "<group>"; };
 		7941954D1D4D834000918B38 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = "Supporting Files/Info.plist"; sourceTree = "<group>"; };
-		794195541D4D841F00918B38 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "Supporting Files/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		79487B351D3A7EAA00FF42AA /* THFileCenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THFileCenter.h; path = Classes/Backend/THFileCenter.h; sourceTree = "<group>"; };
 		79487B361D3A7EBD00FF42AA /* THFileCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileCenter.m; path = Classes/Backend/THFileCenter.m; sourceTree = "<group>"; };
 		79487B381D3A8F7400FF42AA /* THPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylist.h; path = Classes/Backend/THPlaylist.h; sourceTree = "<group>"; };
@@ -138,7 +138,7 @@
 		79A7608F1D23058E009C0859 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				794195541D4D841F00918B38 /* LaunchScreen.storyboard */,
+				7913E80F1D590C0800A76893 /* LaunchScreen.xib */,
 				7941954D1D4D834000918B38 /* Info.plist */,
 				7941954B1D4D832700918B38 /* Assets.xcassets */,
 				794195461D4D82AE00918B38 /* main.m */,
@@ -249,7 +249,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				794195551D4D841F00918B38 /* LaunchScreen.storyboard in Resources */,
+				7913E8101D590C0800A76893 /* LaunchScreen.xib in Resources */,
 				799064CE1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf in Resources */,
 				799064D01D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf in Resources */,
 				7941954C1D4D832700918B38 /* Assets.xcassets in Resources */,

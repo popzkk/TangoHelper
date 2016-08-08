@@ -12,7 +12,11 @@
 #import "Backend/THPlaylist.h"
 #endif  // ADMIN
 
-@implementation THAppDelegate
+static NSTimeInterval thres = 30 * 60;
+
+@implementation THAppDelegate {
+  NSDate *_lastTimeStamp;
+}
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -66,12 +70,19 @@
   [[THFileCenter sharedInstance] flushAll];
 }
 
-#ifdef DEBUG
-// ...convenient method to save all the files - not needed when launched.
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-  [[THFileCenter sharedInstance] flushAll];
+- (void)applicationWillEnterForeground:(UIApplication *)application {
+  if (_lastTimeStamp && [_lastTimeStamp timeIntervalSinceNow] < -thres) {
+    [[THFileCenter sharedInstance] flushAll];
+  }
+  _lastTimeStamp = [NSDate date];
 }
-#endif  // DEBUG
+
+- (void)applicationDidEnterBackground:(UIApplication *)application {
+  if (_lastTimeStamp && [_lastTimeStamp timeIntervalSinceNow] < -thres) {
+    [[THFileCenter sharedInstance] flushAll];
+  }
+  _lastTimeStamp = [NSDate date];
+}
 
 - (void)applicationWillTerminate:(UIApplication *)application {
   [[THFileCenter sharedInstance] flushAll];
