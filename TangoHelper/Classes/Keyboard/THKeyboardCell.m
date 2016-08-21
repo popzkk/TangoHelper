@@ -78,8 +78,10 @@
     UIFont *font = [config fontForState:state];
     UIColor *textColor = [config textColorForState:state];
     UIColor *backgroundColor = [config backgroundColorForState:state];
+#ifdef KEYBOARDCELL_HAS_BORDER
     CGFloat borderWidth = [config borderWidthForState:state];
     UIColor *borderColor = [config borderColorForState:state];
+#endif
 
     if (!font) {
       font = [config fontForState:kTHKeyboardCellStateNormal];
@@ -90,12 +92,14 @@
     if (!backgroundColor) {
       backgroundColor = [config backgroundColorForState:kTHKeyboardCellStateNormal];
     }
+#ifdef KEYBOARDCELL_HAS_BORDER
     if (borderWidth < 0) {
       borderWidth = [config borderWidthForState:kTHKeyboardCellStateNormal];
     }
     if (!borderColor) {
       borderColor = [config borderColorForState:kTHKeyboardCellStateNormal];
     }
+#endif
 
     if (font) {
       self.font = font;
@@ -106,12 +110,14 @@
     if (backgroundColor) {
       self.backgroundColor = backgroundColor;
     }
+#ifdef KEYBOARDCELL_HAS_BORDER
     if (borderWidth > 0) {
       self.layer.borderWidth = borderWidth;
     }
     if (borderColor) {
       self.layer.borderColor = borderColor.CGColor;
     }
+#endif
   } else {
     // NSLog(@"WARNING: cell config is nil!");
   }

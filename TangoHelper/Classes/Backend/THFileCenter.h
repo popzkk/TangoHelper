@@ -34,4 +34,6 @@
 
 - (THFileRW *)secretFile;
 
+- (NSMutableArray *)wordsFiles;
+
 @end

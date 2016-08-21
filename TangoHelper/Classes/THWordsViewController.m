@@ -14,6 +14,9 @@ typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
   kTHWordsViewControllerAddingToPlaylist,
 };
 
+static CGFloat kTextLabelFontSize = 15;
+static CGFloat kDetailTextLabelFontSize = 14;
+
 static NSString *kCellIdentifier = @"WordsViewCell";
 static CGFloat kWordHeight = 40;
 
@@ -516,10 +519,10 @@ static CGFloat kWordHeight = 40;
   }
   NSInteger row = indexPath.row;
   cell.textLabel.text = [_keys objectAtIndex:row];
-  cell.textLabel.font = cj_regular_small();
+  cell.textLabel.font = cj_regular(kTextLabelFontSize);
   // ...object should change.
   cell.detailTextLabel.text = [_objects objectAtIndex:row];
-  cell.detailTextLabel.font = zh_light_small();
+  cell.detailTextLabel.font = zh_light(kDetailTextLabelFontSize);
   if (indexPath.row < _nSelected) {
     // ...config a different style.
   }

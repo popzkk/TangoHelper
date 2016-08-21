@@ -31,6 +31,8 @@ static const NSUInteger katakanaCellIndex = 20;
 static const NSUInteger backCellIndex = 9;
 static const NSUInteger spaceCellIndex = 14;
 static NSString *special_names[] = {@"１２３", @"ＡＢＣ", @"あいう", @"アイウ", @"⌫", @"空白"};
+static const NSUInteger hiraganaCellSpecialIndex = 2;
+static const NSUInteger katakanaCellSpecialIndex = 3;
 static const NSUInteger special_indexes[] = {numberCellIndex,   englishCellIndex, hiraganaCellIndex,
                                              katakanaCellIndex, backCellIndex,    spaceCellIndex};
 static const NSUInteger core_indexes[12] = {6, 7, 8, 11, 12, 13, 16, 17, 18, 21, 22, 23};
@@ -46,12 +48,14 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
   __weak id<THKeyboardDelegate> _delegate;
 
   THKeyboardTouchState _state;
-  NSUInteger _startIndex;     // index of the cell when the touch begins.
-  BOOL _crossIsShown;         // whether the cross is shown.
-  CGPoint _startPoint;        // touch point at the beginning.
-  NSUInteger _previousIndex;  // the previous index of the cell when the user is moving.
-  NSUInteger _currentIndex;   // index of the cell when the user is moving.
-  NSTimeInterval _startTime;  // start time of the touch.
+  NSUInteger _startIndex;       // index of the cell when the touch begins.
+  BOOL _crossIsShown;           // whether the cross is shown.
+  CGPoint _startPoint;          // touch point at the beginning.
+  NSUInteger _previousIndex;    // the previous index of the cell when the user is moving.
+  NSUInteger _currentIndex;     // index of the cell when the user is moving.
+  NSTimeInterval _startTime;    // start time of the touch.
+  NSInteger _rightTappedCount;  // how many times the right cell is tapped. -1 means changed.
+  NSTimeInterval _lastTime;     // finish time of the last tap.
 }
 
 #pragma mark - public
@@ -208,7 +212,9 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 }
 
 - (void)commitTouchResult:(THKeyboardTouchResult)result object:(id)object {
-  NSTimeInterval interval = [NSDate timeIntervalSinceReferenceDate] - _startTime;
+  NSTimeInterval currentTime = [NSDate timeIntervalSinceReferenceDate];
+  NSTimeInterval interval = currentTime - _startTime;
+  NSTimeInterval intervalSinceLastTime = currentTime - _lastTime;
   switch (result) {
     // show a nice dialog to explain.
     case kTHKeyboardTouchResultUnknown:
@@ -216,9 +222,28 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       break;
     // the right cell has some secret function?
     case kTHKeyboardTouchResultRight:
-      // holding the right cell longer than 3s will be regarded as a long tap.
-      if (interval > 3) {
-        [_delegate rightCellLongTapped];
+      if (interval < 0.7) {
+        if (_rightTappedCount <= 0 || intervalSinceLastTime < 0.7) {
+          ++_rightTappedCount;
+          if (_rightTappedCount > 11) {
+            _rightTappedCount = 1;
+          }
+          if (_rightTappedCount == 11) {
+            [_delegate askForSecretWithCallback:^(NSArray<UITextField *> *textFields) {
+              if ([textFields.firstObject.text isEqualToString:@"15"]) {
+                [self updateSecretCells];
+              }
+            }];
+          } else if (_rightTappedCount == 0) {
+            [self updateSecretCells];
+          }
+        }
+      } else {
+        _rightTappedCount = MIN(_rightTappedCount, 0);
+        // holding the right cell longer than 3s will be regarded as a long tap.
+        if (interval > 3) {
+          [_delegate rightCellLongTapped];
+        }
       }
       break;
     case kTHKeyboardTouchResultAction:
@@ -231,7 +256,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
     case kTHKeyboardTouchResultSelf:
       self.keyboardType = keyboard_type(object);
       break;
-    default: // kTHKeyboardTouchResultText
+    default:  // kTHKeyboardTouchResultText
       if ([object isEqualToString:@"⌫"]) {
         [_delegate backCellTapped];
       } else if ([object isEqualToString:@"空白"]) {
@@ -242,6 +267,20 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       }
       break;
   }
+  _lastTime = currentTime;
+}
+
+- (void)updateSecretCells {
+  if (_rightTappedCount == 11) {
+    _rightTappedCount = -1;
+    special_names[hiraganaCellSpecialIndex] = @"ゆきこ";
+    special_names[katakanaCellSpecialIndex] = @"マロニー";
+  } else {
+    special_names[hiraganaCellSpecialIndex] = @"あいう";
+    special_names[katakanaCellSpecialIndex] = @"アイウ";
+  }
+  [self cellAtSpecialIndex:hiraganaCellSpecialIndex].text = special_names[hiraganaCellSpecialIndex];
+  [self cellAtSpecialIndex:katakanaCellSpecialIndex].text = special_names[katakanaCellSpecialIndex];
 }
 
 #pragma mark - UIView
@@ -341,6 +380,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
           NSStringFromClass([self class]), NSStringFromSelector(_cmd));
   }
 
+  // don't update _lastTime here - it will be used in |commitTouchResult:|.
   CGPoint point = [[touches anyObject] locationInView:self];
   NSUInteger index = [self touchedIndex:point];
 
@@ -515,9 +555,9 @@ static THKeyboardType keyboard_type(NSString *cell_name) {
     return kTHKeyboardNumber;
   } else if ([cell_name isEqualToString:@"ＡＢＣ"]) {
     return kTHKeyboardEnglish;
-  } else if ([cell_name isEqualToString:@"あいう"]) {
+  } else if ([cell_name isEqualToString:special_names[hiraganaCellSpecialIndex]]) {
     return kTHKeyboardHiragana;
-  } else if ([cell_name isEqualToString:@"アイウ"]) {
+  } else if ([cell_name isEqualToString:special_names[katakanaCellSpecialIndex]]) {
     return kTHKeyboardKatakana;
   } else {
     return kTHKeyboardUnknown;

@@ -115,6 +115,12 @@
   return [self fileRWForClass:[THFileRW class] filename:@"secret" create:YES];
 }
 
+- (NSMutableArray *)wordsFiles {
+  NSMutableArray *files = [self playlists];
+  [files addObject:[self depot]];
+  return files;
+}
+
 #pragma mark - private
 
 - (instancetype)init {
@@ -155,12 +161,6 @@
       [files addObject:[self fileRWForClass:[THPlaylist class] filename:filename create:NO]];
     }
   }];
-  return files;
-}
-
-- (NSMutableArray *)wordsFiles {
-  NSMutableArray *files = [self playlists];
-  [files addObject:[self depot]];
   return files;
 }
 

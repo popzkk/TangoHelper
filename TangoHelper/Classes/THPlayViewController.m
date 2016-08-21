@@ -10,10 +10,13 @@
 
 #pragma mark - THPlayViewController
 
-static CGFloat kPadding = 20;
-static CGFloat kTextViewTopMargin = 20;
-static CGFloat kTextFieldTopMargin = 5;
-static CGFloat kTextFieldHeight = 35;
+static CGFloat kTextViewFontSize = 27;
+static CGFloat kTextFieldFontSize = 16;
+
+static CGFloat kPadding = 13;
+static CGFloat kTextFieldTopPadding = 5;
+static CGFloat kTextFieldHeight = 28;
+static CGFloat kTextFieldBottomPadding = 5;
 
 @interface THPlayViewController ()<THKeyboardDelegate, THPlayManagerDelegate>
 
@@ -39,13 +42,13 @@ static CGFloat kTextFieldHeight = 35;
                                                 config:[[THPlayConfig alloc] init]
                                               delegate:self];
     _textView = [[UITextView alloc] initWithFrame:CGRectZero];
-    _textView.font = zh_bold_large();
+    _textView.font = zh_bold(kTextViewFontSize);
     _textView.layer.borderWidth = 1;
     _textView.layer.borderColor = grey_color().CGColor;
     _textView.textAlignment = NSTextAlignmentCenter;
     _textView.userInteractionEnabled = NO;
     _textField = [[UITextField alloc] initWithFrame:CGRectZero];
-    _textField.font = cj_regular_small();
+    _textField.font = cj_regular(kTextFieldFontSize);
     _textField.textAlignment = NSTextAlignmentCenter;
     _textField.layer.borderWidth = 1;
     _textField.layer.borderColor = grey_color().CGColor;
@@ -91,20 +94,21 @@ static CGFloat kTextFieldHeight = 35;
 }
 
 - (void)viewWillLayoutSubviews {
-  CGRect frame = CGRectMake(
-      0, self.navigationController.navigationBar.frame.size.height, self.view.bounds.size.width,
-      self.view.bounds.size.height - self.navigationController.navigationBar.frame.size.height);
-  // height for keyboard + text field
-  CGFloat height = (frame.size.height - 2 * kPadding) / 2;
-  _textView.frame =
-      CGRectMake(frame.origin.x + kPadding, frame.origin.y + kPadding + kTextViewTopMargin,
-                 frame.size.width - 2 * kPadding, height - kTextViewTopMargin);
-  _textField.frame = CGRectMake(
-      frame.origin.x + kPadding, frame.origin.y + kPadding + height + kTextFieldTopMargin,
-      frame.size.width - 2 * kPadding, kTextFieldHeight - kTextFieldTopMargin);
-  _keyboard.frame =
-      CGRectMake(frame.origin.x + kPadding, frame.origin.y + kPadding + height + kTextFieldHeight,
-                 frame.size.width - 2 * kPadding, height - kTextFieldHeight);
+  CGRect frame = self.view.bounds;
+  CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
+  // height for the text view.
+  CGFloat textViewHeight = frame.size.height / 2 - kPadding - navBarHeight;
+  CGFloat x = frame.origin.x + kPadding;
+  CGFloat y = frame.origin.y + + navBarHeight + kPadding;
+  CGFloat width = frame.size.width - 2 * kPadding;
+
+  _textView.frame = CGRectMake(x, y += kPadding, width, textViewHeight);
+  y += textViewHeight;
+
+  _textField.frame = CGRectMake(x, y += kTextFieldTopPadding, width, kTextFieldHeight);
+  y += kTextFieldHeight + kTextFieldBottomPadding;
+
+  _keyboard.frame = CGRectMake(x, y, width, frame.size.height - y - kPadding);
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -166,6 +170,14 @@ static CGFloat kTextFieldHeight = 35;
 
 - (void)rightCellLongTapped {
   // ...shows nice sentences?
+}
+
+- (void)askForSecretWithCallback:(id)callback {
+  [self.navigationController
+      presentViewController:texts_alert(@"", nil, @[ @"" ], @[ @"Please enter something ^_^" ],
+                                        callback)
+                   animated:YES
+                 completion:nil];
 }
 
 #pragma mark - THPlayManagerDelegate

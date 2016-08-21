@@ -10,6 +10,8 @@ typedef void (^THTextsAlertAction)(NSArray<UITextField *> *);
 extern "C" {
 #endif
 
+// =============================================  Strings Helpers
+
 NSString *playlist_title(NSString *partial_name);
 NSString *add_to_playlist_title(NSString *partial_name);
 NSString *remove_dialog_title_from_playlist(NSString *partial_name);
@@ -19,6 +21,8 @@ NSString *play_immediately_dialog_title(NSString *partial_name);
 NSString *playing_title(NSString *partial_name);
 NSString *play_wrong_answer_dialog_title(NSString *answer);
 NSString *play_wrong_answer_dialog_message(NSString *answer);
+
+// =============================================  UI components Helpers
 
 UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action);
 UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action);
@@ -34,25 +38,38 @@ UIAlertController *texts_alert(NSString *title, NSString *message, NSArray *text
 UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NSArray *texts,
                                           NSArray *placeholders, THTextsAlertAction cancel_block,
                                           THTextsAlertAction confirm_block);
-//UIFont *ja_light_small();
-//UIFont *ja_light_big();
-UIFont *cj_regular_small();
-UIFont *cj_regular_big();
-UIFont *cj_bold_small();
-UIFont *cj_bold_big();
 
-UIFont *zh_light_small();
-UIFont *zh_medium_big();
-UIFont *zh_bold_large();
+// =============================================  Fonts and Colors Helpers
+
+//UIFont *ja_light(CGFloat size);
+UIFont *cj_regular(CGFloat size);
+UIFont *cj_bold(CGFloat size);
+
+UIFont *zh_light(CGFloat size);
+UIFont *zh_medium(CGFloat size);
+UIFont *zh_bold(CGFloat size);
 
 UIColor *blue_color();
 UIColor *light_blue_color();
 UIColor *grey_color();
 UIColor *grey_color_half();
 
+// =============================================  Other Helpers
+
+// core part means the recitable part of the key.
 NSString *core_part(NSString *);
 
 void shuffle(NSMutableArray *);
+
+id object_for_key(NSString *);
+
+BOOL can_add_key(NSString *key);
+
+BOOL can_edit_key(NSString *, NSString *);
+
+BOOL can_add_playlist(NSString *);
+
+BOOL can_rename_playlist(NSString *, NSString *);
 
 #if __cplusplus
 }  // Extern C

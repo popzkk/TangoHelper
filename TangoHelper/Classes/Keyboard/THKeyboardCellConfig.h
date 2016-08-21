@@ -1,5 +1,7 @@
 #import <UIKit/UIKit.h>
 
+#define KEYBOARDCELL_HAS_BORDER_
+
 typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
   kTHKeyboardCellStateNormal = 0,
   kTHKeyboardCellStateFocused,
@@ -32,7 +34,9 @@ typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
 - (UIFont *)fontForState:(THKeyboardCellState)state;
 - (UIColor *)textColorForState:(THKeyboardCellState)state;
 - (UIColor *)backgroundColorForState:(THKeyboardCellState)state;
+#ifdef KEYBOARDCELL_HAS_BORDER
 - (CGFloat)borderWidthForState:(THKeyboardCellState)state;
 - (UIColor *)borderColorForState:(THKeyboardCellState)state;
+#endif
 
 @end

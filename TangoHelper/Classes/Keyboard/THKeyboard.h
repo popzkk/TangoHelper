@@ -26,6 +26,8 @@ typedef NS_ENUM(NSUInteger, THKeyboardType) {
 
 - (void)rightCellLongTapped;
 
+- (void)askForSecretWithCallback:(id)callback;
+
 @end
 
 @interface THKeyboard : UIView

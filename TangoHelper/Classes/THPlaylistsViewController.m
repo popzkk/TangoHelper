@@ -162,7 +162,7 @@ static CGFloat kPlaylistHeight = 67;
   THPlaylist *playlist =
       [[THFileCenter sharedInstance] playlistWithPartialName:partialName create:YES];
   [_playlists insertObject:playlist atIndex:0];
-  [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0] ]
+  [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row] ]
                         withRowAnimation:UITableViewRowAnimationNone];
   return playlist;
 }

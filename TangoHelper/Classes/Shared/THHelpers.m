@@ -1,9 +1,14 @@
 #import "THHelpers.h"
+
+#import "../Backend/THFileCenter.h"
+#import "../Backend/THFileRW.h"
 #import "THStrings.h"
 
 #if __cplusplus
 extern "C" {
 #endif
+
+static CGFloat kTextFieldFontSize = 16;
 
 // Japanese version of Noto Sans will display Chinese Characters in Japanese style...
 // So use Simplified version of Noto Sans here.
@@ -138,7 +143,7 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
       textField.placeholder = placeholders[i];
       textField.text = text;
-      textField.font = cj_regular_small();
+      textField.font = cj_regular(kTextFieldFontSize);
     }];
   }
   [alert addAction:[UIAlertAction actionWithTitle:kCancel
@@ -156,10 +161,6 @@ UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NS
 
 /*
 UIFont *ja_light(CGFloat size) { return [UIFont fontWithName:ja_font_light size:size]; }
-
-UIFont *ja_light_small() { return ja_light(16); }
-
-UIFont *ja_light_big() { return ja_light(24); }
 */
 
 UIFont *cj_regular(CGFloat size) { return [UIFont fontWithName:cj_font_regular size:size]; }
@@ -182,7 +183,7 @@ UIFont *zh_medium(CGFloat size) { return [UIFont fontWithName:zh_font_medium siz
 
 UIFont *zh_medium_big() { return zh_medium(24); }
 
-UIFont *zh_bold_large() { return [UIFont fontWithName:cj_font_bold size:27]; }
+UIFont *zh_bold(CGFloat size) { return [UIFont fontWithName:cj_font_bold size:size]; }
 
 UIColor *blue_color() {
   // modified from 007aff
@@ -209,6 +210,31 @@ void shuffle(NSMutableArray *array) {
   for (NSUInteger i = array.count; i > 1; --i) {
     [array exchangeObjectAtIndex:i - 1 withObjectAtIndex:arc4random_uniform((int)i)];
   }
+}
+
+id object_for_key(NSString *key) {
+  for (THFileRW *fileRW in [[THFileCenter sharedInstance] wordsFiles]) {
+    id object = [fileRW objectForKey:key];
+    if (object) {
+      return object;
+    }
+  }
+  return nil;
+}
+
+BOOL can_add_key(NSString *key) { return ((NSString *)object_for_key(key)).length > 0; }
+
+BOOL can_edit_key(NSString *old, NSString *new) {
+  // ...object should change.
+  return [new isEqualToString:old] || can_add_key(new);
+}
+
+BOOL can_add_playlist(NSString *partial_name) {
+  return ![[THFileCenter sharedInstance] playlistWithPartialName:partial_name create:NO];
+}
+
+BOOL can_rename_playlist(NSString *old, NSString *new) {
+  return [new isEqualToString:old] || can_add_playlist(new);
 }
 
 #if __cplusplus
