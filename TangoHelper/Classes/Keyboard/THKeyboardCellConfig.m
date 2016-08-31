@@ -36,14 +36,14 @@ static CGFloat kCellFontSizeBig = 24;
 
 + (instancetype)specialCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
-  [instance setBackgroundColor:grey_color() state:kTHKeyboardCellStateNormal];
-  [instance setBackgroundColor:grey_color_half() state:kTHKeyboardCellStateFocused];
+  [instance setBackgroundColor:grey_color() state:THKeyboardCellStateNormal];
+  [instance setBackgroundColor:grey_color_half() state:THKeyboardCellStateFocused];
   return instance;
 }
 
 + (instancetype)actionCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
-  [instance setBackgroundColor:blue_color() state:kTHKeyboardCellStateFocused];
+  [instance setBackgroundColor:blue_color() state:THKeyboardCellStateFocused];
 #ifdef KEYBOARDCELL_HAS_BORDER
   [instance setBorderWidth:0.5 state:kTHKeyboardCellStateFocused];
 #endif
@@ -52,11 +52,11 @@ static CGFloat kCellFontSizeBig = 24;
 
 + (instancetype)hiraganaCharCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
-  [instance setFont:cj_regular(kCellFontSizeMedium) state:kTHKeyboardCellStateNormal];
-  [instance setFont:cj_regular(kCellFontSizeMedium) state:kTHKeyboardCellStatePopped];
-  [instance setFont:cj_bold(kCellFontSizeBig) state:kTHKeyboardCellStateFocused];
-  [instance setBackgroundColor:blue_color() state:kTHKeyboardCellStateFocused];
-  [instance setBackgroundColor:light_blue_color() state:kTHKeyboardCellStatePopped];
+  [instance setFont:cj_regular(kCellFontSizeMedium) state:THKeyboardCellStateNormal];
+  [instance setFont:cj_regular(kCellFontSizeMedium) state:THKeyboardCellStatePopped];
+  [instance setFont:cj_bold(kCellFontSizeBig) state:THKeyboardCellStateFocused];
+  [instance setBackgroundColor:blue_color() state:THKeyboardCellStateFocused];
+  [instance setBackgroundColor:light_blue_color() state:THKeyboardCellStatePopped];
 #ifdef KEYBOARDCELL_HAS_BORDER
   //[instance setBorderWidth:0.5 state:kTHKeyboardCellStateFocused];
   //[instance setBorderWidth:0.5 state:kTHKeyboardCellStatePopped];
@@ -66,7 +66,7 @@ static CGFloat kCellFontSizeBig = 24;
 
 + (instancetype)hiraganaLeftCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
-  [instance setBackgroundColor:grey_color_half() state:kTHKeyboardCellStateFocused];
+  [instance setBackgroundColor:grey_color_half() state:THKeyboardCellStateFocused];
   return instance;
 }
 
@@ -114,10 +114,10 @@ static CGFloat kCellFontSizeBig = 24;
   static THKeyboardCellConfig *instance = nil;
   dispatch_once(&once, ^{
     instance = [[self alloc] init];
-    [instance setFont:cj_regular(kCellFontSizeSmall) state:kTHKeyboardCellStateNormal];
-    [instance setTextColor:[UIColor blackColor] state:kTHKeyboardCellStateNormal];
-    [instance setTextColor:[UIColor lightGrayColor] state:kTHKeyboardCellStateFaded];
-    [instance setBackgroundColor:[UIColor clearColor] state:kTHKeyboardCellStateNormal];
+    [instance setFont:cj_regular(kCellFontSizeSmall) state:THKeyboardCellStateNormal];
+    [instance setTextColor:[UIColor blackColor] state:THKeyboardCellStateNormal];
+    [instance setTextColor:[UIColor lightGrayColor] state:THKeyboardCellStateFaded];
+    [instance setBackgroundColor:[UIColor clearColor] state:THKeyboardCellStateNormal];
 #ifdef KEYBOARDCELL_HAS_BORDER
     //[instance setBorderWidth:0 state:kTHKeyboardCellStateNormal];
     [instance setBorderColor:[UIColor lightGrayColor] state:kTHKeyboardCellStateNormal];

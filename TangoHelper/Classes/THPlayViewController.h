@@ -1,9 +1,9 @@
 #import <UIKit/UIKit.h>
 
-@class THPlaylist;
+@class THWordsCollection;
 
 @interface THPlayViewController : UIViewController
 
-- (instancetype)initWithPlaylist:(THPlaylist *)playlist;
+- (instancetype)initWithCollection:(THWordsCollection *)collection;
 
 @end

@@ -1,14 +1,18 @@
 #import "THPlayViewController.h"
 
-#import "Backend/THFileCenter.h"
-#import "Backend/THPlayManager.h"
+#import "THWordsViewController.h"
+#import "Backend/THFileRW.h"
 #import "Backend/THPlaylist.h"
+#import "Backend/THWord.h"
+#import "Backend/THWordsManager.h"
 #import "Keyboard/THKeyboard.h"
+#import "Models/THPlayViewModel.h"
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
-#import "THPlaylistsViewController.h"
 
-#pragma mark - THPlayViewController
+/** TODO: cancel the back button */
+
+typedef void (^THPlayViewTextsOperation)(NSArray<NSString *> *);
 
 static CGFloat kTextViewFontSize = 27;
 static CGFloat kTextFieldFontSize = 16;
@@ -18,29 +22,36 @@ static CGFloat kTextFieldTopPadding = 5;
 static CGFloat kTextFieldHeight = 28;
 static CGFloat kTextFieldBottomPadding = 5;
 
-@interface THPlayViewController ()<THKeyboardDelegate, THPlayManagerDelegate>
+@interface THPlayViewController ()<THKeyboardDelegate, THPlayViewModelDelegate>
 
 @end
 
 @implementation THPlayViewController {
-  THPlayManager *_manager;
+  THWordsCollection *_collection;
+  THPlayViewModel *_model;
+
   UITextView *_textView;
   UITextField *_textField;
   THKeyboard *_keyboard;
+
+  NSMutableArray<UIAlertController *> *_alertStack;
+  NSMutableArray<NSArray<NSString *> *> *_textsStack;
+
+  THPlayResult *_result;
 }
 
 #pragma mark - public
 
-- (instancetype)initWithPlaylist:(THPlaylist *)playlist {
+- (instancetype)initWithCollection:(THWordsCollection *)collection {
   self = [super init];
   if (self) {
-    if (!playlist) {
-      NSLog(@"Internal error: try to play a nil playlist");
-      return nil;
-    }
-    _manager = [[THPlayManager alloc] initWithPlaylist:playlist
-                                                config:[[THPlayConfig alloc] init]
-                                              delegate:self];
+    _collection = collection;
+    _model = [[THPlayViewModel alloc] initWithCollection:_collection
+                                                  config:[[THPlayConfig alloc] init]
+                                                delegate:self];
+    _alertStack = [NSMutableArray array];
+    _textsStack = [NSMutableArray array];
+
     _textView = [[UITextView alloc] initWithFrame:CGRectZero];
     _textView.font = zh_bold(kTextViewFontSize);
     _textView.layer.borderWidth = 1;
@@ -52,38 +63,98 @@ static CGFloat kTextFieldBottomPadding = 5;
     _textField.textAlignment = NSTextAlignmentCenter;
     _textField.layer.borderWidth = 1;
     _textField.layer.borderColor = grey_color().CGColor;
-    _keyboard = [THKeyboard sharedInstanceWithKeyboardType:kTHKeyboardUnknown
-                                                actionText:kNext
+    _keyboard = [THKeyboard sharedInstanceWithKeyboardType:THKeyboardTypeUnknown
+                                                actionText:kNextJa
                                                   delegate:self];
     [self.view addSubview:_textView];
     [self.view addSubview:_textField];
     [self.view addSubview:_keyboard];
-    self.title = playing_title(playlist.partialName);
+    if ([_collection isKindOfClass:[THPlaylist class]]) {
+      self.title = ((THPlaylist *)_collection).partialName;
+    } else {
+      self.title = @"Playing";
+    }
   }
   return self;
 }
 
+#if (DEBUG)
+- (void)dealloc {
+  NSLog(@"dealloc: %@", self);
+}
+#endif
+
 #pragma mark - private
 
-- (BOOL)canAddPlaylistWithPartialName:(NSString *)partialName {
-  return ![[THFileCenter sharedInstance] playlistWithPartialName:partialName create:NO];
+- (void)showAlert:(UIAlertController *)alert {
+  [self showAlert:alert save:NO];
 }
 
-- (void)playlistDialogAddTextFieldDidChange {
-  UIAlertController *alertController = (UIAlertController *)self.presentedViewController;
-  if (alertController) {
-    NSString *partialName = alertController.textFields.firstObject.text;
-    UIAlertAction *action = alertController.actions.lastObject;
-    action.enabled = partialName.length && [self canAddPlaylistWithPartialName:partialName];
+- (void)showAlert:(UIAlertController *)alert save:(BOOL)save {
+  [self showAlert:alert completion:nil save:save];
+}
+
+- (void)showAlert:(UIAlertController *)alert completion:(void (^)(void))completion save:(BOOL)save {
+  if (save) {
+    [_alertStack addObject: alert];
   }
+  [self.navigationController presentViewController:alert animated:YES completion:completion];
 }
 
-- (UIAlertController *)wrapPlaylistDialogAdd:(UIAlertController *)alert {
-  alert.actions.lastObject.enabled = NO;
-  [alert.textFields.firstObject addTarget:self
-                                   action:@selector(playlistDialogAddTextFieldDidChange)
-                         forControlEvents:UIControlEventEditingChanged];
-  return alert;
+- (void)showLastAlertAndPop:(BOOL)pop {
+  if (pop) {
+    [_alertStack removeLastObject];
+  }
+  UIAlertController *alert = _alertStack.lastObject;
+  if (alert.textFields.count) {
+    recover_alert_texts(alert, _textsStack.lastObject);
+    [_textsStack removeLastObject];
+  }
+  [self showAlert:alert];
+}
+
+- (THAlertBasicAction)editWordBlockWithExplanation:(NSString *)explanation
+                                               key:(THWordKey *)key
+                                         operation:(THPlayViewTextsOperation)operation {
+  __weak THPlayViewController *weakSelf = self;
+  return ^() {
+    [weakSelf
+        showAlert:alert_edit_word(
+                      key.contentForDisplay, @[ key.input, key.extra, explanation ],
+                      ^() {
+                        [weakSelf showLastAlertAndPop:YES];
+                      },
+                      ^(NSArray<UITextField *> *textFields) {
+                        NSArray<NSString *> *texts = texts_from_text_fields(textFields);
+                        [_textsStack addObject:texts];
+                        THWordKey *newKey =
+                            [[THWordKey alloc] initWithInput:texts[0] extra:texts[1]];
+                        NSString *newExplanation = texts[2];
+                        THWordsCollection *collection;
+                        THWordsManagerOverwriteAction action =
+                            [THWordsManager collection:_collection
+                                wantsToEditExplanation:newExplanation
+                                                forKey:newKey
+                                                oldKey:key
+                                           conflicting:&collection];
+                        if (action) {
+                          [weakSelf showAlert:alert_edit_word_conflicting(
+                                                  key.contentForDisplay, newKey.contentForDisplay,
+                                                  newExplanation,
+                                                  [collection objectForKey:newKey].explanation,
+                                                  ^() {
+                                                    [weakSelf showLastAlertAndPop:NO];
+                                                  },
+                                                  ^{
+                                                    action();
+                                                    operation(texts);
+                                                  })];
+                        } else {
+                          operation(texts);
+                        }
+                      })
+             save:YES];
+  };
 }
 
 #pragma mark - UIViewController
@@ -113,26 +184,21 @@ static CGFloat kTextFieldBottomPadding = 5;
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  if (!_manager.playlist.count) {
-    [self.navigationController
-        presentViewController:super_basic_alert(kPlayEmptyPlaylistTitle, nil,
-                                                ^() {
-                                                  [self.navigationController
-                                                      popViewControllerAnimated:YES];
-                                                })
-                     animated:YES
-                   completion:nil];
+  if (!_collection.count) {
+    [self showAlert:alert_play_empty_playlist(^() {
+            [self.navigationController popViewControllerAnimated:YES];
+          })];
+  } else if (_result) {
+    [self.navigationController popViewControllerAnimated:NO];
   } else {
-    if (!_manager.isPlaying) {
-      [_manager start];
-    }
+    [_model start];
   }
 }
 
 #pragma mark - THKeyboardDelegate
 
 - (void)actionCellTapped {
-  [_manager commitInput:_textField.text];
+  [_model confirmInput:_textField.text];
 }
 
 - (void)backCellTapped {
@@ -156,16 +222,8 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)changeLastInputTo:(NSString *)content {
   if ([_textField hasText]) {
     _textField.text = [[_textField.text substringToIndex:_textField.text.length - 1]
-        stringByAppendingString:content];
+                       stringByAppendingString:content];
   }
-}
-
-- (void)showNotImplementedDialog {
-  [self.navigationController
-      presentViewController:super_basic_alert(kNotImplementedDialogTitle,
-                                              kNotImplementedDialogMessage, nil)
-                   animated:YES
-                 completion:nil];
 }
 
 - (void)rightCellLongTapped {
@@ -173,64 +231,85 @@ static CGFloat kTextFieldBottomPadding = 5;
 }
 
 - (void)askForSecretWithCallback:(id)callback {
-  [self.navigationController
-      presentViewController:texts_alert(@"", nil, @[ @"" ], @[ @"Please enter something ^_^" ],
-                                        callback)
-                   animated:YES
-                 completion:nil];
+  [self showAlert:alert_ask_for_secret(callback)];
 }
 
-#pragma mark - THPlayManagerDelegate
+- (void)showNotImplementedDialog {
+  [self showAlert:alert_not_implemented(nil)];
+}
 
-- (void)showWithText:(NSString *)text {
-  _textView.text = text;
+#pragma mark - THPlayViewModelDelegate
+
+- (void)nextWordWithExplanation:(NSString *)explanation {
+  _textView.text = explanation;
   _textField.text = @"";
+  [_alertStack removeAllObjects];
+  [_textsStack removeAllObjects];
 }
 
-- (void)showAlert:(UIAlertController *)alert {
-  [self.navigationController presentViewController:alert animated:YES completion:nil];
+- (void)wrongAnswer:(NSString *)wrongAnswer
+     forExplanation:(NSString *)explanation
+            wordKey:(THWordKey *)key {
+  THAlertBasicAction next_block = ^() {
+    [_model commitWrongAnswerWithOption:THPlayOptionNext texts:nil];
+  };
+  THAlertBasicAction typo_block = ^() {
+    [_model commitWrongAnswerWithOption:THPlayOptionTypo texts:nil];
+  };
+  THPlayViewTextsOperation wrong_right_operation = ^(NSArray<NSString *> *texts) {
+    [_model commitWrongAnswerWithOption:THPlayOptionWrongRight texts:texts];
+  };
+  THPlayViewTextsOperation wrong_wrong_operation = ^(NSArray<NSString *> *texts) {
+    [_model commitWrongAnswerWithOption:THPlayOptionWrongWrong texts:texts];
+  };
+  THAlertBasicAction remove_block = ^() {
+    // _model will remove the word for us!
+    [_model commitWrongAnswerWithOption:THPlayOptionRemove texts:nil];
+  };
+  [self showAlert:action_sheet_play_options(
+                      key.contentForDisplay, wrongAnswer, next_block, typo_block,
+                      [self editWordBlockWithExplanation:explanation
+                                                     key:key
+                                               operation:wrong_right_operation],
+                      [self editWordBlockWithExplanation:explanation
+                                                     key:key
+                                               operation:wrong_wrong_operation],
+                      remove_block)
+             save:YES];
 }
 
 - (void)playFinishedWithResult:(THPlayResult *)result {
-  if (result.errors.count) {
-    [self.navigationController
-        presentViewController:
-            [self
-                wrapPlaylistDialogAdd:texts_alert_two_blocks(
-                                          kPlayFinishMistakeDialogTitle,
-                                          kPlayFinishMistakeDialogMessage, @[ @"" ],
-                                          @[ kPlaylistDialogTextField ],
-                                          ^(NSArray<UITextField *> *textFields) {
-                                            [self.navigationController
-                                                popViewControllerAnimated:YES];
-                                          },
-                                          ^(NSArray<UITextField *> *textFields) {
-                                            NSString *partialName = textFields.firstObject.text;
-                                            THPlaylist *playlist = [[THFileCenter sharedInstance]
-                                                playlistWithPartialName:partialName
-                                                                 create:YES];
-                                            NSArray *keys = [result.errors allObjects];
-                                            [playlist
-                                                setObjects:[_manager.playlist objectsForKeys:keys]
-                                                   forKeys:keys];
-                                            [self.navigationController
-                                                popToRootViewControllerAnimated:YES];
-                                            [(THPlaylistsViewController *)self.navigationController
-                                                    .viewControllers.firstObject
-                                                showDialogForPlaylist:playlist];
-                                          })]
-                     animated:YES
-                   completion:nil];
+  _result = result;
+  if (result.wrongWordKeys.count) {
+    NSArray<THWordKey *> *keys = result.wrongWordKeys.allObjects;
+    THWordsCollection *collection = [[THWordsCollection alloc]
+        initWithTransformedContent:[NSDictionary
+                                       dictionaryWithObjects:[_collection objectsForKeys:keys]
+                                                     forKeys:keys]];
+    [self showAlert:action_sheet_play_finished_mistakes(
+                        ^{
+                          [self.navigationController
+                              pushViewController:[[THPlayViewController alloc]
+                                                     initWithCollection:collection]
+                                        animated:YES];
+                        },
+                        ^{
+                          [self.navigationController
+                              pushViewController:[[THWordsViewController alloc]
+                                                     initWithCollection:collection
+                                                            preSelected:nil
+                                                                  title:@"Wrong Words"
+                                                            cancelBlock:nil
+                                                           confirmBlock:nil]
+                                        animated:YES];
+                        },
+                        ^{
+                          [self.navigationController popViewControllerAnimated:YES];
+                        })];
   } else {
-    [self.navigationController
-        presentViewController:super_basic_alert(kPlayFinishNoMistakeDialogTitle,
-                                                kPlayFinishNoMistakeDialogMessage,
-                                                ^() {
-                                                  [self.navigationController
-                                                      popViewControllerAnimated:YES];
-                                                })
-                     animated:YES
-                   completion:nil];
+    [self showAlert:alert_play_finished_no_mistakes(^() {
+      [self.navigationController popViewControllerAnimated:YES];
+    })];
   }
 }
 

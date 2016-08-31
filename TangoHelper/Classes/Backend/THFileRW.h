@@ -1,24 +1,47 @@
 #import <Foundation/Foundation.h>
 
-@interface THFileRW : NSObject
+@class THMetadata;
+@class THWordKey;
+@class THWordObject;
 
-@property(nonatomic, readonly) NSString *filename;
+#pragma mark - THWordsCollection
+
+@interface THWordsCollection : NSObject
 
 @property(nonatomic, readonly) NSUInteger count;
 
-- (NSArray *)allKeys;
+- (instancetype)initWithTransformedContent:
+    (NSDictionary<THWordKey *, THWordObject *> *)transformedContent;
 
-- (NSArray *)objectsForKeys:(NSArray *)keys;
+- (NSArray<THWordKey *> *)allKeys;
 
-- (id)objectForKey:(NSString *)key;
+- (NSArray<THWordObject *> *)objectsForKeys:(NSArray<THWordKey *> *)keys;
 
-- (void)removeObjectForKey:(NSString *)key;
+- (THWordObject *)objectForKey:(THWordKey *)key;
 
-- (void)setObject:(id)object forKey:(id)key;
+- (void)addObject:(THWordObject *)object forKey:(THWordKey *)key;
 
-- (void)setObjects:(NSArray *)objects forKeys:(NSArray *)keys;
+- (void)removeObjectForKey:(THWordKey *)key;
 
-- (void)addFromFileRW:(THFileRW *)anotherFileRW;
+- (void)editObject:(THWordObject *)object forKey:(THWordKey *)key oldKey:(THWordKey *)oldKey;
+
+- (void)addObjects:(NSArray<THWordObject *> *)objects forKeys:(NSArray<THWordKey *> *)keys;
+
+- (void)removeObjectsForKeys:(NSArray<THWordKey *> *)keys;
+
+- (void)addFromWordsCollection:(THWordsCollection *)collection;
+
+- (NSArray<THWordKey *> *)searchWithString:(NSString *)string;
+
+@end
+
+#pragma mark - THFileRW
+
+@interface THFileRW : THWordsCollection
+
+@property(nonatomic, readonly) NSString *filename;
+
+@property(nonatomic, readonly) THMetadata *metadata;
 
 - (void)flushWithThres:(NSUInteger)thres;
 

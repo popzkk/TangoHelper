@@ -1,11 +1,12 @@
-#import <UIKit/UIKit.h>
+#import "THBasicTableViewController.h"
 
 @class THPlaylist;
 
-@interface THPlaylistsViewController : UITableViewController
+@interface THPlaylistsViewController : THBasicTableViewController
 
-- (instancetype)init;
-
-- (void)showDialogForPlaylist:(THPlaylist *)playlist;
+- (instancetype)initWithExcluded:(NSArray<THPlaylist *> *)excluded
+                           title:(NSString *)title
+                     cancelBlock:(THTableViewCancelBlock)cancelBlock
+                    confirmBlock:(THTableViewConfirmBlock)confirmBlock;
 
 @end

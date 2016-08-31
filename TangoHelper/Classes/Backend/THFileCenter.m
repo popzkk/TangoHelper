@@ -3,13 +3,15 @@
 #import "THFileRW.h"
 #import "THDepot.h"
 #import "THPlaylist.h"
+#import "THWord.h"
 
-// re-define these methods so they can be used...
 @interface THFileRW ()
 
 - (instancetype)initWithFilename:(NSString *)filename;
 
 - (void)updateWithFilename:(NSString *)filename;
+
+- (void)setObject:(THWordObject *)object forKey:(THWordKey *)key;
 
 @end
 
@@ -48,11 +50,7 @@
                      filename:[partialName stringByAppendingPathExtension:@"playlist"]
                        create:create];
 }
-/*
-- (THPlaylist *)tmpPlaylist {
-  return [self fileRWForClass:[THPlaylist class] filename:@"playlist" create:YES];
-}
-*/
+
 - (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName {
   if ([playlist.partialName isEqualToString:partialName]) {
     return;
@@ -86,28 +84,21 @@
   }
 }
 
-- (void)fileRW:(THFileRW *)fileRW
- updatedOldKey:(NSString *)oldKey
-       withKey:(NSString *)key
-        object:(id)object {
+- (void)fileRW:(THFileRW *)fileRW didUpdateKey:(THWordKey *)key withObject:(THWordObject *)object {
+#if (DEBUG)
   if ([_openedFiles objectForKey:fileRW.filename] != fileRW) {
     NSLog(@"Internal error: fileRW not found!");
     return;
   }
-
-  NSMutableArray *files = [NSMutableArray array];
+#endif
   for (THFileRW *anotherFileRW in [self wordsFiles]) {
-    if (anotherFileRW != fileRW && [anotherFileRW objectForKey:oldKey]) {
-      [files addObject:anotherFileRW];
+    if (anotherFileRW == fileRW) {
+      continue;
     }
-  }
-  if (![key isEqualToString:oldKey]) {
-    for (THFileRW *anotherFileRW in files) {
-      [anotherFileRW removeObjectForKey:oldKey];
+    THWordObject *anotherObj = [anotherFileRW objectForKey:key];
+    if (anotherObj && anotherObj != object) {
+      [anotherFileRW setObject:object forKey:key];
     }
-  }
-  for (THFileRW *anotherFileRW in files) {
-    [anotherFileRW setObject:object forKey:key];
   }
 }
 

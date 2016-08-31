@@ -7,10 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 793C5E6C1D429B2D00922EB7 /* THPlayManager.m */; };
+		7922495F1D6CFDE700493AB5 /* THBasicTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7922495E1D6CFDE700493AB5 /* THBasicTableViewController.m */; };
+		79224C411D6DE47900493AB5 /* THPlaylistsViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79224C3F1D6DE47900493AB5 /* THPlaylistsViewModel.m */; };
+		79224C421D6DE47900493AB5 /* THWordsViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79224C401D6DE47900493AB5 /* THWordsViewModel.m */; };
+		793B46DA1D75C51F00376E20 /* THWordsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 793B46D91D75C51F00376E20 /* THWordsManager.m */; };
+		793DD0191D69A10B0006B6D1 /* THMetadata.m in Sources */ = {isa = PBXBuildFile; fileRef = 793DD0181D69A10B0006B6D1 /* THMetadata.m */; };
+		793DD01C1D69A5220006B6D1 /* THWord.m in Sources */ = {isa = PBXBuildFile; fileRef = 793DD01B1D69A5220006B6D1 /* THWord.m */; };
 		794195471D4D82AE00918B38 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 794195461D4D82AE00918B38 /* main.m */; };
 		7941954A1D4D82E200918B38 /* THAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 794195491D4D82E200918B38 /* THAppDelegate.m */; };
 		7941954C1D4D832700918B38 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7941954B1D4D832700918B38 /* Assets.xcassets */; };
+		794500391D774D7C00A9C491 /* THPlayViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79224C3B1D6DD28900493AB5 /* THPlayViewModel.m */; };
 		79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B361D3A7EBD00FF42AA /* THFileCenter.m */; };
 		79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B391D3A8F8500FF42AA /* THPlaylist.m */; };
 		79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3C1D3A90A000FF42AA /* THDepot.m */; };
@@ -24,14 +30,28 @@
 		799064D01D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 799064CF1D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf */; };
 		799878D11D6356D60038122F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 799878D01D6356D60038122F /* LaunchScreen.storyboard */; };
 		79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A762F81D28F4EA009C0859 /* THFileRW.m */; };
-		79A766991D2D4142009C0859 /* THPlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A766981D2D4142009C0859 /* THPlaylistsViewController.m */; };
-		79A78D9C1D3820CE009C0859 /* THWordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A78D9B1D3820CE009C0859 /* THWordsViewController.m */; };
-		79A86F951D400D960093DBC4 /* THPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A86F941D400D960093DBC4 /* THPlayViewController.m */; };
+		79C639061D7213C600CF09E8 /* THPlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C639021D7213C600CF09E8 /* THPlaylistsViewController.m */; };
+		79C639071D7213C700CF09E8 /* THPlayViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C639041D7213C600CF09E8 /* THPlayViewController.m */; };
+		79C639081D7213C700CF09E8 /* THWordsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C639051D7213C600CF09E8 /* THWordsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		793C5E6B1D42925400922EB7 /* THPlayManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlayManager.h; path = Classes/Backend/THPlayManager.h; sourceTree = "<group>"; };
-		793C5E6C1D429B2D00922EB7 /* THPlayManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayManager.m; path = Classes/Backend/THPlayManager.m; sourceTree = "<group>"; };
+		7922495B1D6CFC7700493AB5 /* THBasicTableViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THBasicTableViewController.h; path = Classes/THBasicTableViewController.h; sourceTree = "<group>"; };
+		7922495D1D6CFCD600493AB5 /* THTableViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THTableViewModel.h; path = Classes/Models/THTableViewModel.h; sourceTree = "<group>"; };
+		7922495E1D6CFDE700493AB5 /* THBasicTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THBasicTableViewController.m; path = Classes/THBasicTableViewController.m; sourceTree = "<group>"; };
+		79224C3A1D6DD28900493AB5 /* THPlayViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THPlayViewModel.h; path = Classes/Models/THPlayViewModel.h; sourceTree = "<group>"; };
+		79224C3B1D6DD28900493AB5 /* THPlayViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayViewModel.m; path = Classes/Models/THPlayViewModel.m; sourceTree = "<group>"; };
+		79224C3D1D6DDB7F00493AB5 /* THWordsViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THWordsViewModel.h; path = Classes/Models/THWordsViewModel.h; sourceTree = "<group>"; };
+		79224C3E1D6DE47900493AB5 /* THPlaylistsViewModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THPlaylistsViewModel.h; path = Classes/Models/THPlaylistsViewModel.h; sourceTree = "<group>"; };
+		79224C3F1D6DE47900493AB5 /* THPlaylistsViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlaylistsViewModel.m; path = Classes/Models/THPlaylistsViewModel.m; sourceTree = "<group>"; };
+		79224C401D6DE47900493AB5 /* THWordsViewModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THWordsViewModel.m; path = Classes/Models/THWordsViewModel.m; sourceTree = "<group>"; };
+		793B46D81D75C4E400376E20 /* THWordsManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THWordsManager.h; path = Classes/Backend/THWordsManager.h; sourceTree = "<group>"; };
+		793B46D91D75C51F00376E20 /* THWordsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THWordsManager.m; path = Classes/Backend/THWordsManager.m; sourceTree = "<group>"; };
+		793DD0171D69A0F90006B6D1 /* THMetadata.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THMetadata.h; path = Classes/Backend/THMetadata.h; sourceTree = "<group>"; };
+		793DD0181D69A10B0006B6D1 /* THMetadata.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THMetadata.m; path = Classes/Backend/THMetadata.m; sourceTree = "<group>"; };
+		793DD01A1D69A5120006B6D1 /* THWord.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THWord.h; path = Classes/Backend/THWord.h; sourceTree = "<group>"; };
+		793DD01B1D69A5220006B6D1 /* THWord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THWord.m; path = Classes/Backend/THWord.m; sourceTree = "<group>"; };
+		793DD01D1D69AD160006B6D1 /* THPropertyList.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPropertyList.h; path = Classes/Backend/THPropertyList.h; sourceTree = "<group>"; };
 		794195461D4D82AE00918B38 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Supporting Files/main.m"; sourceTree = "<group>"; };
 		794195481D4D82E200918B38 /* THAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THAppDelegate.h; path = Classes/THAppDelegate.h; sourceTree = "<group>"; };
 		794195491D4D82E200918B38 /* THAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THAppDelegate.m; path = Classes/THAppDelegate.m; sourceTree = "<group>"; };
@@ -62,13 +82,13 @@
 		79A7608C1D23058E009C0859 /* TangoHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TangoHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79A762F81D28F4EA009C0859 /* THFileRW.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileRW.m; path = Classes/Backend/THFileRW.m; sourceTree = "<group>"; };
 		79A762FA1D28F517009C0859 /* THFileRW.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THFileRW.h; path = Classes/Backend/THFileRW.h; sourceTree = "<group>"; };
-		79A766971D2D412F009C0859 /* THPlaylistsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylistsViewController.h; path = Classes/THPlaylistsViewController.h; sourceTree = "<group>"; };
-		79A766981D2D4142009C0859 /* THPlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlaylistsViewController.m; path = Classes/THPlaylistsViewController.m; sourceTree = "<group>"; };
 		79A78D991D357E77009C0859 /* THStrings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THStrings.h; path = Classes/Shared/THStrings.h; sourceTree = "<group>"; };
-		79A78D9A1D3820B6009C0859 /* THWordsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THWordsViewController.h; path = Classes/THWordsViewController.h; sourceTree = "<group>"; };
-		79A78D9B1D3820CE009C0859 /* THWordsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THWordsViewController.m; path = Classes/THWordsViewController.m; sourceTree = "<group>"; };
-		79A86F931D400D960093DBC4 /* THPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THPlayViewController.h; path = Classes/THPlayViewController.h; sourceTree = "<group>"; };
-		79A86F941D400D960093DBC4 /* THPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayViewController.m; path = Classes/THPlayViewController.m; sourceTree = "<group>"; };
+		79C639001D7212ED00CF09E8 /* THWordsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THWordsViewController.h; path = Classes/THWordsViewController.h; sourceTree = "<group>"; };
+		79C639011D7213C600CF09E8 /* THPlaylistsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THPlaylistsViewController.h; path = Classes/THPlaylistsViewController.h; sourceTree = "<group>"; };
+		79C639021D7213C600CF09E8 /* THPlaylistsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlaylistsViewController.m; path = Classes/THPlaylistsViewController.m; sourceTree = "<group>"; };
+		79C639031D7213C600CF09E8 /* THPlayViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THPlayViewController.h; path = Classes/THPlayViewController.h; sourceTree = "<group>"; };
+		79C639041D7213C600CF09E8 /* THPlayViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlayViewController.m; path = Classes/THPlayViewController.m; sourceTree = "<group>"; };
+		79C639051D7213C600CF09E8 /* THWordsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THWordsViewController.m; path = Classes/THWordsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -82,6 +102,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		7922495C1D6CFCA500493AB5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				79224C3D1D6DDB7F00493AB5 /* THWordsViewModel.h */,
+				79224C401D6DE47900493AB5 /* THWordsViewModel.m */,
+				79224C3E1D6DE47900493AB5 /* THPlaylistsViewModel.h */,
+				79224C3F1D6DE47900493AB5 /* THPlaylistsViewModel.m */,
+				79224C3A1D6DD28900493AB5 /* THPlayViewModel.h */,
+				79224C3B1D6DD28900493AB5 /* THPlayViewModel.m */,
+				7922495D1D6CFCD600493AB5 /* THTableViewModel.h */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
 		7941954F1D4D836800918B38 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -152,14 +186,17 @@
 				79A762F61D287375009C0859 /* Backend */,
 				79A761C81D2451D1009C0859 /* Shared */,
 				794FBCF01D45D76D00055E21 /* Keyboard */,
+				7922495C1D6CFCA500493AB5 /* Models */,
 				794195481D4D82E200918B38 /* THAppDelegate.h */,
 				794195491D4D82E200918B38 /* THAppDelegate.m */,
-				79A766971D2D412F009C0859 /* THPlaylistsViewController.h */,
-				79A766981D2D4142009C0859 /* THPlaylistsViewController.m */,
-				79A86F931D400D960093DBC4 /* THPlayViewController.h */,
-				79A86F941D400D960093DBC4 /* THPlayViewController.m */,
-				79A78D9A1D3820B6009C0859 /* THWordsViewController.h */,
-				79A78D9B1D3820CE009C0859 /* THWordsViewController.m */,
+				7922495B1D6CFC7700493AB5 /* THBasicTableViewController.h */,
+				7922495E1D6CFDE700493AB5 /* THBasicTableViewController.m */,
+				79C639011D7213C600CF09E8 /* THPlaylistsViewController.h */,
+				79C639021D7213C600CF09E8 /* THPlaylistsViewController.m */,
+				79C639031D7213C600CF09E8 /* THPlayViewController.h */,
+				79C639041D7213C600CF09E8 /* THPlayViewController.m */,
+				79C639001D7212ED00CF09E8 /* THWordsViewController.h */,
+				79C639051D7213C600CF09E8 /* THWordsViewController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -183,10 +220,15 @@
 				79487B361D3A7EBD00FF42AA /* THFileCenter.m */,
 				79A762FA1D28F517009C0859 /* THFileRW.h */,
 				79A762F81D28F4EA009C0859 /* THFileRW.m */,
+				793B46D81D75C4E400376E20 /* THWordsManager.h */,
+				793B46D91D75C51F00376E20 /* THWordsManager.m */,
+				793DD0171D69A0F90006B6D1 /* THMetadata.h */,
+				793DD0181D69A10B0006B6D1 /* THMetadata.m */,
 				79487B381D3A8F7400FF42AA /* THPlaylist.h */,
 				79487B391D3A8F8500FF42AA /* THPlaylist.m */,
-				793C5E6B1D42925400922EB7 /* THPlayManager.h */,
-				793C5E6C1D429B2D00922EB7 /* THPlayManager.m */,
+				793DD01D1D69AD160006B6D1 /* THPropertyList.h */,
+				793DD01A1D69A5120006B6D1 /* THWord.h */,
+				793DD01B1D69A5220006B6D1 /* THWord.m */,
 			);
 			name = Backend;
 			sourceTree = "<group>";
@@ -263,22 +305,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				79224C421D6DE47900493AB5 /* THWordsViewModel.m in Sources */,
+				79C639071D7213C700CF09E8 /* THPlayViewController.m in Sources */,
 				794FBD001D45D78500055E21 /* THKeyboardConfig.m in Sources */,
+				79224C411D6DE47900493AB5 /* THPlaylistsViewModel.m in Sources */,
+				794500391D774D7C00A9C491 /* THPlayViewModel.m in Sources */,
+				793DD01C1D69A5220006B6D1 /* THWord.m in Sources */,
 				794FBCFC1D45D78500055E21 /* THKeyboard.m in Sources */,
 				7941954A1D4D82E200918B38 /* THAppDelegate.m in Sources */,
 				79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */,
 				79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */,
 				79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */,
 				794FBCFE1D45D78500055E21 /* THKeyboardCellConfig.m in Sources */,
-				79A766991D2D4142009C0859 /* THPlaylistsViewController.m in Sources */,
 				79487B401D3C430F00FF42AA /* THHelpers.m in Sources */,
-				793C5E6D1D429B2D00922EB7 /* THPlayManager.m in Sources */,
 				794FBCFD1D45D78500055E21 /* THKeyboardCell.m in Sources */,
+				79C639081D7213C700CF09E8 /* THWordsViewController.m in Sources */,
 				79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */,
 				794195471D4D82AE00918B38 /* main.m in Sources */,
-				79A78D9C1D3820CE009C0859 /* THWordsViewController.m in Sources */,
+				7922495F1D6CFDE700493AB5 /* THBasicTableViewController.m in Sources */,
+				793DD0191D69A10B0006B6D1 /* THMetadata.m in Sources */,
 				794FBCFF1D45D78500055E21 /* THKeyboardCharTransformer.m in Sources */,
-				79A86F951D400D960093DBC4 /* THPlayViewController.m in Sources */,
+				793B46DA1D75C51F00376E20 /* THWordsManager.m in Sources */,
+				79C639061D7213C600CF09E8 /* THPlaylistsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

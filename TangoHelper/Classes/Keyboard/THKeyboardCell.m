@@ -84,13 +84,13 @@
 #endif
 
     if (!font) {
-      font = [config fontForState:kTHKeyboardCellStateNormal];
+      font = [config fontForState:THKeyboardCellStateNormal];
     }
     if (!textColor) {
-      textColor = [config textColorForState:kTHKeyboardCellStateNormal];
+      textColor = [config textColorForState:THKeyboardCellStateNormal];
     }
     if (!backgroundColor) {
-      backgroundColor = [config backgroundColorForState:kTHKeyboardCellStateNormal];
+      backgroundColor = [config backgroundColorForState:THKeyboardCellStateNormal];
     }
 #ifdef KEYBOARDCELL_HAS_BORDER
     if (borderWidth < 0) {

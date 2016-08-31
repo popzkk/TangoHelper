@@ -2,12 +2,12 @@
 
 typedef NS_ENUM(NSUInteger, THKeyboardType) {
   // unknown can keep it the same as last time used.
-  kTHKeyboardUnknown = 0,
+  THKeyboardTypeUnknown = 0,
   // make the order as it appears on the keyboard.
-  kTHKeyboardNumber,
-  kTHKeyboardEnglish,
-  kTHKeyboardHiragana,
-  kTHKeyboardKatakana
+  THKeyboardTypeNumber,
+  THKeyboardTypeEnglish,
+  THKeyboardTypeHiragana,
+  THKeyboardTypeKatakana,
 };
 
 @protocol THKeyboardDelegate

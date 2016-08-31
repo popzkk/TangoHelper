@@ -3,14 +3,27 @@
 #import "Backend/THFileCenter.h"
 #import "THPlaylistsViewController.h"
 
-#define ADMIN_
+#define ADMIN 0
 
-#ifdef ADMIN
+#if (ADMIN)
+#import "Backend/THMetadata.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THFileRW.h"
 #import "Backend/THDepot.h"
 #import "Backend/THPlaylist.h"
+#import "Backend/THWord.h"
 #endif  // ADMIN
+
+#if (ADMIN)
+
+#define START_DATE [NSDate dateWithTimeIntervalSince1970:1456676400]
+
+@interface THMetadata ()
+
+- (void)setObject:(NSDate *)object forKey:(THMetadataKey)key;
+
+@end
+#endif
 
 static NSTimeInterval thres = 30 * 60;
 
@@ -20,9 +33,10 @@ static NSTimeInterval thres = 30 * 60;
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-#ifdef ADMIN
+#if (ADMIN)
   NSString *path = [THFileCenter sharedInstance].directoryPath;
   NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+  /*
   id removeOtherFiles = ^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
     NSString *extension = filename.pathExtension;
@@ -36,14 +50,33 @@ static NSTimeInterval thres = 30 * 60;
   id changeWordKeyFormatBlock = ^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
     NSString *fullPath = [path stringByAppendingPathComponent:filename];
-    NSMutableDictionary *oldContent = [NSMutableDictionary dictionaryWithContentsOfFile:fullPath];
+    NSDictionary *oldContent = [NSDictionary dictionaryWithContentsOfFile:fullPath];
     NSMutableDictionary *newContent = [NSMutableDictionary dictionaryWithCapacity:oldContent.count];
-    for (NSString *oldKey in oldContent.allKeys) {
-      NSString *newKey = [oldKey stringByReplacingOccurrencesOfString:@"〈" withString:@"「"];
-      newKey = [newKey stringByReplacingOccurrencesOfString:@"〉" withString:@"」"];
+    for (NSString *oldKey in oldContent) {
+      NSString *newKey = [oldKey stringByReplacingOccurrencesOfString:@"「" withString:@"\\"];
+      newKey = [newKey stringByReplacingOccurrencesOfString:@"」" withString:@""];
       [newContent setObject:[oldContent objectForKey:oldKey] forKey:newKey];
     }
     [newContent writeToFile:fullPath atomically:YES];
+  };
+   */
+  id transformFileFormatBlock = ^(id obj, NSUInteger idx, BOOL *stop) {
+    NSString *filename = (NSString *)obj;
+    NSString *fullPath = [path stringByAppendingPathComponent:filename];
+    NSDictionary *oldContent = [NSDictionary dictionaryWithContentsOfFile:fullPath];
+    NSMutableDictionary *newContent = [NSMutableDictionary dictionaryWithCapacity:oldContent.count];
+    for (NSString *oldKey in oldContent) {
+      NSString *newKey = [oldKey stringByReplacingOccurrencesOfString:@"「" withString:@"\\"];
+      newKey = [newKey stringByReplacingOccurrencesOfString:@"」" withString:@""];
+      NSString *explanation = [oldContent objectForKey:oldKey];
+      THWordObject *object = [[THWordObject alloc] initWithExplanation:explanation];
+      [object.metadata setObject:START_DATE forKey:THMetadataKeyCreated];
+      [newContent setObject:object.outputPropertyList forKey:newKey];
+    }
+    THMetadata *metadata = [[THMetadata alloc] init];
+    [metadata setObject:START_DATE forKey:THMetadataKeyCreated];
+    NSDictionary *file = @{@"metadata":metadata.outputPropertyList, @"content":newContent};
+    [file writeToFile:fullPath atomically:YES];
   };
 /*
   for (NSString *family in [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)]) {
@@ -55,7 +88,7 @@ static NSTimeInterval thres = 30 * 60;
   }
   exit(0);
 */
-  [files enumerateObjectsUsingBlock:changeWordKeyFormatBlock];
+  [files enumerateObjectsUsingBlock:transformFileFormatBlock];
   exit(0);
 #endif  // ADMIN
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

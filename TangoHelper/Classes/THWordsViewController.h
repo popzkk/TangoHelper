@@ -1,26 +1,18 @@
-#import <UIKit/UIKit.h>
+#import "THBasicTableViewController.h"
 
-@class THFileRW;
-@class THPlaylist;
+#import "Models/THWordsViewModel.h"
 
-@interface THWordsViewDataManager : NSObject
+@class THWordKey;
+@class THWordsCollection;
 
-- (instancetype)initWithFileRW:(THFileRW *)fileRW;
+@interface THWordsViewController : THBasicTableViewController<THWordsViewModelDelegate>
 
-- (NSArray *)keys;
+- (instancetype)initWithCollection:(THWordsCollection *)collection;
 
-- (NSArray *)objects;
-
-- (void)filterWithContent:(NSString *)content;
-
-@end
-
-@interface THWordsViewController : UITableViewController
-
-- (instancetype)initUsingDepot;
-
-- (instancetype)initWithPlaylist:(THPlaylist *)playlist;
-
-- (instancetype)initUsingDepotWithPlaylist:(THPlaylist *)playlist;
+- (instancetype)initWithCollection:(THWordsCollection *)collection
+                       preSelected:(NSArray<THWordKey *> *)preSelected
+                             title:(NSString *)title
+                       cancelBlock:(THTableViewCancelBlock)executionBlock
+                      confirmBlock:(THTableViewConfirmBlock)confirmBlock;
 
 @end

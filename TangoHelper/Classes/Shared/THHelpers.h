@@ -3,48 +3,67 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^THBasicAlertAction)();
-typedef void (^THTextsAlertAction)(NSArray<UITextField *> *);
+@class THPlaylist;
+
+typedef void (^THAlertBasicAction)();
+typedef void (^THAlertTextsAction)(NSArray<UITextField *> *);
 
 #if __cplusplus
 extern "C" {
 #endif
-
-// =============================================  Strings Helpers
-
-NSString *playlist_title(NSString *partial_name);
-NSString *add_to_playlist_title(NSString *partial_name);
-NSString *remove_dialog_title_from_playlist(NSString *partial_name);
-NSString *remove_dialog_title_normal(NSString *name);
-NSString *play_dialog_title(NSString *partial_name);
-NSString *play_immediately_dialog_title(NSString *partial_name);
-NSString *playing_title(NSString *partial_name);
-NSString *play_wrong_answer_dialog_title(NSString *answer);
-NSString *play_wrong_answer_dialog_message(NSString *answer);
 
 // =============================================  UI components Helpers
 
 UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action);
 UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action);
 
-UIAlertController *super_basic_alert(NSString *title, NSString *message, THBasicAlertAction block);
-UIAlertController *basic_alert_two_blocks(NSString *title, NSString *message,
-                                          THBasicAlertAction cancel_block,
-                                          THBasicAlertAction confirm_block);
-UIAlertController *basic_alert(NSString *title, NSString *message, THBasicAlertAction block);
-// all buttons are enabled by default.
-UIAlertController *texts_alert(NSString *title, NSString *message, NSArray *texts,
-                               NSArray *placeholders, THTextsAlertAction block);
-UIAlertController *texts_alert_two_blocks(NSString *title, NSString *message, NSArray *texts,
-                                          NSArray *placeholders, THTextsAlertAction cancel_block,
-                                          THTextsAlertAction confirm_block);
+UIAlertController *alert_add_word(THAlertTextsAction confirm_block);
+UIAlertController *alert_edit_word(NSString *word_key, NSArray<NSString *> *texts,
+                                   THAlertBasicAction cancel_block,
+                                   THAlertTextsAction confirm_block);
+UIAlertController *alert_add_word_conflicting(NSString *word_key, NSString *your_input,
+                                              NSString *already_there,
+                                              THAlertBasicAction cancel_block,
+                                              THAlertBasicAction confirm_block);
+UIAlertController *alert_edit_word_conflicting(NSString *old_key, NSString *new_key,
+                                               NSString *your_input, NSString *already_there,
+                                               THAlertBasicAction cancel_block,
+                                               THAlertBasicAction confirm_block);
+UIAlertController *alert_add_playlist(THAlertTextsAction confirm_block);
+UIAlertController *alert_rename_playlist(NSString *partial_name, THAlertTextsAction confirm_block);
+UIAlertController *alert_playlist_exists(NSString *partial_name, THAlertBasicAction block);
+UIAlertController *alert_remove_item(NSString *name, THAlertBasicAction confirm_block);
+UIAlertController *alert_remove_selected(THAlertBasicAction confirm_block);
+UIAlertController *alert_more_info(NSString *more_info);
+UIAlertController *action_sheet_selected_options_words(THAlertBasicAction create_block,
+                                                       THAlertBasicAction copy_block,
+                                                       THAlertBasicAction move_block,
+                                                       THAlertBasicAction play_block);
+UIAlertController *action_sheet_selected_options_playlists(THAlertBasicAction create_block,
+                                                           THAlertBasicAction copy_block,
+                                                           THAlertBasicAction play_block);
+UIAlertController *action_sheet_selection_options(THAlertBasicAction select_all_block,
+                                                  THAlertBasicAction clear_block,
+                                                  THAlertBasicAction invert_block);
+UIAlertController *alert_play(NSString *partial_name, THAlertBasicAction confirm_block);
+UIAlertController *action_sheet_play_options(NSString *word_self, NSString *your_answer,
+                                             THAlertBasicAction next_block,
+                                             THAlertBasicAction typo_block,
+                                             THAlertBasicAction wrong_right_block,
+                                             THAlertBasicAction wrong_wrong_block,
+                                             THAlertBasicAction remove_block);
+UIAlertController *alert_play_empty_playlist(THAlertBasicAction block);
+UIAlertController *action_sheet_play_finished_mistakes(THAlertBasicAction try_again_block,
+                                                       THAlertBasicAction view_block,
+                                                       THAlertBasicAction ok_block);
+UIAlertController *alert_play_finished_no_mistakes(THAlertBasicAction block);
+UIAlertController *alert_not_implemented(THAlertBasicAction block);
+UIAlertController *alert_ask_for_secret(THAlertTextsAction block);
 
 // =============================================  Fonts and Colors Helpers
 
-//UIFont *ja_light(CGFloat size);
 UIFont *cj_regular(CGFloat size);
 UIFont *cj_bold(CGFloat size);
-
 UIFont *zh_light(CGFloat size);
 UIFont *zh_medium(CGFloat size);
 UIFont *zh_bold(CGFloat size);
@@ -56,20 +75,15 @@ UIColor *grey_color_half();
 
 // =============================================  Other Helpers
 
-// core part means the recitable part of the key.
-NSString *core_part(NSString *);
-
 void shuffle(NSMutableArray *);
 
-id object_for_key(NSString *);
+NSArray<NSString *> *texts_from_text_fields(NSArray<UITextField *> *text_fields);
 
-BOOL can_add_key(NSString *key);
+NSIndexSet *index_set_from_index_paths(NSArray<NSIndexPath *> *index_paths);
 
-BOOL can_edit_key(NSString *, NSString *);
+UIAlertController *recover_alert_texts(UIAlertController *alert, NSArray<NSString *> *texts);
 
-BOOL can_add_playlist(NSString *);
-
-BOOL can_rename_playlist(NSString *, NSString *);
+THPlaylist *try_to_create(NSString *partial_name);
 
 #if __cplusplus
 }  // Extern C

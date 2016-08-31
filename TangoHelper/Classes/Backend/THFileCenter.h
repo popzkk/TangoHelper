@@ -3,6 +3,8 @@
 @class THFileRW;
 @class THDepot;
 @class THPlaylist;
+@class THWordKey;
+@class THWordObject;
 
 @interface THFileCenter : NSObject
 
@@ -16,7 +18,7 @@
 
 - (THDepot *)depot;
 
-- (NSMutableArray *)playlists;
+- (NSMutableArray<THPlaylist *> *)playlists;
 
 - (THPlaylist *)playlistWithPartialName:(NSString *)partialName create:(BOOL)create;
 
@@ -26,14 +28,11 @@
 
 - (void)deletePlaylist:(THPlaylist *)playlist;
 
-// if this update should align the same arcoss all files, this method must be called.
-- (void)fileRW:(THFileRW *)fileRW
- updatedOldKey:(NSString *)oldKey
-       withKey:(NSString *)key
-        object:(id)object;
+// if a word should align the same arcoss all files, this method must be called.
+- (void)fileRW:(THFileRW *)fileRW didUpdateKey:(THWordKey *)key withObject:(THWordObject *)object;
 
 - (THFileRW *)secretFile;
 
-- (NSMutableArray *)wordsFiles;
+- (NSMutableArray<THFileRW *> *)wordsFiles;
 
 @end

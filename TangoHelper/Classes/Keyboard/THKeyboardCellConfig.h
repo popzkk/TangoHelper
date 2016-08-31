@@ -3,13 +3,13 @@
 #define KEYBOARDCELL_HAS_BORDER_
 
 typedef NS_ENUM(NSUInteger, THKeyboardCellState) {
-  kTHKeyboardCellStateNormal = 0,
-  kTHKeyboardCellStateFocused,
+  THKeyboardCellStateNormal = 0,
+  THKeyboardCellStateFocused,
   // not used...
-  kTHKeyboardCellStateFaded,
-  kTHKeyboardCellStatePopped,
+  THKeyboardCellStateFaded,
+  THKeyboardCellStatePopped,
   // count the number of states.
-  numberOfKeyboardCellStates
+  numberOfKeyboardCellStates,
 };
 
 @interface THKeyboardCellConfig : NSObject
