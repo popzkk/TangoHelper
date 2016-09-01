@@ -222,21 +222,25 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
       break;
     // the right cell has some secret function?
     case THKeyboardTouchResultRight:
-      if (interval < 0.7) {
-        if (_rightTappedCount <= 0 || intervalSinceLastTime < 0.7) {
+      if (interval < 0.46875) {
+        if (_rightTappedCount == 11) {
+          _rightTappedCount = 0;
+        }
+        if (_rightTappedCount == -1) {
+          [self updateSecretCells];
+        } else if (_rightTappedCount == 0) {
+          _rightTappedCount = 1;
+        } else if (intervalSinceLastTime < 0.46875) {
           ++_rightTappedCount;
-          if (_rightTappedCount > 11) {
-            _rightTappedCount = 1;
-          }
           if (_rightTappedCount == 11) {
             [_delegate askForSecretWithCallback:^(NSArray<UITextField *> *textFields) {
               if ([textFields.firstObject.text isEqualToString:@"11"]) {
                 [self updateSecretCells];
               }
             }];
-          } else if (_rightTappedCount == 0) {
-            [self updateSecretCells];
           }
+        } else {
+          _rightTappedCount = 0;
         }
       } else {
         _rightTappedCount = MIN(_rightTappedCount, 0);
@@ -276,6 +280,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
     special_names[hiraganaCellSpecialIndex] = @"うの";
     special_names[katakanaCellSpecialIndex] = @"マロニー";
   } else {
+    _rightTappedCount = 0;
     special_names[hiraganaCellSpecialIndex] = @"あいう";
     special_names[katakanaCellSpecialIndex] = @"アイウ";
   }
