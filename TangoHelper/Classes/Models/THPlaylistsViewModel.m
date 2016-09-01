@@ -122,9 +122,11 @@
   } else {
     NSUInteger row = rows.firstIndex;
     [[THFileCenter sharedInstance] deletePlaylist:_outputPlaylists[row]];
-    [_playlists removeObjectAtIndex:_rowIndex[row].unsignedIntegerValue];
     [_outputPlaylists removeObjectAtIndex:row];
-    [_rowIndex removeObjectAtIndex:row];
+    if (_searchString.length) {
+      [_playlists removeObjectAtIndex:_rowIndex[row].unsignedIntegerValue];
+      [_rowIndex removeObjectAtIndex:row];
+    }
   }
   [_delegate modelDidRemoveRows:rows];
 }

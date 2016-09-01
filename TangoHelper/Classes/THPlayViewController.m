@@ -74,6 +74,8 @@ static CGFloat kTextFieldBottomPadding = 5;
     } else {
       self.title = @"Playing";
     }
+    self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.leftBarButtonItem = system_item(UIBarButtonSystemItemCancel, self, @selector(didTapBarItemCancel));
   }
   return self;
 }
@@ -85,6 +87,10 @@ static CGFloat kTextFieldBottomPadding = 5;
 #endif
 
 #pragma mark - private
+
+- (void)didTapBarItemCancel {
+  [_model finish];
+}
 
 - (void)showAlert:(UIAlertController *)alert {
   [self showAlert:alert save:NO];

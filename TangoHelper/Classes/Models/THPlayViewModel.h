@@ -45,6 +45,8 @@ typedef NS_ENUM(NSUInteger, THPlayOption) {
 
 - (void)start;
 
+- (void)finish;
+
 - (void)confirmInput:(NSString *)input;
 
 - (void)commitWrongAnswerWithOption:(THPlayOption)option texts:(NSArray<NSString *> *)texts;

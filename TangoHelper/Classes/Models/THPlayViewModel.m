@@ -116,6 +116,12 @@
   [self next];
 }
 
+- (void)finish {
+  THPlayResult *result = [[THPlayResult alloc] init];
+  result.wrongWordKeys = _wrongWordKeys;
+  [_delegate playFinishedWithResult:result];
+}
+
 #pragma mark - private
 
 - (void)rightAnswer {
@@ -136,12 +142,6 @@
   _key = [_availableKeys objectAtIndex:arc4random_uniform((int)_availableKeys.count)];
   _object = [_collection objectForKey:_key];
   [_delegate nextWordWithExplanation:_object.explanation];
-}
-
-- (void)finish {
-  THPlayResult *result = [[THPlayResult alloc] init];
-  result.wrongWordKeys = _wrongWordKeys;
-  [_delegate playFinishedWithResult:result];
 }
 
 @end
