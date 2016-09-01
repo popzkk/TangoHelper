@@ -3,10 +3,6 @@
 #import "THMetadata.h"
 #import "THWord.h"
 
-/** TODO
- * add desc.
- */
-
 @interface THMetadata ()
 
 - (void)setObject:(NSDate *)object forKey:(THMetadataKey)key;
@@ -16,7 +12,7 @@
 @implementation THPlaylist
 
 - (NSString *)partialName {
-  return [super.filename stringByDeletingPathExtension];
+  return [self.filename stringByDeletingPathExtension];
 }
 
 - (NSString *)desc {
@@ -24,16 +20,26 @@
 }
 
 - (NSString *)descWithString:(NSString *)string {
-  NSMutableString *desc = [NSMutableString string];
   NSArray<THWordKey *> *matchingKeys = [self searchWithString:string];
+  if (!matchingKeys.count) {
+    return @"";
+  }
+  NSMutableString *desc = [NSMutableString stringWithString:@"|"];
+  BOOL first = YES;
   for (THWordKey *key in matchingKeys) {
     THWordObject *object = [self objectForKey:key];
-    if ([object.explanation containsString:string]) {
-      [desc appendString:[NSString stringWithFormat:@"%@: %@ | ", key.contentForDisplay, object.explanation]];
+    if (first) {
+      first = NO;
     } else {
-      [desc appendString:[NSString stringWithFormat:@"%@ | ", key.contentForDisplay]];
+      [desc appendString:@"_|"];
+    }
+    if ([object.explanation containsString:string]) {
+      [desc appendFormat:@"_%@ : %@", key.contentForDisplay, object.explanation];
+    } else {
+      [desc appendFormat:@"_%@", key.contentForDisplay];
     }
   }
+  [desc appendString:@"_|"];
   return desc;
 }
 

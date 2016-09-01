@@ -30,8 +30,9 @@
     (NSDictionary<THWordKey *, THWordObject *> *)transformedContent {
   self = [super init];
   if (self) {
-    _transformedContent = [NSMutableDictionary dictionaryWithDictionary:transformedContent];
     // we don't set _content here.
+    _transformedContent = [NSMutableDictionary dictionaryWithDictionary:transformedContent];
+    _lastSearchResult = [NSMutableArray array];
   }
   return self;
 }
@@ -46,6 +47,7 @@
           setObject:[[THWordObject alloc] initWithPropertyList:[_content objectForKey:key]]
              forKey:[[THWordKey alloc] initWithOutputKey:key]];
     }
+    _lastSearchResult = [NSMutableArray array];
   }
   return self;
 }

@@ -28,8 +28,11 @@
 
 - (void)reload {
   [self reloadResources];
-  // _searchString must be empty, no need to filter.
-  [_delegate modelDidGetUpdated];
+  if (_searchString.length) {
+    [self filterContentWithString:_searchString ignoresEmptyString:YES];
+  } else {
+    [_delegate modelDidGetUpdated];
+  }
 }
 
 - (NSUInteger)numberOfRows {

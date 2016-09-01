@@ -1,6 +1,7 @@
 #import "THPlayViewModel.h"
 
 #import "../Backend/THFileRW.h"
+#import "../Backend/THPlaylist.h"
 #import "../Backend/THWord.h"
 #import "../Shared/THHelpers.h"
 
@@ -73,6 +74,9 @@
 }
 
 - (void)start {
+  if ([_collection isKindOfClass:[THPlaylist class]]) {
+    [(THPlaylist *)_collection willPlay];
+  }
   [self next];
 }
 
@@ -120,6 +124,7 @@
 #pragma mark - private
 
 - (void)rightAnswer {
+  [[_collection objectForKey:_key] didPass];
   NSUInteger remaining = [_availableCounts objectForKey:_key].unsignedIntegerValue - 1;
   if (!remaining) {
     [_availableKeys removeObject:_key];
@@ -131,11 +136,19 @@
 
 - (void)next {
   if (!_availableKeys.count) {
+    if ([_collection isKindOfClass:[THPlaylist class]]) {
+      if (_wrongWordKeys.count) {
+        [(THPlaylist *)_collection didFinish];
+      } else {
+        [(THPlaylist *)_collection didPass];
+      }
+    }
     [self finish];
     return;
   }
   _key = [_availableKeys objectAtIndex:arc4random_uniform((int)_availableKeys.count)];
   _object = [_collection objectForKey:_key];
+  [_object willPlay];
   [_delegate nextWordWithExplanation:_object.explanation];
 }
 

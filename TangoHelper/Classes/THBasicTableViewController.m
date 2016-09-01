@@ -120,6 +120,7 @@ static CGFloat kSearchBarHeight = 40;
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
   [_model filterContentWithString:searchController.searchBar.text
                ignoresEmptyString:_searchControllerWillDismiss];
+  [self recoverSelections];
 }
 
 #pragma mark - UITableViewDataSource

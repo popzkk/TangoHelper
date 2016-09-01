@@ -11,7 +11,7 @@
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
 static UITableViewCellStyle kCellStyle = UITableViewCellStyleSubtitle;
 static CGFloat kTextLabelFontSize = 15;
-static CGFloat kDetailTextLabelFontSize = 14;
+static CGFloat kDetailTextLabelFontSize = 12;
 
 static CGFloat kPlaylistHeight = 60;
 
