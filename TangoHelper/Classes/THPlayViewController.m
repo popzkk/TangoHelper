@@ -22,20 +22,23 @@ static CGFloat kTextFieldTopPadding = 5;
 static CGFloat kTextFieldHeight = 28;
 static CGFloat kTextFieldBottomPadding = 5;
 
+// Declear these properties here so we can use 'weakSelf.xxx'. Any better way?
 @interface THPlayViewController ()<THKeyboardDelegate, THPlayViewModelDelegate>
+
+@property(nonatomic) THWordsCollection *collection;
+
+@property(nonatomic) THPlayViewModel *model;
+
+@property(nonatomic) UIAlertController *lastAlert;
+
+@property(nonatomic) NSArray<NSString *> *lastTexts;
 
 @end
 
 @implementation THPlayViewController {
-  THWordsCollection *_collection;
-  THPlayViewModel *_model;
-
   UITextView *_textView;
   UITextField *_textField;
   THKeyboard *_keyboard;
-
-  NSMutableArray<UIAlertController *> *_alertStack;
-  NSMutableArray<NSArray<NSString *> *> *_textsStack;
 
   THPlayResult *_result;
 }
@@ -49,8 +52,6 @@ static CGFloat kTextFieldBottomPadding = 5;
     _model = [[THPlayViewModel alloc] initWithCollection:_collection
                                                   config:[[THPlayConfig alloc] init]
                                                 delegate:self];
-    _alertStack = [NSMutableArray array];
-    _textsStack = [NSMutableArray array];
 
     _textView = [[UITextView alloc] initWithFrame:CGRectZero];
     _textView.font = zh_bold(kTextViewFontSize);
@@ -75,7 +76,8 @@ static CGFloat kTextFieldBottomPadding = 5;
       self.title = @"Playing";
     }
     self.navigationItem.hidesBackButton = YES;
-    self.navigationItem.leftBarButtonItem = system_item(UIBarButtonSystemItemCancel, self, @selector(didTapBarItemCancel));
+    self.navigationItem.leftBarButtonItem =
+        system_item(UIBarButtonSystemItemCancel, self, @selector(didTapBarItemCancel));
   }
   return self;
 }
@@ -102,65 +104,9 @@ static CGFloat kTextFieldBottomPadding = 5;
 
 - (void)showAlert:(UIAlertController *)alert completion:(void (^)(void))completion save:(BOOL)save {
   if (save) {
-    [_alertStack addObject: alert];
+    _lastAlert = alert;
   }
   [self.navigationController presentViewController:alert animated:YES completion:completion];
-}
-
-- (void)showLastAlertAndPop:(BOOL)pop {
-  if (pop) {
-    [_alertStack removeLastObject];
-  }
-  UIAlertController *alert = _alertStack.lastObject;
-  if (alert.textFields.count) {
-    recover_alert_texts(alert, _textsStack.lastObject);
-    [_textsStack removeLastObject];
-  }
-  [self showAlert:alert];
-}
-
-- (THAlertBasicAction)editWordBlockWithExplanation:(NSString *)explanation
-                                               key:(THWordKey *)key
-                                         operation:(THPlayViewTextsOperation)operation {
-  __weak THPlayViewController *weakSelf = self;
-  return ^() {
-    [weakSelf
-        showAlert:alert_edit_word(
-                      key.contentForDisplay, @[ key.input, key.extra, explanation ],
-                      ^() {
-                        [weakSelf showLastAlertAndPop:YES];
-                      },
-                      ^(NSArray<UITextField *> *textFields) {
-                        NSArray<NSString *> *texts = texts_from_text_fields(textFields);
-                        [_textsStack addObject:texts];
-                        THWordKey *newKey =
-                            [[THWordKey alloc] initWithInput:texts[0] extra:texts[1]];
-                        NSString *newExplanation = texts[2];
-                        THWordsCollection *collection;
-                        THWordsManagerOverwriteAction action =
-                            [THWordsManager collection:_collection
-                                wantsToEditExplanation:newExplanation
-                                                forKey:newKey
-                                                oldKey:key
-                                           conflicting:&collection];
-                        if (action) {
-                          [weakSelf showAlert:alert_edit_word_conflicting(
-                                                  key.contentForDisplay, newKey.contentForDisplay,
-                                                  newExplanation,
-                                                  [collection objectForKey:newKey].explanation,
-                                                  ^() {
-                                                    [weakSelf showLastAlertAndPop:NO];
-                                                  },
-                                                  ^{
-                                                    action();
-                                                    operation(texts);
-                                                  })];
-                        } else {
-                          operation(texts);
-                        }
-                      })
-             save:YES];
-  };
 }
 
 #pragma mark - UIViewController
@@ -176,7 +122,7 @@ static CGFloat kTextFieldBottomPadding = 5;
   // height for the text view.
   CGFloat textViewHeight = frame.size.height / 2 - kPadding - navBarHeight;
   CGFloat x = frame.origin.x + kPadding;
-  CGFloat y = frame.origin.y + + navBarHeight + kPadding;
+  CGFloat y = frame.origin.y + +navBarHeight + kPadding;
   CGFloat width = frame.size.width - 2 * kPadding;
 
   _textView.frame = CGRectMake(x, y += kPadding, width, textViewHeight);
@@ -191,7 +137,7 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
   if (!_collection.count) {
-    [self showAlert:alert_play_empty_playlist(^() {
+    [self showAlert:alert_play_empty_playlist(^{
             [self.navigationController popViewControllerAnimated:YES];
           })];
   } else if (_result) {
@@ -228,7 +174,7 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)changeLastInputTo:(NSString *)content {
   if ([_textField hasText]) {
     _textField.text = [[_textField.text substringToIndex:_textField.text.length - 1]
-                       stringByAppendingString:content];
+        stringByAppendingString:content];
   }
 }
 
@@ -249,39 +195,70 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)nextWordWithExplanation:(NSString *)explanation {
   _textView.text = explanation;
   _textField.text = @"";
-  [_alertStack removeAllObjects];
-  [_textsStack removeAllObjects];
 }
 
 - (void)wrongAnswer:(NSString *)wrongAnswer
      forExplanation:(NSString *)explanation
             wordKey:(THWordKey *)key {
-  THAlertBasicAction next_block = ^() {
-    [_model commitWrongAnswerWithOption:THPlayOptionNext texts:nil];
+  THAlertBasicAction next_block = ^{
+    [_model commitWrongAnswerWithOption:THPlayOptionNext wordKey:nil];
   };
-  THAlertBasicAction typo_block = ^() {
-    [_model commitWrongAnswerWithOption:THPlayOptionTypo texts:nil];
+  THAlertBasicAction typo_block = ^{
+    [_model commitWrongAnswerWithOption:THPlayOptionTypo wordKey:nil];
   };
-  THPlayViewTextsOperation wrong_right_operation = ^(NSArray<NSString *> *texts) {
-    [_model commitWrongAnswerWithOption:THPlayOptionWrongRight texts:texts];
-  };
-  THPlayViewTextsOperation wrong_wrong_operation = ^(NSArray<NSString *> *texts) {
-    [_model commitWrongAnswerWithOption:THPlayOptionWrongWrong texts:texts];
-  };
-  THAlertBasicAction remove_block = ^() {
-    // _model will remove the word for us!
-    [_model commitWrongAnswerWithOption:THPlayOptionRemove texts:nil];
-  };
-  [self showAlert:action_sheet_play_options(
-                      key.contentForDisplay, wrongAnswer, next_block, typo_block,
-                      [self editWordBlockWithExplanation:explanation
-                                                     key:key
-                                               operation:wrong_right_operation],
-                      [self editWordBlockWithExplanation:explanation
-                                                     key:key
-                                               operation:wrong_wrong_operation],
-                      remove_block)
+  __weak THPlayViewController *weakSelf = self;
+  THAlertBasicAction edit_block = ^{
+    [self
+        showAlert:alert_edit_word(
+                      key.contentForDisplay, @[ key.input, key.extra, explanation ],
+                      ^{
+                        [weakSelf wrongAnswer:wrongAnswer forExplanation:explanation wordKey:key];
+                      },
+                      ^(NSArray<UITextField *> *textFields) {
+                        NSArray<NSString *> *texts = texts_from_text_fields(textFields);
+                        weakSelf.lastTexts = texts;
+                        THWordKey *newKey =
+                            [[THWordKey alloc] initWithInput:texts[0] extra:texts[1]];
+                        NSString *newExplanation = texts[2];
+                        THWordsCollection *collection;
+                        THWordsManagerOverwriteAction action =
+                            [THWordsManager collection:weakSelf.collection
+                                wantsToEditExplanation:newExplanation
+                                                forKey:newKey
+                                                oldKey:key
+                                           conflicting:&collection];
+                        if (collection && action) {
+                          [weakSelf showAlert:alert_edit_word_conflicting(
+                                                  key.contentForDisplay, newKey.contentForDisplay,
+                                                  newExplanation,
+                                                  [collection objectForKey:newKey].explanation,
+                                                  ^{
+                                                    recover_alert_texts(weakSelf.lastAlert,
+                                                                        weakSelf.lastTexts);
+                                                    [weakSelf showAlert:weakSelf.lastAlert];
+                                                  },
+                                                  ^{
+                                                    action();
+                                                    [weakSelf.model
+                                                        commitWrongAnswerWithOption:THPlayOptionEdit
+                                                                            wordKey:newKey];
+                                                  })];
+                        } else {
+                          if (action) {
+                            action();
+                          }
+                          [weakSelf.model commitWrongAnswerWithOption:THPlayOptionEdit
+                                                              wordKey:newKey];
+                        }
+                      })
              save:YES];
+  };
+  THAlertBasicAction remove_block = ^{
+    // _model will remove the word for us!
+    [_model commitWrongAnswerWithOption:THPlayOptionRemove wordKey:nil];
+  };
+  [self showAlert:action_sheet_play_options(key.contentForDisplay, wrongAnswer, next_block,
+                                            typo_block, edit_block, remove_block)];
 }
 
 - (void)playFinishedWithResult:(THPlayResult *)result {
@@ -313,9 +290,9 @@ static CGFloat kTextFieldBottomPadding = 5;
                           [self.navigationController popViewControllerAnimated:YES];
                         })];
   } else {
-    [self showAlert:alert_play_finished_no_mistakes(^() {
-      [self.navigationController popViewControllerAnimated:YES];
-    })];
+    [self showAlert:alert_play_finished_no_mistakes(^{
+            [self.navigationController popViewControllerAnimated:YES];
+          })];
   }
 }
 

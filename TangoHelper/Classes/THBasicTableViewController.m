@@ -331,7 +331,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     } else {
       excluded = [_model itemsAtRows:selectedIndexSet];
     }
-    THAlertBasicAction create_block = ^() {
+    THAlertBasicAction create_block = ^{
       [self showAlert:alert_add_playlist(^(NSArray<UITextField *> *textFields) {
               weakSelf.lastTexts = texts_from_text_fields(textFields);
               [weakSelf.model add:weakSelf.lastTexts content:collection globalCheck:YES];
@@ -343,7 +343,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
         [playlist addFromWordsCollection:collection];
       }
     };
-    THAlertBasicAction copy_block = ^() {
+    THAlertBasicAction copy_block = ^{
       [self.navigationController
           pushViewController:[[THPlaylistsViewController alloc]
                                  initWithExcluded:excluded
@@ -352,7 +352,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                                      confirmBlock:copy_operation]
                     animated:YES];
     };
-    THAlertBasicAction play_block = ^() {
+    THAlertBasicAction play_block = ^{
       [self.navigationController
           pushViewController:[[THPlayViewController alloc] initWithCollection:collection]
                     animated:YES];
@@ -362,7 +362,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
         copy_operation(playlists);
         [self.model remove:selectedIndexSet];
       };
-      THAlertBasicAction move_block = ^() {
+      THAlertBasicAction move_block = ^{
         [self.navigationController
             pushViewController:[[THPlaylistsViewController alloc]
                                    initWithExcluded:excluded
@@ -388,13 +388,13 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)didTapBarItemAction {
   [self showAlert:action_sheet_selection_options(
-                      ^() {
+                      ^{
                         [self selectionSelectAll];
                       },
-                      ^() {
+                      ^{
                         [self selectionClear];
                       },
-                      ^() {
+                      ^{
                         [self selectionInvert];
                       })];
 }

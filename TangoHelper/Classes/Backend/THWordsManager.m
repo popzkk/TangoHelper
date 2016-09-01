@@ -20,7 +20,7 @@
   if ([target.explanation isEqualToString:explanation]) {
     return nil;
   } else {
-    return ^() {
+    return ^{
       target.explanation = explanation;
       [conflictingCollection editObject:target forKey:key oldKey:key];
     };
@@ -40,7 +40,7 @@
     if ([object.explanation isEqualToString:explanation]) {
       return nil;
     } else {
-      return ^() {
+      return ^{
         object.explanation = explanation;
         // here conflctingCollection must be equal to collection
         [conflictingCollection editObject:object forKey:key oldKey:key];
@@ -48,16 +48,16 @@
     }
   } else {
     if (collection == conflictingCollection) {
-      return ^() {
+      return ^{
         object.explanation = explanation;
         [collection removeObjectForKey:oldKey];
         [collection editObject:object forKey:key oldKey:key];
       };
     } else {
-      return ^() {
+      return ^{
         THWordObject *oldObj = [collection objectForKey:oldKey];
         oldObj.explanation = explanation;
-        [collection editObject:oldObj forKey:oldKey oldKey:key];
+        [collection editObject:oldObj forKey:key oldKey:oldKey];
         object.explanation = explanation;
         [conflictingCollection editObject:object forKey:key oldKey:key];
       };

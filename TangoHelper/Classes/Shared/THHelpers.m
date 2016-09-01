@@ -61,17 +61,16 @@ static NSString *kPlayFinishMistakesActionSheetTitle =
     @"Finished...However there were some mistakes";
 static NSString *kPlayFinishMistakesActionSheetTryAgain = @"Try again with the mistakes";
 static NSString *kPlayFinishMistakesActionSheetView = @"View the mistakes";
-static NSString *kPlayFinishMistakesActionSheetOK = @"OK";
+static NSString *kPlayFinishMistakesActionSheetAck = @"Acknowledged";
 static NSString *kPlayFinishNoMistakeAlertTitle = @"Wow...No mistakes!";
 static NSString *kPlayFinishNoMistakeAlertMessage = @"Congratulations!";
 static NSString *kPlayEmptyPlaylistAlertTitle = @"Please add some Words first";
 static NSString *kPlayOptionsActionSheetTitle = @"Word Self:\"%@\"";
 static NSString *kPlayOptionsActionSheetMessage = @"Your Answer:\"%@\"";
-static NSString *kPlayOptionsActionSheetNext = @"Next";
+static NSString *kPlayOptionsActionSheetNext = @"F**k...Next";
 static NSString *kPlayOptionsActionSheetTypo = @"Typo...Never mind";
-static NSString *kPlayOptionsActionSheetWrongWordRightAnswer = @"Wrong Word and Right Answer";
-static NSString *kPlayOptionsActionSheetWrongWordWrongAnswer = @"Wrong Word and Wrong Answer";
-static NSString *kPlayOptionsActionSheetRemove = @"Remove this word";
+static NSString *kPlayOptionsActionSheetEdit = @"Edit this Word";
+static NSString *kPlayOptionsActionSheetRemove = @"Remove this Word";
 
 // ===================================== Others
 
@@ -96,7 +95,7 @@ UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id tar
 
 UIAlertController *alert_super_basic(NSString *title, NSString *message, THAlertBasicAction block) {
   if (!block) {
-    block = ^() {
+    block = ^{
     };
   }
 
@@ -116,11 +115,11 @@ UIAlertController *alert_basic_two_blocks(NSString *title, NSString *message,
                                           THAlertBasicAction cancel_block,
                                           THAlertBasicAction confirm_block) {
   if (!cancel_block) {
-    cancel_block = ^() {
+    cancel_block = ^{
     };
   }
   if (!confirm_block) {
-    confirm_block = ^() {
+    confirm_block = ^{
     };
   }
 
@@ -197,32 +196,42 @@ UIAlertController *alert_texts(NSString *title, NSString *message, NSArray *text
 }
 
 UIAlertController *action_sheet(NSString *title, NSString *message,
-                                NSArray<NSString *> *actionTitles,
-                                NSArray<THAlertBasicAction> *actions, BOOL cancel_action) {
+                                NSArray<NSString *> *action_titles,
+                                NSArray<THAlertBasicAction> *actions, NSString *default_title,
+                                THAlertBasicAction default_block) {
   UIAlertController *alert =
       [UIAlertController alertControllerWithTitle:title
                                           message:message
                                    preferredStyle:UIAlertControllerStyleActionSheet];
 #if (DEBUG)
-  if (actionTitles.count != actions.count) {
+  if (action_titles.count != actions.count) {
     NSLog(@"cannot create 'action_sheet': inconsistant number of elements");
     return nil;
   }
 #endif
-  for (NSUInteger i = 0; i < actionTitles.count; ++i) {
-    [alert addAction:[UIAlertAction actionWithTitle:actionTitles[i]
+  for (NSUInteger i = 0; i < action_titles.count; ++i) {
+    [alert addAction:[UIAlertAction actionWithTitle:action_titles[i]
                                               style:UIAlertActionStyleDefault
                                             handler:^(UIAlertAction *action) {
                                               actions[i]();
                                             }]];
   }
-  if (cancel_action) {
-    [alert addAction:[UIAlertAction actionWithTitle:kCancel
-                                              style:UIAlertActionStyleCancel
-                                            handler:^(UIAlertAction *action){
-                                            }]];
+  if (!default_block) {
+    default_block = ^{
+    };
   }
+  [alert addAction:[UIAlertAction actionWithTitle:default_title
+                                            style:UIAlertActionStyleCancel
+                                          handler:^(UIAlertAction *action) {
+                                            default_block();
+                                          }]];
   return alert;
+}
+
+UIAlertController *action_sheet_basic(NSString *title, NSString *message,
+                                      NSArray<NSString *> *action_titles,
+                                      NSArray<THAlertBasicAction> *actions) {
+  return action_sheet(title, message, action_titles, actions, kCancel, nil);
 }
 
 UIAlertController *alert_word(NSString *title, NSString *message, NSArray<NSString *> *texts,
@@ -313,54 +322,51 @@ UIAlertController *action_sheet_selected_options_words(THAlertBasicAction create
                                                        THAlertBasicAction copy_block,
                                                        THAlertBasicAction move_block,
                                                        THAlertBasicAction play_block) {
-  return action_sheet(kSelectedOptionsActionSheetTitle, nil,
-                      @[
-                        kSelectedOptionsActionSheetCreateActionTitle,
-                        kSelectedOptionsActionSheetCopyActionTitle,
-                        kSelectedOptionsActionSheetMoveActionTitle,
-                        kSelectedOptionsActionSheetPlayActionTitle,
-                      ],
-                      @[
-                        create_block,
-                        copy_block,
-                        move_block,
-                        play_block,
-                      ],
-                      YES);
+  return action_sheet_basic(kSelectedOptionsActionSheetTitle, nil,
+                            @[
+                              kSelectedOptionsActionSheetCreateActionTitle,
+                              kSelectedOptionsActionSheetCopyActionTitle,
+                              kSelectedOptionsActionSheetMoveActionTitle,
+                              kSelectedOptionsActionSheetPlayActionTitle,
+                            ],
+                            @[
+                              create_block,
+                              copy_block,
+                              move_block,
+                              play_block,
+                            ]);
 }
 
 UIAlertController *action_sheet_selected_options_playlists(THAlertBasicAction create_block,
                                                            THAlertBasicAction copy_block,
                                                            THAlertBasicAction play_block) {
-  return action_sheet(kSelectedOptionsActionSheetTitle, nil,
-                      @[
-                        kSelectedOptionsActionSheetCreateActionTitle,
-                        kSelectedOptionsActionSheetCopyActionTitle,
-                        kSelectedOptionsActionSheetPlayActionTitle,
-                      ],
-                      @[
-                        create_block,
-                        copy_block,
-                        play_block,
-                      ],
-                      YES);
+  return action_sheet_basic(kSelectedOptionsActionSheetTitle, nil,
+                            @[
+                              kSelectedOptionsActionSheetCreateActionTitle,
+                              kSelectedOptionsActionSheetCopyActionTitle,
+                              kSelectedOptionsActionSheetPlayActionTitle,
+                            ],
+                            @[
+                              create_block,
+                              copy_block,
+                              play_block,
+                            ]);
 }
 
 UIAlertController *action_sheet_selection_options(THAlertBasicAction select_all_block,
                                                   THAlertBasicAction clear_block,
                                                   THAlertBasicAction invert_block) {
-  return action_sheet(nil, nil,
-                      @[
-                        kSelectionOptionsActionSheetSelectAllActionTitle,
-                        kSelectionOptionsActionSheetClearActionTitle,
-                        kSelectionOptionsActionSheetInvertActionTitle,
-                      ],
-                      @[
-                        select_all_block,
-                        clear_block,
-                        invert_block,
-                      ],
-                      YES);
+  return action_sheet_basic(nil, nil,
+                            @[
+                              kSelectionOptionsActionSheetSelectAllActionTitle,
+                              kSelectionOptionsActionSheetClearActionTitle,
+                              kSelectionOptionsActionSheetInvertActionTitle,
+                            ],
+                            @[
+                              select_all_block,
+                              clear_block,
+                              invert_block,
+                            ]);
 }
 
 UIAlertController *alert_play(NSString *partial_name, THAlertBasicAction confirm_block) {
@@ -375,26 +381,21 @@ UIAlertController *alert_play(NSString *partial_name, THAlertBasicAction confirm
 UIAlertController *action_sheet_play_options(NSString *word_self, NSString *your_answer,
                                              THAlertBasicAction next_block,
                                              THAlertBasicAction typo_block,
-                                             THAlertBasicAction wrong_right_block,
-                                             THAlertBasicAction wrong_wrong_block,
+                                             THAlertBasicAction edit_block,
                                              THAlertBasicAction remove_block) {
   return action_sheet([NSString stringWithFormat:kPlayOptionsActionSheetTitle, word_self],
                       [NSString stringWithFormat:kPlayOptionsActionSheetMessage, your_answer],
                       @[
-                        kPlayOptionsActionSheetNext,
                         kPlayOptionsActionSheetTypo,
-                        kPlayOptionsActionSheetWrongWordRightAnswer,
-                        kPlayOptionsActionSheetWrongWordWrongAnswer,
+                        kPlayOptionsActionSheetEdit,
                         kPlayOptionsActionSheetRemove,
                       ],
                       @[
-                        next_block,
                         typo_block,
-                        wrong_right_block,
-                        wrong_wrong_block,
+                        edit_block,
                         remove_block,
                       ],
-                      NO);
+                      kPlayOptionsActionSheetNext, next_block);
 }
 
 UIAlertController *alert_play_empty_playlist(THAlertBasicAction block) {
@@ -403,19 +404,17 @@ UIAlertController *alert_play_empty_playlist(THAlertBasicAction block) {
 
 UIAlertController *action_sheet_play_finished_mistakes(THAlertBasicAction try_again_block,
                                                        THAlertBasicAction view_block,
-                                                       THAlertBasicAction ok_block) {
+                                                       THAlertBasicAction ack_block) {
   return action_sheet(kPlayFinishMistakesActionSheetTitle, nil,
                       @[
                         kPlayFinishMistakesActionSheetTryAgain,
                         kPlayFinishMistakesActionSheetView,
-                        kPlayFinishMistakesActionSheetOK,
                       ],
                       @[
                         try_again_block,
                         view_block,
-                        ok_block,
                       ],
-                      NO);
+                      kPlayFinishMistakesActionSheetAck, ack_block);
 }
 
 UIAlertController *alert_play_finished_no_mistakes(THAlertBasicAction block) {

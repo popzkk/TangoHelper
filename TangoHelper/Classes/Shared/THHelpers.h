@@ -49,13 +49,12 @@ UIAlertController *alert_play(NSString *partial_name, THAlertBasicAction confirm
 UIAlertController *action_sheet_play_options(NSString *word_self, NSString *your_answer,
                                              THAlertBasicAction next_block,
                                              THAlertBasicAction typo_block,
-                                             THAlertBasicAction wrong_right_block,
-                                             THAlertBasicAction wrong_wrong_block,
+                                             THAlertBasicAction edit_block,
                                              THAlertBasicAction remove_block);
 UIAlertController *alert_play_empty_playlist(THAlertBasicAction block);
 UIAlertController *action_sheet_play_finished_mistakes(THAlertBasicAction try_again_block,
                                                        THAlertBasicAction view_block,
-                                                       THAlertBasicAction ok_block);
+                                                       THAlertBasicAction ack_block);
 UIAlertController *alert_play_finished_no_mistakes(THAlertBasicAction block);
 UIAlertController *alert_not_implemented(THAlertBasicAction block);
 UIAlertController *alert_ask_for_secret(THAlertTextsAction block);

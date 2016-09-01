@@ -74,6 +74,7 @@
 }
 
 - (void)setExplanation:(NSString *)explanation {
+  // No checking needed as setting the same explanation will trigger a refresh on last modified date
   _explanation = [explanation copy];
   [_metadata setObject:[NSDate date] forKey:THMetadataKeyModified];
 }

@@ -201,7 +201,7 @@
   if (globalCheck && ![oldKey isEqual:key]) {
     THWordsCollection *tmpFileRW = [self globalFileRWContainingKey:key];
     THWordObject *tmpObj = [tmpFileRW objectForKey:key];
-    THAlertBasicAction removeUnnecessary = ^() {
+    THAlertBasicAction removeUnnecessary = ^{
       NSUInteger anotherRow = [_outputKeys indexOfObject:key];
       if (anotherRow != NSNotFound) {
         [self remove:[NSIndexSet indexSetWithIndex:anotherRow]];

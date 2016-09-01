@@ -85,33 +85,28 @@
   }
 }
 
-- (void)commitWrongAnswerWithOption:(THPlayOption)option texts:(NSArray<NSString *> *)texts {
-  if (option == THPlayOptionRemove) {
+- (void)commitWrongAnswerWithOption:(THPlayOption)option wordKey:(THWordKey *)key {
+  if (option == THPlayOptionNext) {
+    [_wrongWordKeys addObject:_key];
+  } else if (option == THPlayOptionTypo) {
+    [self rightAnswer];
+  } else if (option == THPlayOptionEdit) {
+    // _collection and all files are already updated (that means _object is updated).
+    // no action needed if keys are the same.
+    if (![_key isEqual:key]) {
+      // if the new key is still waiting to be recited, just remove the old key
+      [_availableCounts removeObjectForKey:_key];
+      [_availableKeys removeObject:_key];
+      // if the new key is not recitable, add it to the list as it is never recited
+      if (![_availableCounts objectForKey:key]) {
+        [_availableCounts setObject:@(_config.repeat) forKey:key];
+        [_availableKeys addObject:key];
+      }
+    }
+  } else if (option == THPlayOptionRemove) {
     [_collection removeObjectForKey:_key];
     [_availableKeys removeObject:_key];
     [_availableCounts removeObjectForKey:_key];
-  } else {
-    if (option == THPlayOptionWrongWrong || option == THPlayOptionWrongRight) {
-      // _collection and all files are already updated (that means _object is updated).
-      THWordKey *key = [[THWordKey alloc] initWithInput:texts[0] extra:texts[1]];
-      // no action needed if keys are the same.
-      if (![_key isEqual:key]) {
-        [_availableCounts removeObjectForKey:_key];
-        [_availableKeys removeObject:_key];
-        // if the new key is still waiting to be recited, just remove the old key
-        // if the new key is not recitable, add it to the list as it is never recited
-        if (![_availableCounts objectForKey:key]) {
-          [_availableCounts setObject:@(_config.repeat) forKey:key];
-          [_availableKeys addObject:key];
-        }
-        _key = key;
-      }
-    }
-    if (option == THPlayOptionNext || option == THPlayOptionWrongWrong) {
-      [_wrongWordKeys addObject:_key];
-    } else {
-      [self rightAnswer];
-    }
   }
   [self next];
 }

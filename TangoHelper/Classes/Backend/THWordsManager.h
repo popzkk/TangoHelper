@@ -28,4 +28,7 @@ typedef void (^THWordsManagerOverwriteAction)();
                                      oldKey:(THWordKey *)oldKey
                                 conflicting:(THWordsCollection **)conflicting;
 
++ (THWordsCollection *)globalCollectionContainingKey:(THWordKey *)key
+                                   defaultCollection:(THWordsCollection *)collection;
+
 @end
