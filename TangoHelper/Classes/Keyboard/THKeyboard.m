@@ -273,7 +273,7 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
 - (void)updateSecretCells {
   if (_rightTappedCount == 11) {
     _rightTappedCount = -1;
-    special_names[hiraganaCellSpecialIndex] = @"ゆきこ";
+    special_names[hiraganaCellSpecialIndex] = @"うの";
     special_names[katakanaCellSpecialIndex] = @"マロニー";
   } else {
     special_names[hiraganaCellSpecialIndex] = @"あいう";
