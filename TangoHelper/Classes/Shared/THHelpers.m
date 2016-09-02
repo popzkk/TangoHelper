@@ -12,10 +12,10 @@ extern "C" {
 
 static CGFloat kTextFieldFontSize = 16;
 
-// Japanese version of Noto Sans will display Chinese Characters in Japanese style...
-// So use Simplified version of Noto Sans here.
-static NSString *cj_font_regular = @"NotoSansCJKsc-Regular";
-static NSString *cj_font_bold = @"NotoSansCJKsc-Bold";
+//static NSString *cj_font_regular = @"NotoSansCJKsc-Regular";
+//static NSString *cj_font_bold = @"NotoSansCJKsc-Bold";
+static NSString *cj_font_regular = @"HiraKakuProN-W3";
+static NSString *cj_font_bold = @"HiraKakuProN-W6";
 static NSString *zh_font_light = @"STHeitiSC-Light";
 static NSString *zh_font_medium = @"STHeitiSC-Medium";
 

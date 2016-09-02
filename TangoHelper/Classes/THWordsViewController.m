@@ -16,7 +16,7 @@ typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
 
 static NSString *kCellIdentifier = @"WordsViewCell";
 static UITableViewCellStyle kCellStyle = UITableViewCellStyleValue1;
-static CGFloat kTextLabelFontSize = 15;
+static CGFloat kTextLabelFontSize = 14;
 static CGFloat kDetailTextLabelFontSize = 14;
 
 static CGFloat kWordHeight = 40;

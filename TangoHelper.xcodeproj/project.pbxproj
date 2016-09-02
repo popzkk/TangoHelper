@@ -26,8 +26,6 @@
 		794FBCFE1D45D78500055E21 /* THKeyboardCellConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF61D45D78500055E21 /* THKeyboardCellConfig.m */; };
 		794FBCFF1D45D78500055E21 /* THKeyboardCharTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF81D45D78500055E21 /* THKeyboardCharTransformer.m */; };
 		794FBD001D45D78500055E21 /* THKeyboardConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */; };
-		799064CE1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 799064CC1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf */; };
-		799064D01D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 799064CF1D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf */; };
 		799878D11D6356D60038122F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 799878D01D6356D60038122F /* LaunchScreen.storyboard */; };
 		79A762F91D28F4EA009C0859 /* THFileRW.m in Sources */ = {isa = PBXBuildFile; fileRef = 79A762F81D28F4EA009C0859 /* THFileRW.m */; };
 		79C639061D7213C600CF09E8 /* THPlaylistsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 79C639021D7213C600CF09E8 /* THPlaylistsViewController.m */; };
@@ -291,8 +289,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				799064CE1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf in Resources */,
-				799064D01D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf in Resources */,
 				799878D11D6356D60038122F /* LaunchScreen.storyboard in Resources */,
 				7941954C1D4D832700918B38 /* Assets.xcassets in Resources */,
 			);
