@@ -52,9 +52,9 @@ static CGFloat kCellFontSizeBig = 24;
 
 + (instancetype)hiraganaCharCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
-  [instance setFont:cj_regular(kCellFontSizeMedium) state:THKeyboardCellStateNormal];
-  [instance setFont:cj_regular(kCellFontSizeMedium) state:THKeyboardCellStatePopped];
-  [instance setFont:cj_bold(kCellFontSizeBig) state:THKeyboardCellStateFocused];
+  [instance setFont:ja_normal(kCellFontSizeMedium) state:THKeyboardCellStateNormal];
+  [instance setFont:ja_normal(kCellFontSizeMedium) state:THKeyboardCellStatePopped];
+  [instance setFont:ja_bold(kCellFontSizeBig) state:THKeyboardCellStateFocused];
   [instance setBackgroundColor:blue_color() state:THKeyboardCellStateFocused];
   [instance setBackgroundColor:light_blue_color() state:THKeyboardCellStatePopped];
 #ifdef KEYBOARDCELL_HAS_BORDER
@@ -114,7 +114,7 @@ static CGFloat kCellFontSizeBig = 24;
   static THKeyboardCellConfig *instance = nil;
   dispatch_once(&once, ^{
     instance = [[self alloc] init];
-    [instance setFont:cj_regular(kCellFontSizeSmall) state:THKeyboardCellStateNormal];
+    [instance setFont:ja_normal(kCellFontSizeSmall) state:THKeyboardCellStateNormal];
     [instance setTextColor:[UIColor blackColor] state:THKeyboardCellStateNormal];
     [instance setTextColor:[UIColor lightGrayColor] state:THKeyboardCellStateFaded];
     [instance setBackgroundColor:[UIColor clearColor] state:THKeyboardCellStateNormal];

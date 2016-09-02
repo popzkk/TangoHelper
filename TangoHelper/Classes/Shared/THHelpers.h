@@ -61,10 +61,9 @@ UIAlertController *alert_ask_for_secret(THAlertTextsAction block);
 
 // =============================================  Fonts and Colors Helpers
 
-UIFont *cj_regular(CGFloat size);
-UIFont *cj_bold(CGFloat size);
-UIFont *zh_light(CGFloat size);
-UIFont *zh_medium(CGFloat size);
+UIFont *ja_normal(CGFloat size);
+UIFont *ja_bold(CGFloat size);
+UIFont *zh_normal(CGFloat size);
 UIFont *zh_bold(CGFloat size);
 
 UIColor *blue_color();

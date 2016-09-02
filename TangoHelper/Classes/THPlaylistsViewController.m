@@ -34,8 +34,8 @@ static CGFloat kPlaylistHeight = 60;
     self.model.delegate = self;
     self.cellIdentifier = kCellIdentifier;
     self.cellStyle = kCellStyle;
-    self.textLabelFont = cj_regular(kTextLabelFontSize);
-    self.detailTextLabelFont = cj_regular(kDetailTextLabelFontSize);
+    self.textLabelFont = ja_normal(kTextLabelFontSize);
+    self.detailTextLabelFont = ja_normal(kDetailTextLabelFontSize);
     self.tableView.rowHeight = kPlaylistHeight;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
 

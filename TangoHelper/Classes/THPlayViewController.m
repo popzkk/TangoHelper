@@ -10,8 +10,6 @@
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
 
-/** TODO: cancel the back button */
-
 typedef void (^THPlayViewTextsOperation)(NSArray<NSString *> *);
 
 static CGFloat kTextViewFontSize = 27;
@@ -23,7 +21,7 @@ static CGFloat kTextFieldHeight = 28;
 static CGFloat kTextFieldBottomPadding = 5;
 
 // Declear these properties here so we can use 'weakSelf.xxx'. Any better way?
-@interface THPlayViewController ()<THKeyboardDelegate, THPlayViewModelDelegate>
+@interface THPlayViewController ()<UITextFieldDelegate, THKeyboardDelegate, THPlayViewModelDelegate>
 
 @property(nonatomic) THWordsCollection *collection;
 
@@ -60,16 +58,23 @@ static CGFloat kTextFieldBottomPadding = 5;
     _textView.textAlignment = NSTextAlignmentCenter;
     _textView.userInteractionEnabled = NO;
     _textField = [[UITextField alloc] initWithFrame:CGRectZero];
-    _textField.font = cj_regular(kTextFieldFontSize);
+    _textField.font = ja_normal(kTextFieldFontSize);
     _textField.textAlignment = NSTextAlignmentCenter;
     _textField.layer.borderWidth = 1;
     _textField.layer.borderColor = grey_color().CGColor;
+    _textField.autocorrectionType = UITextAutocorrectionTypeNo;
+    _textField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    _textField.spellCheckingType = UITextSpellCheckingTypeNo;
+    _textField.returnKeyType = UIReturnKeyNext;
+    _textField.delegate = self;
     _keyboard = [THKeyboard sharedInstanceWithKeyboardType:THKeyboardTypeUnknown
                                                 actionText:kNextJa
                                                   delegate:self];
+    _keyboard.hidden = NO;
     [self.view addSubview:_textView];
     [self.view addSubview:_textField];
     [self.view addSubview:_keyboard];
+
     if ([_collection isKindOfClass:[THPlaylist class]]) {
       self.title = ((THPlaylist *)_collection).partialName;
     } else {
@@ -78,17 +83,48 @@ static CGFloat kTextFieldBottomPadding = 5;
     self.navigationItem.hidesBackButton = YES;
     self.navigationItem.leftBarButtonItem =
         system_item(UIBarButtonSystemItemCancel, self, @selector(didTapBarItemCancel));
+    self.navigationItem.rightBarButtonItem =
+        custom_item(@"Keyboard", UIBarButtonItemStylePlain, self, @selector(didTapBarItemKeyboard));
+
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(sysKeyboardDidChangeFrame:)
+                                                 name:UIKeyboardDidChangeFrameNotification
+                                               object:nil];
   }
   return self;
 }
 
-#if (DEBUG)
 - (void)dealloc {
+  [[NSNotificationCenter defaultCenter] removeObserver:self];
+#if (DEBUG)
   NSLog(@"dealloc: %@", self);
-}
 #endif
+}
 
 #pragma mark - private
+
+- (void)didTapBarItemKeyboard {
+  if (_keyboard.hidden) {
+    [_textField resignFirstResponder];
+    _keyboard.hidden = NO;
+  } else {
+    _keyboard.hidden = YES;
+    [_textField becomeFirstResponder];
+  }
+}
+
+- (void)sysKeyboardDidChangeFrame:(NSNotification *)notification {
+  CGRect kbRect = [self.view
+      convertRect:[[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue]
+         fromView:nil];
+  CGFloat diff =
+      _textField.frame.origin.y + kTextFieldHeight + kTextFieldBottomPadding - kbRect.origin.y;
+  _textField.frame =
+      CGRectApplyAffineTransform(_textField.frame, CGAffineTransformMakeTranslation(0, -diff));
+  _textView.frame = CGRectMake(_textView.frame.origin.x, _textView.frame.origin.y,
+                               _textView.frame.size.width, _textView.frame.size.height - diff);
+  [self.view layoutIfNeeded];
+}
 
 - (void)didTapBarItemCancel {
   [_model finish];
@@ -117,21 +153,24 @@ static CGFloat kTextFieldBottomPadding = 5;
 }
 
 - (void)viewWillLayoutSubviews {
-  CGRect frame = self.view.bounds;
-  CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
-  // height for the text view.
-  CGFloat textViewHeight = frame.size.height / 2 - kPadding - navBarHeight;
-  CGFloat x = frame.origin.x + kPadding;
-  CGFloat y = frame.origin.y + +navBarHeight + kPadding;
-  CGFloat width = frame.size.width - 2 * kPadding;
+  [super viewWillLayoutSubviews];
+  if (!_keyboard.hidden) {
+    CGRect frame = self.view.bounds;
+    CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
+    // height for the text view.
+    CGFloat textViewHeight = frame.size.height / 2 - kPadding - navBarHeight;
+    CGFloat x = frame.origin.x + kPadding;
+    CGFloat y = frame.origin.y + +navBarHeight + kPadding;
+    CGFloat width = frame.size.width - 2 * kPadding;
 
-  _textView.frame = CGRectMake(x, y += kPadding, width, textViewHeight);
-  y += textViewHeight;
+    _textView.frame = CGRectMake(x, y += kPadding, width, textViewHeight);
+    y += textViewHeight;
 
-  _textField.frame = CGRectMake(x, y += kTextFieldTopPadding, width, kTextFieldHeight);
-  y += kTextFieldHeight + kTextFieldBottomPadding;
+    _textField.frame = CGRectMake(x, y += kTextFieldTopPadding, width, kTextFieldHeight);
+    y += kTextFieldHeight + kTextFieldBottomPadding;
 
-  _keyboard.frame = CGRectMake(x, y, width, frame.size.height - y - kPadding);
+    _keyboard.frame = CGRectMake(x, y, width, frame.size.height - y - kPadding);
+  }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -145,6 +184,13 @@ static CGFloat kTextFieldBottomPadding = 5;
   } else {
     [_model start];
   }
+}
+
+#pragma mark - UITextFieldDelegate
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  [_model confirmInput:textField.text];
+  return YES;
 }
 
 #pragma mark - THKeyboardDelegate

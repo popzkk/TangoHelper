@@ -12,12 +12,12 @@ extern "C" {
 
 static CGFloat kTextFieldFontSize = 16;
 
-//static NSString *cj_font_regular = @"NotoSansCJKsc-Regular";
-//static NSString *cj_font_bold = @"NotoSansCJKsc-Bold";
-static NSString *cj_font_regular = @"HiraKakuProN-W3";
-static NSString *cj_font_bold = @"HiraKakuProN-W6";
-static NSString *zh_font_light = @"STHeitiSC-Light";
-static NSString *zh_font_medium = @"STHeitiSC-Medium";
+//static NSString *ja_font_normal = @"NotoSansCJKsc-Regular";
+//static NSString *ja_font_bold = @"NotoSansCJKsc-Bold";
+static NSString *ja_font_normal = @"HiraKakuProN-W3";
+static NSString *ja_font_bold = @"HiraKakuProN-W6";
+static NSString *zh_font_normal = @"STHeitiSC-Light";
+static NSString *zh_font_bold = @"STHeitiSC-Medium";
 
 // =====================================  Word related strings
 
@@ -171,7 +171,7 @@ UIAlertController *alert_texts_two_blocks(NSString *title, NSString *message, NS
     [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
       textField.placeholder = placeholders[i];
       textField.text = text;
-      textField.font = cj_regular(kTextFieldFontSize);
+      textField.font = ja_normal(kTextFieldFontSize);
     }];
   }
   [alert addAction:[UIAlertAction actionWithTitle:kCancel
@@ -432,15 +432,14 @@ UIAlertController *alert_ask_for_secret(THAlertTextsAction block) {
 
 #pragma mark - Fonts and Colors
 
-UIFont *cj_regular(CGFloat size) { return [UIFont fontWithName:cj_font_regular size:size]; }
+UIFont *ja_normal(CGFloat size) { return [UIFont fontWithName:ja_font_normal size:size]; }
 
-UIFont *cj_bold(CGFloat size) { return [UIFont fontWithName:cj_font_bold size:size]; }
+UIFont *ja_bold(CGFloat size) { return [UIFont fontWithName:ja_font_bold size:size]; }
 
-UIFont *zh_light(CGFloat size) { return [UIFont fontWithName:zh_font_light size:size]; }
+UIFont *zh_normal(CGFloat size) { return [UIFont fontWithName:zh_font_normal size:size]; }
 
-UIFont *zh_medium(CGFloat size) { return [UIFont fontWithName:zh_font_medium size:size]; }
+UIFont *zh_bold(CGFloat size) { return [UIFont fontWithName:zh_font_bold size:size]; }
 
-UIFont *zh_bold(CGFloat size) { return [UIFont fontWithName:cj_font_bold size:size]; }
 
 UIColor *blue_color() {
   // modified from 007aff
