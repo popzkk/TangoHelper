@@ -12,9 +12,6 @@
 #import "Backend/THDepot.h"
 #import "Backend/THPlaylist.h"
 #import "Backend/THWord.h"
-#endif  // ADMIN
-
-#if (ADMIN)
 
 #define START_DATE [NSDate dateWithTimeIntervalSince1970:1456676400]
 
@@ -23,7 +20,8 @@
 - (void)setObject:(NSDate *)object forKey:(THMetadataKey)key;
 
 @end
-#endif
+
+#endif  // ADMIN
 
 static NSTimeInterval thres = 30 * 60;
 
@@ -47,18 +45,6 @@ static NSTimeInterval thres = 30 * 60;
                      error:nil];
     }
   };
-  id changeWordKeyFormatBlock = ^(id obj, NSUInteger idx, BOOL *stop) {
-    NSString *filename = (NSString *)obj;
-    NSString *fullPath = [path stringByAppendingPathComponent:filename];
-    NSDictionary *oldContent = [NSDictionary dictionaryWithContentsOfFile:fullPath];
-    NSMutableDictionary *newContent = [NSMutableDictionary dictionaryWithCapacity:oldContent.count];
-    for (NSString *oldKey in oldContent) {
-      NSString *newKey = [oldKey stringByReplacingOccurrencesOfString:@"「" withString:@"\\"];
-      newKey = [newKey stringByReplacingOccurrencesOfString:@"」" withString:@""];
-      [newContent setObject:[oldContent objectForKey:oldKey] forKey:newKey];
-    }
-    [newContent writeToFile:fullPath atomically:YES];
-  };
    */
   id transformFileFormatBlock = ^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
@@ -78,7 +64,7 @@ static NSTimeInterval thres = 30 * 60;
     NSDictionary *file = @{@"metadata":metadata.outputPropertyList, @"content":newContent};
     [file writeToFile:fullPath atomically:YES];
   };
-/*
+
   for (NSString *family in [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)]) {
     NSLog(@"%@", family);
     for (NSString *name in
@@ -87,7 +73,7 @@ static NSTimeInterval thres = 30 * 60;
     }
   }
   exit(0);
-*/
+
   [files enumerateObjectsUsingBlock:transformFileFormatBlock];
   exit(0);
 #endif  // ADMIN

@@ -8,16 +8,17 @@
 extern "C" {
 #endif
 
-// =====================================  Fonts
+#pragma mark - UIBarButtonItems
 
-static CGFloat kTextFieldFontSize = 16;
+UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action) {
+  return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:sys target:target action:action];
+}
 
-//static NSString *ja_font_normal = @"NotoSansCJKsc-Regular";
-//static NSString *ja_font_bold = @"NotoSansCJKsc-Bold";
-static NSString *ja_font_normal = @"HiraKakuProN-W3";
-static NSString *ja_font_bold = @"HiraKakuProN-W6";
-static NSString *zh_font_normal = @"STHeitiSC-Light";
-static NSString *zh_font_bold = @"STHeitiSC-Medium";
+UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action) {
+  return [[UIBarButtonItem alloc] initWithTitle:title style:style target:target action:action];
+}
+
+#pragma mark - Alerts and ActionSheets
 
 // =====================================  Word related strings
 
@@ -81,17 +82,7 @@ static NSString *kAskForSecretAlertSecretPlaceholder = @"Please enter something 
 
 // =====================================
 
-#pragma mark - UIBarButtonItems
-
-UIBarButtonItem *system_item(UIBarButtonSystemItem sys, id target, SEL action) {
-  return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:sys target:target action:action];
-}
-
-UIBarButtonItem *custom_item(NSString *title, UIBarButtonItemStyle style, id target, SEL action) {
-  return [[UIBarButtonItem alloc] initWithTitle:title style:style target:target action:action];
-}
-
-#pragma mark - Alerts and ActionSheets
+static CGFloat kTextFieldFontSize = 16;
 
 UIAlertController *alert_super_basic(NSString *title, NSString *message, THAlertBasicAction block) {
   if (!block) {
@@ -432,14 +423,44 @@ UIAlertController *alert_ask_for_secret(THAlertTextsAction block) {
 
 #pragma mark - Fonts and Colors
 
-UIFont *ja_normal(CGFloat size) { return [UIFont fontWithName:ja_font_normal size:size]; }
+static NSString *ja_font_normal = @"PingFang-SC-Medium";
+static NSString *ja_font_bold = @"PingFang-SC-Semibold";
+static NSString *zh_font_normal = @"PingFang-SC-Medium";
+static NSString *zh_font_bold = @"PingFang-SC-Semibold";
+static NSString *ja_font_normal_fallback = @"STHeitiSC-Light";
+static NSString *ja_font_bold_fallback = @"STHeitiSC-Medium";
+static NSString *zh_font_normal_fallback = @"STHeitiSC-Light";
+static NSString *zh_font_bold_fallback = @"STHeitiSC-Medium";
 
-UIFont *ja_bold(CGFloat size) { return [UIFont fontWithName:ja_font_bold size:size]; }
+#define FONT_NAME_FALLBACK(x) x##_fallback
 
-UIFont *zh_normal(CGFloat size) { return [UIFont fontWithName:zh_font_normal size:size]; }
+#define FONT_NAME_RUNTIME(x)                                                        \
+  ({                                                                                \
+    NSString *y;                                                                    \
+    if ([[NSProcessInfo processInfo]                                                \
+            isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){9, 0, 0}]) { \
+      y = x;                                                                        \
+    } else {                                                                        \
+      y = FONT_NAME_FALLBACK(x);                                                    \
+    }                                                                               \
+    y;                                                                              \
+  })
 
-UIFont *zh_bold(CGFloat size) { return [UIFont fontWithName:zh_font_bold size:size]; }
+UIFont *ja_normal(CGFloat size) {
+  return [UIFont fontWithName:FONT_NAME_RUNTIME(ja_font_normal) size:size];
+}
 
+UIFont *ja_bold(CGFloat size) {
+  return [UIFont fontWithName:FONT_NAME_RUNTIME(ja_font_bold) size:size];
+}
+
+UIFont *zh_normal(CGFloat size) {
+  return [UIFont fontWithName:FONT_NAME_RUNTIME(zh_font_normal) size:size];
+}
+
+UIFont *zh_bold(CGFloat size) {
+  return [UIFont fontWithName:FONT_NAME_RUNTIME(zh_font_bold) size:size];
+}
 
 UIColor *blue_color() {
   // modified from 007aff

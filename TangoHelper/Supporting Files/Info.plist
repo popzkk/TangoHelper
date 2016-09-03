@@ -22,11 +22,6 @@
 	<string>1111</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>UIAppFonts</key>
-	<array>
-		<string>NotoSansCJKsc-Regular.otf</string>
-		<string>NotoSansCJKsc-Bold.otf</string>
-	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

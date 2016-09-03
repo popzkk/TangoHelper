@@ -74,8 +74,6 @@
 		794FBCF91D45D78500055E21 /* THKeyboardConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardConfig.h; path = Classes/Keyboard/THKeyboardConfig.h; sourceTree = "<group>"; };
 		794FBCFA1D45D78500055E21 /* THKeyboardConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THKeyboardConfig.m; path = Classes/Keyboard/THKeyboardConfig.m; sourceTree = "<group>"; };
 		794FBCFB1D45D78500055E21 /* THKeyboardJaConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboardJaConstants.h; path = Classes/Keyboard/THKeyboardJaConstants.h; sourceTree = "<group>"; };
-		799064CC1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NotoSansCJKsc-Regular.otf"; path = "Resources/NotoSansCJKsc-Regular.otf"; sourceTree = "<group>"; };
-		799064CF1D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "NotoSansCJKsc-Bold.otf"; path = "Resources/NotoSansCJKsc-Bold.otf"; sourceTree = "<group>"; };
 		799878D01D6356D60038122F /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = "Supporting Files/LaunchScreen.storyboard"; sourceTree = "<group>"; };
 		79A7608C1D23058E009C0859 /* TangoHelper.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TangoHelper.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		79A762F81D28F4EA009C0859 /* THFileRW.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileRW.m; path = Classes/Backend/THFileRW.m; sourceTree = "<group>"; };
@@ -112,15 +110,6 @@
 				7922495D1D6CFCD600493AB5 /* THTableViewModel.h */,
 			);
 			name = Models;
-			sourceTree = "<group>";
-		};
-		7941954F1D4D836800918B38 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				799064CF1D4DB16900AE50AE /* NotoSansCJKsc-Bold.otf */,
-				799064CC1D4DB02E00AE50AE /* NotoSansCJKsc-Regular.otf */,
-			);
-			name = Resources;
 			sourceTree = "<group>";
 		};
 		794FBCF01D45D76D00055E21 /* Keyboard */ = {
@@ -161,7 +150,6 @@
 			isa = PBXGroup;
 			children = (
 				79A761C71D24518F009C0859 /* Classes */,
-				7941954F1D4D836800918B38 /* Resources */,
 				79A7608F1D23058E009C0859 /* Supporting Files */,
 			);
 			path = TangoHelper;

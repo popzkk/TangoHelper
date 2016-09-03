@@ -28,7 +28,11 @@ static CGFloat kWordHeight = 40;
 }
 
 - (instancetype)initWithCollection:(THWordsCollection *)collection {
-  return [self initWithCollection:collection preSelected:nil title:nil cancelBlock:nil confirmBlock:nil];
+  return [self initWithCollection:collection
+                      preSelected:nil
+                            title:nil
+                      cancelBlock:nil
+                     confirmBlock:nil];
 }
 
 - (instancetype)initWithCollection:(THWordsCollection *)collection
@@ -36,7 +40,10 @@ static CGFloat kWordHeight = 40;
                              title:(NSString *)title
                        cancelBlock:(THTableViewCancelBlock)cancelBlock
                       confirmBlock:(THTableViewConfirmBlock)confirmBlock {
-  self = [super initWithStyle:UITableViewStylePlain title:title cancelBlock:cancelBlock confirmBlock:confirmBlock];
+  self = [super initWithStyle:UITableViewStylePlain
+                        title:title
+                  cancelBlock:cancelBlock
+                 confirmBlock:confirmBlock];
   if (self) {
     _collection = collection;
     if ([_collection isKindOfClass:[THDepot class]]) {

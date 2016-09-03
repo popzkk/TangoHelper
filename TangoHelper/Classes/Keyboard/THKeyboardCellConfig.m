@@ -5,6 +5,7 @@
 static CGFloat kCellFontSizeSmall = 12;
 static CGFloat kCellFontSizeMedium = 17;
 static CGFloat kCellFontSizeBig = 24;
+static CGFloat kCellFontSizeLarge = 27;
 
 @implementation THKeyboardCellConfig {
   UIFont *_font[numberOfKeyboardCellStates];
@@ -53,8 +54,8 @@ static CGFloat kCellFontSizeBig = 24;
 + (instancetype)hiraganaCharCellConfig {
   THKeyboardCellConfig *instance = [[[self class] defaultJaInstance] copy];
   [instance setFont:ja_normal(kCellFontSizeMedium) state:THKeyboardCellStateNormal];
-  [instance setFont:ja_normal(kCellFontSizeMedium) state:THKeyboardCellStatePopped];
-  [instance setFont:ja_bold(kCellFontSizeBig) state:THKeyboardCellStateFocused];
+  [instance setFont:ja_normal(kCellFontSizeBig) state:THKeyboardCellStatePopped];
+  [instance setFont:ja_bold(kCellFontSizeLarge) state:THKeyboardCellStateFocused];
   [instance setBackgroundColor:blue_color() state:THKeyboardCellStateFocused];
   [instance setBackgroundColor:light_blue_color() state:THKeyboardCellStatePopped];
 #ifdef KEYBOARDCELL_HAS_BORDER

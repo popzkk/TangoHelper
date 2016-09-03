@@ -292,6 +292,10 @@
   return [NSSet setWithArray:_outputKeys];
 }
 
+- (NSString *)accessibilityLabelAtRow:(NSUInteger)row {
+  return _outputKeys[row].input;
+}
+
 #pragma mark - private
 
 - (void)reloadResources {
