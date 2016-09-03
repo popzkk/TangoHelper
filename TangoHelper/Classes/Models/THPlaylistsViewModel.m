@@ -21,18 +21,15 @@
   self = [super init];
   if (self) {
     _excluded = [excluded copy];
-    [self reloadResources];
+    [self reload];
   }
   return self;
 }
 
 - (void)reload {
-  [self reloadResources];
-  if (_searchString.length) {
-    [self filterContentWithString:_searchString ignoresEmptyString:YES];
-  } else {
-    [_delegate modelDidGetUpdated];
-  }
+  _playlists = [[THFileCenter sharedInstance] playlists];
+  [_playlists removeObjectsInArray:_excluded];
+  _outputPlaylists = _playlists;
 }
 
 - (NSUInteger)numberOfRows {
@@ -201,12 +198,6 @@
 }
 
 #pragma mark - private
-
-- (void)reloadResources {
-  _playlists = [[THFileCenter sharedInstance] playlists];
-  [_playlists removeObjectsInArray:_excluded];
-  _outputPlaylists = _playlists;
-}
 
 - (BOOL)searchStringMatchingRowIndex:(NSUInteger)rowIndex {
   if (!_searchString.length) {

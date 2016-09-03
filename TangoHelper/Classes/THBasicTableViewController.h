@@ -20,8 +20,11 @@ typedef void (^THTableViewRowActionHandler)(UITableViewRowAction *, NSIndexPath 
 
 - (instancetype)initWithStyle:(UITableViewStyle)style
                         title:(NSString *)title
+                 searchString:(NSString *)searchString
                   cancelBlock:(THTableViewCancelBlock)cancelBlock
                  confirmBlock:(THTableViewConfirmBlock)confirmBlock;
+
+@property(nonatomic, readonly) NSString *searchString;
 
 @property(nonatomic) THTableViewCancelBlock cancelBlock;
 
@@ -97,6 +100,8 @@ typedef void (^THTableViewRowActionHandler)(UITableViewRowAction *, NSIndexPath 
 @property(nonatomic) UIFont *textLabelFont;
 
 @property(nonatomic) UIFont *detailTextLabelFont;
+
+@property(nonatomic) UIColor *detailTextLabelColor;
 
 #pragma mark - UITableViewDelegate related
 

@@ -333,6 +333,7 @@ static CGFloat kTextFieldBottomPadding = 5;
                                                      initWithCollection:collection
                                                             preSelected:nil
                                                                   title:@"Wrong Words"
+                                                           searchString:nil
                                                             cancelBlock:nil
                                                            confirmBlock:nil]
                                         animated:YES];

@@ -24,22 +24,15 @@
   if (!matchingKeys.count) {
     return @"";
   }
-  NSMutableString *desc = [NSMutableString stringWithString:@"|"];
-  BOOL first = YES;
+  NSMutableString *desc = [NSMutableString stringWithString:@""];
   for (THWordKey *key in matchingKeys) {
     THWordObject *object = [self objectForKey:key];
-    if (first) {
-      first = NO;
-    } else {
-      [desc appendString:@"_|"];
-    }
     if ([object.explanation containsString:string]) {
-      [desc appendFormat:@"_%@ : %@", key.contentForDisplay, object.explanation];
+      [desc appendFormat:@"{%@ :: %@} ", key.contentForDisplay, object.explanation];
     } else {
-      [desc appendFormat:@"_%@", key.contentForDisplay];
+      [desc appendFormat:@"{%@} ", key.contentForDisplay];
     }
   }
-  [desc appendString:@"_|"];
   return desc;
 }
 

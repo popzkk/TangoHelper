@@ -28,9 +28,15 @@ static CGFloat kWordHeight = 40;
 }
 
 - (instancetype)initWithCollection:(THWordsCollection *)collection {
+  return [self initWithCollection:collection searchString:nil];
+}
+
+- (instancetype)initWithCollection:(THWordsCollection *)collection
+                      searchString:(NSString *)searchString {
   return [self initWithCollection:collection
                       preSelected:nil
                             title:nil
+                     searchString:searchString
                       cancelBlock:nil
                      confirmBlock:nil];
 }
@@ -38,10 +44,12 @@ static CGFloat kWordHeight = 40;
 - (instancetype)initWithCollection:(THWordsCollection *)collection
                        preSelected:(NSArray<THWordKey *> *)preSelected
                              title:(NSString *)title
+                      searchString:(NSString *)searchString
                        cancelBlock:(THTableViewCancelBlock)cancelBlock
                       confirmBlock:(THTableViewConfirmBlock)confirmBlock {
   self = [super initWithStyle:UITableViewStylePlain
                         title:title
+                 searchString:searchString
                   cancelBlock:cancelBlock
                  confirmBlock:confirmBlock];
   if (self) {

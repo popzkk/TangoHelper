@@ -21,14 +21,19 @@ static CGFloat kPlaylistHeight = 60;
 }
 
 - (instancetype)init {
-  return [self initWithExcluded:nil title:nil cancelBlock:nil confirmBlock:nil];
+  return [self initWithExcluded:nil title:nil searchString:nil cancelBlock:nil confirmBlock:nil];
 }
 
 - (instancetype)initWithExcluded:(NSArray<THPlaylist *> *)excluded
                            title:(NSString *)title
+                    searchString:(NSString *)searchString
                      cancelBlock:(THTableViewCancelBlock)cancelBlock
                     confirmBlock:(THTableViewConfirmBlock)confirmBlock {
-  self = [super initWithStyle:UITableViewStylePlain title:title cancelBlock:cancelBlock confirmBlock:confirmBlock];
+  self = [super initWithStyle:UITableViewStylePlain
+                        title:title
+                 searchString:searchString
+                  cancelBlock:cancelBlock
+                 confirmBlock:confirmBlock];
   if (self) {
     self.model = [[THPlaylistsViewModel alloc] initWithExcluded:excluded];
     self.model.delegate = self;
@@ -36,14 +41,15 @@ static CGFloat kPlaylistHeight = 60;
     self.cellStyle = kCellStyle;
     self.textLabelFont = ja_normal(kTextLabelFontSize);
     self.detailTextLabelFont = ja_normal(kDetailTextLabelFontSize);
+    self.detailTextLabelColor = [UIColor grayColor];
     self.tableView.rowHeight = kPlaylistHeight;
     self.tableView.allowsMultipleSelectionDuringEditing = YES;
 
     if (!self.confirmBlock) {
       self.rightItems = @[ self.barItemEdit ];
       self.rightItemsEditing = @[ self.barItemDone, self.barItemAction ];
-      UIBarButtonItem *browserDepot = custom_item(kBrowseDepot, UIBarButtonItemStylePlain, self,
-                                                  @selector(didTapBrowserDepot));
+      UIBarButtonItem *browserDepot =
+          custom_item(kBrowseDepot, UIBarButtonItemStylePlain, self, @selector(didTapBrowserDepot));
       self.bottomItems = @[ browserDepot, self.barItemPadding, self.barItemAdd ];
       self.bottomItemsEditing = @[ self.barItemTrash, self.barItemPadding, self.barItemPlay ];
       self.title = @"Playlists";
@@ -74,10 +80,18 @@ static CGFloat kPlaylistHeight = 60;
   if (tableView.isEditing) {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
   } else {
-    [self.navigationController
-        pushViewController:[[THWordsViewController alloc]
-                               initWithCollection:[self.model itemAtRow:indexPath.row]]
-                  animated:YES];
+    THPlaylist *playlist = [self.model itemAtRow:indexPath.row];
+    if (self.searchString && [playlist searchWithString:self.searchString].count > 0) {
+      [self.navigationController
+          pushViewController:[[THWordsViewController alloc] initWithCollection:playlist
+                                                                  searchString:self.searchString]
+                    animated:YES];
+    } else {
+      [self.navigationController
+          pushViewController:[[THWordsViewController alloc] initWithCollection:playlist
+                                                                  searchString:nil]
+                    animated:YES];
+    }
   }
 }
 

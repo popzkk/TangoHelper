@@ -17,12 +17,12 @@ static CGFloat kSearchBarHeight = 40;
 @implementation THBasicTableViewController {
   // only the intersect set makes sense!
   NSMutableSet *_selectedItems;
-  NSString *_searchString;
   BOOL _searchControllerWillDismiss;
 }
 
 - (instancetype)initWithStyle:(UITableViewStyle)style
                         title:(NSString *)title
+                 searchString:(NSString *)searchString
                   cancelBlock:(THTableViewCancelBlock)cancelBlock
                  confirmBlock:(THTableViewConfirmBlock)confirmBlock {
   self = [super initWithStyle:style];
@@ -58,6 +58,10 @@ static CGFloat kSearchBarHeight = 40;
     [_searchController.searchBar sizeToFit];
     self.tableView.tableHeaderView = _searchController.searchBar;
 #endif
+    if (searchString.length) {
+      _searchString = [searchString copy];
+      _searchController.searchBar.text = _searchString;
+    }
   }
   return self;
 }
@@ -85,6 +89,11 @@ static CGFloat kSearchBarHeight = 40;
     }
   }
   [_model reload];
+  if (_searchString.length) {
+    [_model filterContentWithString:_searchString ignoresEmptyString:YES];
+  } else {
+    [self.tableView reloadData];
+  }
   if (self.tableView.editing) {
     [self recoverSelections];
   }
@@ -139,6 +148,9 @@ static CGFloat kSearchBarHeight = 40;
   cell.detailTextLabel.text = [_model detailTextAtRow:row];
   if (_detailTextLabelFont) {
     cell.detailTextLabel.font = _detailTextLabelFont;
+  }
+  if (_detailTextLabelColor) {
+    cell.detailTextLabel.textColor = _detailTextLabelColor;
   }
 
   // ...config a different style for pre-selected
@@ -349,6 +361,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
           pushViewController:[[THPlaylistsViewController alloc]
                                  initWithExcluded:excluded
                                             title:@"Select Playlist(s) to copy to"
+                                     searchString:nil
                                       cancelBlock:nil
                                      confirmBlock:copy_operation]
                     animated:YES];
@@ -368,6 +381,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
             pushViewController:[[THPlaylistsViewController alloc]
                                    initWithExcluded:excluded
                                               title:@"Select Playlist(s) to move to"
+                                       searchString:nil
                                         cancelBlock:nil
                                        confirmBlock:move_operation]
                       animated:YES];

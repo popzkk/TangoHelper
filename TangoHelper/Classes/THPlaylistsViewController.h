@@ -6,6 +6,7 @@
 
 - (instancetype)initWithExcluded:(NSArray<THPlaylist *> *)excluded
                            title:(NSString *)title
+                    searchString:(NSString *)searchString
                      cancelBlock:(THTableViewCancelBlock)cancelBlock
                     confirmBlock:(THTableViewConfirmBlock)confirmBlock;
 

@@ -27,15 +27,17 @@
   self = [super init];
   if (self) {
     _collection = collection;
-    [self reloadResources];
+    [self reload];
   }
   return self;
 }
 
 - (void)reload {
-  [self reloadResources];
-  // _searchString must be empty, no need to filter.
-  [_delegate modelDidGetUpdated];
+  _keys = [NSMutableArray arrayWithArray:[_collection allKeys]];
+  shuffle(_keys);
+  _objects = [NSMutableArray arrayWithArray:[_collection objectsForKeys:_keys]];
+  _outputKeys = _keys;
+  _outputObjects = _objects;
 }
 
 - (NSUInteger)numberOfRows {
@@ -297,14 +299,6 @@
 }
 
 #pragma mark - private
-
-- (void)reloadResources {
-  _keys = [NSMutableArray arrayWithArray:[_collection allKeys]];
-  shuffle(_keys);
-  _objects = [NSMutableArray arrayWithArray:[_collection objectsForKeys:_keys]];
-  _outputKeys = _keys;
-  _outputObjects = _objects;
-}
 
 - (BOOL)searchStringMatchingRowIndex:(NSUInteger)rowIndex {
   if (!_searchString.length) {
