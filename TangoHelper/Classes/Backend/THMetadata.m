@@ -68,6 +68,8 @@
 
 - (void)setObject:(NSDate *)object forKey:(THMetadataKey)key;
 
+- (void)flush;
+
 @end
 
 @implementation THMetadata {
@@ -107,7 +109,12 @@
 #pragma mark - private
 
 - (void)setObject:(NSDate *)object forKey:(THMetadataKey)key {
+  _dirty = YES;
   [_dict setObject:object forKey:_keys[key]];
+}
+
+- (void)flush {
+  _dirty = NO;
 }
 
 #pragma mark - THPropertyListDictionary

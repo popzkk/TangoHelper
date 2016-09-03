@@ -171,6 +171,8 @@ static NSUInteger thres = 20;
 
 - (void)setObject:(NSDate *)object forKey:(THMetadataKey)key;
 
+- (void)flush;
+
 @end
 
 #pragma mark - THFileRW
@@ -228,7 +230,7 @@ static NSUInteger thres = 20;
 }
 
 - (void)flushWithThres:(NSUInteger)thres {
-  if (self.diff > thres) {
+  if (_metadata.dirty || _diff > thres) {
     NSLog(@"flush \"%@\"", _filename);
     NSDictionary *dictionary = @{
       @"metadata" : _metadata.outputPropertyList,
@@ -236,6 +238,7 @@ static NSUInteger thres = 20;
     };
     if ([dictionary writeToFile:_path atomically:NO]) {
       _diff = 0;
+      [_metadata flush];
     } else {
       NSLog(@"WARNING: writing to %@ fails.", _filename);
     }

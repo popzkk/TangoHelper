@@ -23,6 +23,8 @@ typedef NS_ENUM(NSUInteger, THMetadataKey) {
 
 @interface THMetadata : NSObject<THPropertyList>
 
+@property(nonatomic, readonly) BOOL dirty;
+
 - (NSDate *)objectForKey:(THMetadataKey)key;
 
 // Will automtically set "created".

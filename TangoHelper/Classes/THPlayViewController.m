@@ -125,8 +125,8 @@ static CGFloat kTextFieldBottomPadding = 5;
     _keyboard.hidden = NO;
     [_textField resignFirstResponder];
   } else {
-    [_textField becomeFirstResponder];
     _keyboard.hidden = YES;
+    [_textField becomeFirstResponder];
   }
 }
 
