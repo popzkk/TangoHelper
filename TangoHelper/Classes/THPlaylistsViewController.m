@@ -108,7 +108,7 @@ static CGFloat kPlaylistHeight = 60;
                                             weakSelf.lastTexts = texts_from_text_fields(textFields);
                                             [weakSelf.model modifyRow:row
                                                             withTexts:weakSelf.lastTexts
-                                                          globalCheck:YES];
+                                                          ];
                                           })
                save:YES];
   };
@@ -120,7 +120,7 @@ static CGFloat kPlaylistHeight = 60;
   __weak THPlaylistsViewController *weakSelf = self;
   [self showAlert:alert_add_playlist(^(NSArray<UITextField *> *textFields) {
           weakSelf.lastTexts = texts_from_text_fields(textFields);
-          [weakSelf.model add:weakSelf.lastTexts globalCheck:YES];
+          [weakSelf.model add:weakSelf.lastTexts];
         })
              save:YES];
 }

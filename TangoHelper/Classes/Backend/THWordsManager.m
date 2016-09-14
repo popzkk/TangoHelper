@@ -1,82 +1,67 @@
 #import "THWordsManager.h"
 
-#import "THFileCenter.h"
 #import "THFileRW.h"
 #import "THWord.h"
 
-@implementation THWordsManager
+@implementation THWordsManager {
+  NSMutableDictionary<THWordKey *, THWordObject *> *_globalTransformedContent;
+  NSMutableDictionary<THWordKey *, NSNumber *> *_globalReferenceCount;
+}
 
-+ (THWordsManagerOverwriteAction)collection:(THWordsCollection *)collection
-                      wantsToAddExplanation:(NSString *)explanation
-                                     forKey:(THWordKey *)key
-                                conflicting:(THWordsCollection **)conflicting {
-  THWordsCollection *conflictingCollection =
-      [self globalCollectionContainingKey:key defaultCollection:collection];
-  *conflicting = conflictingCollection;
-  if (!conflictingCollection) {
-    return nil;
-  }
-  THWordObject *target = [conflictingCollection objectForKey:key];
-  if ([target.explanation isEqualToString:explanation]) {
-    return nil;
-  } else {
-    return ^{
-      target.explanation = explanation;
-      [conflictingCollection editObject:target forKey:key oldKey:key];
-    };
++ (instancetype)sharedInstance {
+  static dispatch_once_t onceToken;
+  static THWordsManager *instance = nil;
+  dispatch_once(&onceToken, ^{
+    instance = [[self alloc] init];
+    instance->_globalTransformedContent = [NSMutableDictionary dictionary];
+    instance->_globalReferenceCount = [NSMutableDictionary dictionary];
+  });
+  return instance;
+}
+
+- (THWordObject *)objectForKey:(THWordKey *)key {
+  return [_globalTransformedContent objectForKey:key];
+}
+
+- (void)didInitializeFileRW:(THFileRW *)fileRW {
+  NSArray<THWordKey *> *keys = fileRW.allKeys;
+  for (THWordKey *key in keys) {
+    [self someFileRWDidAddObject:[fileRW objectForKey:key] forKey:key];
   }
 }
 
-+ (THWordsManagerOverwriteAction)collection:(THWordsCollection *)collection
-                     wantsToEditExplanation:(NSString *)explanation
-                                     forKey:(THWordKey *)key
-                                     oldKey:(THWordKey *)oldKey
-                                conflicting:(THWordsCollection **)conflicting {
-  THWordsCollection *conflictingCollection =
-      [self globalCollectionContainingKey:key defaultCollection:collection];
-  *conflicting = conflictingCollection;
-  THWordObject *object = [conflictingCollection objectForKey:key];
-  if ([key isEqual:oldKey]) {
-    if ([object.explanation isEqualToString:explanation]) {
-      return nil;
-    } else {
-      return ^{
-        object.explanation = explanation;
-        // here conflctingCollection must be equal to collection
-        [conflictingCollection editObject:object forKey:key oldKey:key];
-      };
-    }
-  } else {
-    if (collection == conflictingCollection) {
-      return ^{
-        object.explanation = explanation;
-        [collection removeObjectForKey:oldKey];
-        [collection editObject:object forKey:key oldKey:key];
-      };
-    } else {
-      return ^{
-        THWordObject *oldObj = [collection objectForKey:oldKey];
-        oldObj.explanation = explanation;
-        [collection editObject:oldObj forKey:key oldKey:oldKey];
-        object.explanation = explanation;
-        [conflictingCollection editObject:object forKey:key oldKey:key];
-      };
-    }
+- (void)willRemoveFileRW:(THFileRW *)fileRW {
+  NSArray<THWordKey *> *keys = fileRW.allKeys;
+  for (THWordKey *key in keys) {
+    [self someFileRWDidRemoveKey:key];
   }
 }
 
-+ (THWordsCollection *)globalCollectionContainingKey:(THWordKey *)key
-                                   defaultCollection:(THWordsCollection *)collection {
-  if ([collection objectForKey:key]) {
-    return collection;
+- (void)someFileRWDidAddObject:(THWordObject *)object forKey:(THWordKey *)key {
+#if (DEBUG)
+  THWordObject *oldObj = [_globalTransformedContent objectForKey:key];
+  if (oldObj && oldObj != object) {
+    NSLog(@"Internal error: adding a globally existing object");
+    return;
   }
-  NSArray<THFileRW *> *array = [[THFileCenter sharedInstance] wordsFiles];
-  for (THFileRW *fileRW in array) {
-    if ([fileRW objectForKey:key]) {
-      return fileRW;
-    }
+#endif
+  NSUInteger refCount = [_globalReferenceCount objectForKey:key].unsignedIntegerValue + 1;
+  if (refCount > 1) {
+    [_globalReferenceCount setObject:@(refCount) forKey:key];
+  } else {
+    [_globalTransformedContent setObject:object forKey:key];
+    [_globalReferenceCount setObject:@(1) forKey:key];
   }
-  return nil;
+}
+
+- (void)someFileRWDidRemoveKey:(THWordKey *)key {
+  NSUInteger refCount = [_globalReferenceCount objectForKey:key].unsignedIntegerValue - 1;
+  if (refCount) {
+    [_globalReferenceCount setObject:@(refCount) forKey:key];
+  } else {
+    [_globalReferenceCount removeObjectForKey:key];
+    [_globalTransformedContent removeObjectForKey:key];
+  }
 }
 
 @end

@@ -15,7 +15,7 @@
     if (++cur >= _sources.count) {
       break;
     }
-    index = [[_sources objectAtIndex:cur] rangeOfString:content].location;
+    index = [_sources[cur] rangeOfString:content].location;
   }
   // not in the charset of this language, return the original.
   if (index == NSNotFound) {
@@ -25,7 +25,7 @@
   NSUInteger tmp = cur;
   do {
     cur = (cur + 1) % _sources.count;
-    NSString *nextForm = [[_sources objectAtIndex:cur] substringWithRange:NSMakeRange(index, 1)];
+    NSString *nextForm = [_sources[cur] substringWithRange:NSMakeRange(index, 1)];
     if (![nextForm isEqualToString:content]) {
       return nextForm;
     }

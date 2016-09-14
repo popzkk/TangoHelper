@@ -24,6 +24,8 @@ typedef void (^THTableViewRowActionHandler)(UITableViewRowAction *, NSIndexPath 
                   cancelBlock:(THTableViewCancelBlock)cancelBlock
                  confirmBlock:(THTableViewConfirmBlock)confirmBlock;
 
+- (NSString *)customizedTitle;
+
 @property(nonatomic, readonly) NSString *searchString;
 
 @property(nonatomic) THTableViewCancelBlock cancelBlock;

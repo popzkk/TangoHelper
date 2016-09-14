@@ -25,6 +25,7 @@ static CGFloat kWordHeight = 40;
   THWordsViewControllerSituation _situation;
   THWordsCollection *_collection;
   NSSet<THWordKey *> *_preSelected;
+  NSString *_basicTitle;
 }
 
 - (instancetype)initWithCollection:(THWordsCollection *)collection {
@@ -98,10 +99,10 @@ static CGFloat kWordHeight = 40;
         self.barItemPlay
       ];
       if (_situation == THWordsViewControllerSituationDepot) {
-        self.title = @"Depot";
+        _basicTitle = @"Depot";
         self.bottomItems = @[ self.barItemPadding, self.barItemAdd, self.barItemPadding ];
       } else if (_situation == THWordsViewControllerSituationPlaylist) {
-        self.title = ((THPlaylist *)collection).partialName;
+        _basicTitle = ((THPlaylist *)collection).partialName;
         self.bottomItems = self.bottomItemsEditing;
       } else {
         self.navigationItem.hidesBackButton = YES;
@@ -110,6 +111,13 @@ static CGFloat kWordHeight = 40;
     }
   }
   return self;
+}
+
+- (NSString *)customizedTitle {
+  if (_basicTitle.length) {
+    return [NSString stringWithFormat:@"%@ (%lu)", _basicTitle, (unsigned long)_collection.count];
+  }
+  return nil;
 }
 
 #pragma mark - THTableViewModelDelegate
@@ -158,7 +166,7 @@ static CGFloat kWordHeight = 40;
                                       weakSelf.lastTexts = texts_from_text_fields(textFields);
                                       [weakSelf.model modifyRow:row
                                                       withTexts:weakSelf.lastTexts
-                                                    globalCheck:YES];
+                                                    ];
                                     })
                save:YES];
   };
@@ -170,7 +178,7 @@ static CGFloat kWordHeight = 40;
   __weak THWordsViewController *weakSelf = self;
   [self showAlert:alert_add_word(^(NSArray<UITextField *> *textFields) {
           weakSelf.lastTexts = texts_from_text_fields(textFields);
-          [weakSelf.model add:weakSelf.lastTexts globalCheck:YES];
+          [weakSelf.model add:weakSelf.lastTexts];
         })
              save:YES];
 }
@@ -181,7 +189,7 @@ static CGFloat kWordHeight = 40;
     return;
   }
   [self showAlert:alert_remove_item(self.title, ^{
-          [[THFileCenter sharedInstance] deletePlaylist:(THPlaylist *)_collection];
+          [[THFileCenter sharedInstance] removePlaylist:(THPlaylist *)_collection];
           [self.navigationController popToRootViewControllerAnimated:YES];
         })];
 }

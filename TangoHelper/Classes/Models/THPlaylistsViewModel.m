@@ -70,11 +70,11 @@
   [_delegate modelDidGetUpdated];
 }
 
-- (void)add:(NSArray<NSString *> *)texts globalCheck:(BOOL)globalCheck {
-  [self add:texts content:nil globalCheck:globalCheck];
+- (void)add:(NSArray<NSString *> *)texts {
+  [self add:texts content:nil];
 }
 
-- (void)add:(NSArray<NSString *> *)texts content:(id)content globalCheck:(BOOL)globalCheck {
+- (void)add:(NSArray<NSString *> *)texts content:(id)content {
 #if (DEBUG)
   if (texts.count != 1) {
     NSLog(@"WARNING: can only add a playlist with 1 string");
@@ -83,9 +83,6 @@
   if (_searchString.length) {
     NSLog(@"WARNING: cannot add a playlist during search");
     return;
-  }
-  if (!globalCheck) {
-    NSLog(@"WARNING: globalCheck must be YES for playlists");
   }
   if (content && ![content isKindOfClass:[THWordsCollection class]]) {
     NSLog(@"WARNING: content must be a words collection");
@@ -116,12 +113,12 @@
   if (rows.count > 1) {
     NSArray<THPlaylist *> *playlists = [_playlists objectsAtIndexes:rows];
     for (THPlaylist *playlist in playlists) {
-      [[THFileCenter sharedInstance] deletePlaylist:playlist];
+      [[THFileCenter sharedInstance] removePlaylist:playlist];
     }
     [_playlists removeObjectsAtIndexes:rows];
   } else {
     NSUInteger row = rows.firstIndex;
-    [[THFileCenter sharedInstance] deletePlaylist:_outputPlaylists[row]];
+    [[THFileCenter sharedInstance] removePlaylist:_outputPlaylists[row]];
     [_outputPlaylists removeObjectAtIndex:row];
     if (_searchString.length) {
       [_playlists removeObjectAtIndex:_rowIndex[row].unsignedIntegerValue];
@@ -135,16 +132,11 @@
   return @[ _outputPlaylists[row].partialName ];
 }
 
-- (void)modifyRow:(NSUInteger)row
-        withTexts:(NSArray<NSString *> *)texts
-      globalCheck:(BOOL)globalCheck {
+- (void)modifyRow:(NSUInteger)row withTexts:(NSArray<NSString *> *)texts {
 #if (DEBUG)
   if (texts.count != 1) {
     NSLog(@"WARNING: can only edit a playlist with 1 strings");
     return;
-  }
-  if (!globalCheck) {
-    NSLog(@"WARNING: globalCheck must be YES for playlists");
   }
 #endif
   NSString *partialName = texts.firstObject;

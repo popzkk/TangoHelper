@@ -37,11 +37,11 @@
 - (void)filterContentWithString:(NSString *)string ignoresEmptyString:(BOOL)ignoresEmptyString;
 
 // convenient method with a nil content
-- (void)add:(NSArray<NSString *> *)texts globalCheck:(BOOL)globalCheck;
+- (void)add:(NSArray<NSString *> *)texts;
 
 // the user wants to add a row (a word or a playlist)
 // content means a words collection of the new playlist
-- (void)add:(NSArray<NSString *> *)texts content:(id)content globalCheck:(BOOL)globalCheck;
+- (void)add:(NSArray<NSString *> *)texts content:(id)content;
 
 // the user wants to remove row(s)
 - (void)remove:(NSIndexSet *)rows;
@@ -50,9 +50,7 @@
 - (NSArray<NSString *> *)textsForModifyingRow:(NSUInteger)row;
 
 // the user modifies the row with some texts
-- (void)modifyRow:(NSUInteger)row
-        withTexts:(NSArray<NSString *> *)texts
-      globalCheck:(BOOL)globalCheck;
+- (void)modifyRow:(NSUInteger)row withTexts:(NSArray<NSString *> *)texts;
 
 // structed string of metadata
 - (NSString *)infoOfRow:(NSUInteger)row;

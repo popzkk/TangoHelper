@@ -72,6 +72,10 @@ static CGFloat kSearchBarHeight = 40;
 }
 #endif
 
+- (NSString *)customizedTitle {
+  return nil;
+}
+
 #pragma mark - UIViewController
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -97,6 +101,7 @@ static CGFloat kSearchBarHeight = 40;
   if (self.tableView.editing) {
     [self recoverSelections];
   }
+  [self updateTitle];
 }
 
 #pragma mark - UISearchBarDelegate
@@ -271,6 +276,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 - (void)modelDidAddAtRow:(NSUInteger)row {
   [self.tableView insertRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row] ]
                         withRowAnimation:UITableViewRowAnimationNone];
+  [self updateTitle];
 }
 
 - (void)modelDidRemoveRows:(NSIndexSet *)rows {
@@ -279,6 +285,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     [indexPaths addObject:[NSIndexPath indexPathForRow:idx]];
   }];
   [self.tableView deleteRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationNone];
+  [self updateTitle];
 }
 
 - (void)modelDidModifyAtRow:(NSUInteger)row {
@@ -288,6 +295,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 
 - (void)modelDidGetUpdated {
   [self.tableView reloadData];
+  [self updateTitle];
 }
 
 #pragma mark - UIBarButtonItem actions
@@ -347,7 +355,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     THAlertBasicAction create_block = ^{
       [self showAlert:alert_add_playlist(^(NSArray<UITextField *> *textFields) {
               weakSelf.lastTexts = texts_from_text_fields(textFields);
-              [weakSelf.model add:weakSelf.lastTexts content:collection globalCheck:YES];
+              [weakSelf.model add:weakSelf.lastTexts content:collection];
             })
                  save:YES];
     };
@@ -494,6 +502,13 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
         [_selectedItems addObject:[_model itemAtRow:i]];
       }
     }
+  }
+}
+
+- (void)updateTitle {
+  NSString *customizedTitle = [self customizedTitle];
+  if (customizedTitle.length) {
+    self.title = customizedTitle;
   }
 }
 

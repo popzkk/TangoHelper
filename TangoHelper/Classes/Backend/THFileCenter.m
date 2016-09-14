@@ -4,14 +4,13 @@
 #import "THDepot.h"
 #import "THPlaylist.h"
 #import "THWord.h"
+#import "THWordsManager.h"
 
 @interface THFileRW ()
 
 - (instancetype)initWithFilename:(NSString *)filename;
 
 - (void)updateWithFilename:(NSString *)filename;
-
-- (void)setObject:(THWordObject *)object forKey:(THWordKey *)key;
 
 @end
 
@@ -65,8 +64,9 @@
   [_openedFiles setObject:playlist forKey:filename];
 }
 
-- (void)deletePlaylist:(THPlaylist *)playlist {
+- (void)removePlaylist:(THPlaylist *)playlist {
   NSString *filename = playlist.filename;
+  [[THWordsManager sharedInstance] willRemoveFileRW:[_openedFiles objectForKey:filename]];
   [_openedFiles removeObjectForKey:filename];
   [[NSFileManager defaultManager] removeItemAtPath:[_path stringByAppendingPathComponent:filename]
                                              error:nil];
@@ -81,24 +81,6 @@
 - (void)flushAllWithThres:(NSUInteger)thres {
   for (THFileRW *fileRW in _openedFiles.allValues) {
     [fileRW flushWithThres:thres];
-  }
-}
-
-- (void)fileRW:(THFileRW *)fileRW didUpdateKey:(THWordKey *)key withObject:(THWordObject *)object {
-#if (DEBUG)
-  if ([_openedFiles objectForKey:fileRW.filename] != fileRW) {
-    NSLog(@"Internal error: fileRW not found!");
-    return;
-  }
-#endif
-  for (THFileRW *anotherFileRW in [self wordsFiles]) {
-    if (anotherFileRW == fileRW) {
-      continue;
-    }
-    THWordObject *anotherObj = [anotherFileRW objectForKey:key];
-    if (anotherObj && anotherObj != object) {
-      [anotherFileRW setObject:object forKey:key];
-    }
   }
 }
 
@@ -125,7 +107,7 @@
 }
 
 - (id)fileRWForClass:(Class)fileRWClass filename:(NSString *)filename create:(BOOL)create {
-  id fileRW = [_openedFiles objectForKey:filename];
+  THFileRW *fileRW = [_openedFiles objectForKey:filename];
   if (!fileRW) {
     NSString *path = [_path stringByAppendingPathComponent:filename];
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -136,6 +118,7 @@
       }
     }
     fileRW = [[fileRWClass alloc] initWithFilename:filename];
+    [[THWordsManager sharedInstance] didInitializeFileRW:fileRW];
     [_openedFiles setObject:fileRW forKey:filename];
   }
   return fileRW;

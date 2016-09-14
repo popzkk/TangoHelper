@@ -26,10 +26,7 @@
 
 - (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName;
 
-- (void)deletePlaylist:(THPlaylist *)playlist;
-
-// if a word should align the same arcoss all files, this method must be called.
-- (void)fileRW:(THFileRW *)fileRW didUpdateKey:(THWordKey *)key withObject:(THWordObject *)object;
+- (void)removePlaylist:(THPlaylist *)playlist;
 
 - (THFileRW *)secretFile;
 

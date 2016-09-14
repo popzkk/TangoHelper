@@ -3,21 +3,18 @@
 #import "THFileCenter.h"
 #import "THMetadata.h"
 #import "THWord.h"
+#import "THWordsManager.h"
 
 #pragma mark - THWordsCollection
 
 @interface THWordsCollection ()
 
-// THWordKey -> THWordObject
 @property(nonatomic, readonly) NSMutableDictionary<THWordKey *, THWordObject *> *transformedContent;
 
 // THWordkey.outputKey -> THWordObject.outputPropertyList
 @property(nonatomic, readonly) NSMutableDictionary<NSString *, NSDictionary *> *content;
 
 - (instancetype)initWithContent:(NSDictionary<NSString *, NSDictionary *> *)content;
-
-// this silently allows a word to be added or edited.
-- (void)setObject:(THWordObject *)object forKey:(THWordKey *)key;
 
 @end
 
@@ -42,10 +39,13 @@
   if (self) {
     _content = [NSMutableDictionary dictionaryWithDictionary:content];
     _transformedContent = [NSMutableDictionary dictionaryWithCapacity:_content.count];
-    for (NSString *key in _content) {
-      [_transformedContent
-          setObject:[[THWordObject alloc] initWithPropertyList:[_content objectForKey:key]]
-             forKey:[[THWordKey alloc] initWithOutputKey:key]];
+    for (NSString *outputKey in _content) {
+      THWordKey *key = [[THWordKey alloc] initWithOutputKey:outputKey];
+      THWordObject *object = [[THWordsManager sharedInstance] objectForKey:key];
+      if (!object) {
+        object = [[THWordObject alloc] initWithPropertyList:[_content objectForKey:outputKey]];
+      }
+      [_transformedContent setObject:object forKey:key];
     }
     _lastSearchResult = [NSMutableArray array];
   }
@@ -68,80 +68,64 @@
   return [_transformedContent objectForKey:key];
 }
 
-- (void)addObject:(THWordObject *)object forKey:(THWordKey *)key {
+- (BOOL)addObject:(THWordObject *)object forKey:(THWordKey *)key {
   if ([_transformedContent objectForKey:key]) {
-#if (DEBUG)
-    NSLog(@"WARNING: cannot add an object for an existing key %@", key.outputKey);
-#endif
-    return;
+    return NO;
   }
   [_transformedContent setObject:object forKey:key];
   [_content setObject:object.outputPropertyList forKey:key.outputKey];
+  return YES;
 }
 
-- (void)removeObjectForKey:(THWordKey *)key {
-#if (DEBUG)
+- (BOOL)removeObjectForKey:(THWordKey *)key {
   if (![_transformedContent objectForKey:key]) {
-    NSLog(@"WARNING: cannot remove an object for a non-existing key %@", key.outputKey);
-    return;
+    return NO;
   }
-#endif
   [_transformedContent removeObjectForKey:key];
   [_content removeObjectForKey:key.outputKey];
+  return YES;
 }
 
-/**
- * Calling this method requires the reference of the object the same as before, because metadata is
- * updated quietly through THWordObject itself.
- */
-- (void)editObject:(THWordObject *)object forKey:(THWordKey *)key oldKey:(THWordKey *)oldKey {
-  // no action needed if keys are the same as the two objects are the same object.
-  if (![oldKey isEqual:key]) {
-    [_transformedContent removeObjectForKey:oldKey];
-    [_transformedContent setObject:object forKey:key];
-    [_content removeObjectForKey:oldKey.outputKey];
-    [_content setObject:object.outputPropertyList forKey:key.outputKey];
+- (THWordObject *)editOldKey:(THWordKey *)oldKey
+                       toKey:(THWordKey *)key
+             withExplanation:(NSString *)explanation {
+  BOOL sameKey = [key isEqual:oldKey];
+  THWordObject *object = [[THWordsManager sharedInstance] objectForKey:key];
+  if (object && !sameKey && ![explanation isEqualToString:object.explanation]) {
+    return object;
   }
+  if (!object) {
+    object = [[THWordObject alloc] initWithExplanation:explanation];
+  }
+  if (sameKey && [explanation isEqualToString:object.explanation]) {
+    return nil;
+  }
+  object.explanation = explanation;
+  if (!sameKey) {
+    [self removeObjectForKey:oldKey];
+    [self removeObjectForKey:key];
+    [self addObject:object forKey:key];
+  }
+  return nil;
 }
 
 - (void)addObjects:(NSArray<THWordObject *> *)objects forKeys:(NSArray<THWordKey *> *)keys {
   NSUInteger count = keys.count;
   for (NSUInteger i = 0; i < count; ++i) {
-    THWordKey *key = keys[i];
-    THWordObject *object = objects[i];
-    if ([_transformedContent objectForKey:key]) {
-#if (DEBUG)
-      NSLog(@"WARNING: cannot add an object for an existing key %@", key.outputKey);
-#endif
-      continue;
-    }
-    [_transformedContent setObject:object forKey:key];
-    [_content setObject:object.outputPropertyList forKey:key.outputKey];
+    [self addObject:objects[i] forKey:keys[i]];
   }
 }
 
 - (void)removeObjectsForKeys:(NSArray<THWordKey *> *)keys {
-  NSUInteger count = keys.count;
-  for (NSUInteger i = 0; i < count; ++i) {
-    THWordKey *key = keys[i];
-#if (DEBUG)
-    if (![_transformedContent objectForKey:key]) {
-      NSLog(@"WARNING: cannot remove an object for a non-existing key %@", key.outputKey);
-    }
-#endif
-    [_transformedContent removeObjectForKey:key];
-    [_content removeObjectForKey:key.outputKey];
+  for (THWordKey *key in keys) {
+    [self removeObjectForKey:key];
   }
 }
 
 - (void)addFromWordsCollection:(THWordsCollection *)collection {
-  [_transformedContent addEntriesFromDictionary:collection.transformedContent];
-  [_content addEntriesFromDictionary:collection.content];
-}
-
-- (void)setObject:(THWordObject *)object forKey:(THWordKey *)key {
-  [_transformedContent setObject:object forKey:key];
-  [_content setObject:object.outputPropertyList forKey:key.outputKey];
+  NSArray<THWordKey *> *keys = collection.allKeys;
+  NSArray<THWordObject *> *objects = [collection objectsForKeys:keys];
+  [self addObjects:objects forKeys:keys];
 }
 
 - (NSArray<THWordKey *> *)searchWithString:(NSString *)string {
@@ -187,50 +171,44 @@ static NSUInteger thres = 20;
 
 - (void)updateWithFilename:(NSString *)filename;
 
-// this silently allows a word to be added or edited.
-- (void)setObject:(THWordObject *)object forKey:(THWordKey *)key;
-
 @end
 
 @implementation THFileRW
 
 #pragma mark - public
 
-- (void)addObject:(THWordObject *)object forKey:(THWordKey *)key {
-  [super addObject:object forKey:key];
-  ++self.diff;
+- (BOOL)addObject:(THWordObject *)object forKey:(THWordKey *)key {
+  if ([super addObject:object forKey:key]) {
+    [[THWordsManager sharedInstance] someFileRWDidAddObject:object forKey:key];
+    ++self.diff;
+    return YES;
+  }
+  return NO;
 }
 
-- (void)removeObjectForKey:(THWordKey *)key {
-  [super removeObjectForKey:key];
-  ++self.diff;
+- (BOOL)removeObjectForKey:(THWordKey *)key {
+  if ([super removeObjectForKey:key]) {
+    [[THWordsManager sharedInstance] someFileRWDidRemoveKey:key];
+    ++self.diff;
+    return YES;
+  }
+  return NO;
 }
 
-- (void)editObject:(THWordObject *)object forKey:(THWordKey *)key oldKey:(THWordKey *)oldKey {
-  [super editObject:object forKey:key oldKey:oldKey];
-  ++self.diff;
-  if ([key isEqual:oldKey]) {
-    [[THFileCenter sharedInstance] fileRW:self didUpdateKey:key withObject:object];
+- (THWordObject *)editOldKey:(THWordKey *)oldKey
+                       toKey:(THWordKey *)key
+             withExplanation:(NSString *)explanation {
+  THWordObject *object = [super editOldKey:oldKey toKey:key withExplanation:explanation];
+  if (object) {
+    return object;
+  } else {
+    ++self.diff;
+    return nil;
   }
 }
 
-- (void)addObjects:(NSArray<THWordObject *> *)objects forKeys:(NSArray<THWordKey *> *)keys {
-  [super addObjects:objects forKeys:keys];
-  self.diff += keys.count;
-}
-
-- (void)removeObjectsForKeys:(NSArray<THWordKey *> *)keys {
-  [super removeObjectsForKeys:keys];
-  self.diff += keys.count;
-}
-
-- (void)addFromWordsCollection:(THWordsCollection *)collection {
-  [super addFromWordsCollection:collection];
-  self.diff += collection.count;
-}
-
 - (void)flushWithThres:(NSUInteger)thres {
-  if (_metadata.dirty || _diff > thres) {
+  if ((thres == 0 && _metadata.dirty) || _diff > thres) {
     NSLog(@"flush \"%@\"", _filename);
     NSDictionary *dictionary = @{
       @"metadata" : _metadata.outputPropertyList,
@@ -252,6 +230,9 @@ static NSUInteger thres = 20;
 #pragma mark - private
 
 - (void)setDiff:(NSUInteger)diff {
+  if (_diff == diff) {
+    return;
+  }
   _diff = diff;
   [_metadata setObject:[NSDate date] forKey:THMetadataKeyModified];
   [self flushWithThres:thres];
@@ -279,11 +260,6 @@ static NSUInteger thres = 20;
 - (void)updateWithFilename:(NSString *)filename {
   _filename = filename;
   _path = [[THFileCenter sharedInstance].directoryPath stringByAppendingPathComponent:_filename];
-}
-
-- (void)setObject:(THWordObject *)object forKey:(THWordKey *)key {
-  [super setObject:object forKey:key];
-  ++self.diff;
 }
 
 @end

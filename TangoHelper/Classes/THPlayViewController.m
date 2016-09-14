@@ -271,33 +271,28 @@ static CGFloat kTextFieldBottomPadding = 5;
                         THWordKey *newKey =
                             [[THWordKey alloc] initWithInput:texts[0] extra:texts[1]];
                         NSString *newExplanation = texts[2];
-                        THWordsCollection *collection;
-                        THWordsManagerOverwriteAction action =
-                            [THWordsManager collection:weakSelf.collection
-                                wantsToEditExplanation:newExplanation
-                                                forKey:newKey
-                                                oldKey:key
-                                           conflicting:&collection];
-                        if (collection && action) {
+                        THWordObject *newObj = [weakSelf.collection editOldKey:key
+                                                                         toKey:newKey
+                                                               withExplanation:newExplanation];
+                        if (newObj) {
                           [weakSelf showAlert:alert_edit_word_conflicting(
                                                   key.contentForDisplay, newKey.contentForDisplay,
-                                                  newExplanation,
-                                                  [collection objectForKey:newKey].explanation,
+                                                  newExplanation, newObj.explanation,
                                                   ^{
                                                     recover_alert_texts(weakSelf.lastAlert,
                                                                         weakSelf.lastTexts);
                                                     [weakSelf showAlert:weakSelf.lastAlert];
                                                   },
                                                   ^{
-                                                    action();
+                                                    newObj.explanation = newExplanation;
+                                                    [weakSelf.collection editOldKey:key
+                                                                              toKey:newKey
+                                                                    withExplanation:newExplanation];
                                                     [weakSelf.model
                                                         commitWrongAnswerWithOption:THPlayOptionEdit
                                                                             wordKey:newKey];
                                                   })];
                         } else {
-                          if (action) {
-                            action();
-                          }
                           [weakSelf.model commitWrongAnswerWithOption:THPlayOptionEdit
                                                               wordKey:newKey];
                         }

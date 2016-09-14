@@ -19,11 +19,13 @@
 
 - (THWordObject *)objectForKey:(THWordKey *)key;
 
-- (void)addObject:(THWordObject *)object forKey:(THWordKey *)key;
+- (BOOL)addObject:(THWordObject *)object forKey:(THWordKey *)key;
 
-- (void)removeObjectForKey:(THWordKey *)key;
+- (BOOL)removeObjectForKey:(THWordKey *)key;
 
-- (void)editObject:(THWordObject *)object forKey:(THWordKey *)key oldKey:(THWordKey *)oldKey;
+- (THWordObject *)editOldKey:(THWordKey *)oldKey
+                       toKey:(THWordKey *)key
+             withExplanation:(NSString *)explanation;
 
 - (void)addObjects:(NSArray<THWordObject *> *)objects forKeys:(NSArray<THWordKey *> *)keys;
 

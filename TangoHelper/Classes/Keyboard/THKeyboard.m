@@ -110,8 +110,8 @@ static const NSUInteger rightCellIndex = 23;  // core_indexes[rightCellCoreIndex
     if (i != leftCellCoreIndex && i != rightCellCoreIndex) {
       cell.config = charCellConfig;
     }
-    cell.text = [keyboardConfig.texts objectAtIndex:i];
-    cell.arrow = [keyboardConfig.arrows objectAtIndex:i];
+    cell.text = keyboardConfig.texts[i];
+    cell.arrow = keyboardConfig.arrows[i];
   }
 }
 

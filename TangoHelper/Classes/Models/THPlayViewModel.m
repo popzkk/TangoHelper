@@ -146,7 +146,7 @@
     [self finish];
     return;
   }
-  _key = [_availableKeys objectAtIndex:arc4random_uniform((int)_availableKeys.count)];
+  _key = _availableKeys[arc4random_uniform((int)_availableKeys.count)];
   _object = [_collection objectForKey:_key];
   [_object willPlay];
   [_delegate nextWordWithExplanation:_object.explanation];
