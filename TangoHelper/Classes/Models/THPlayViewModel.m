@@ -124,7 +124,7 @@
 #pragma mark - private
 
 - (void)rightAnswer {
-  [[_collection objectForKey:_key] didPass];
+  [_object didPass];
   NSUInteger remaining = [_availableCounts objectForKey:_key].unsignedIntegerValue - 1;
   if (!remaining) {
     [_availableKeys removeObject:_key];

@@ -231,7 +231,7 @@
 }
 
 - (NSString *)infoOfRow:(NSUInteger)row {
-  THMetadata *metadata = _objects[row].metadata;
+  THMetadata *metadata = _outputObjects[row].metadata;
   return [NSString stringWithFormat:@"%@\n%@\n%@\n%@",
                                     [metadata translateDateWithKey:THMetadataKeyCreated],
                                     [metadata translateDateWithKey:THMetadataKeyModified],

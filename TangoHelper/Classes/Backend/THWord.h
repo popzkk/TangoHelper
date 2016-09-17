@@ -20,7 +20,6 @@
 
 @end
 
-// |isEqual:| methos is not implemented.
 @interface THWordObject : NSObject<THPropertyList>
 
 @property(nonatomic, readonly) THMetadata *metadata;
