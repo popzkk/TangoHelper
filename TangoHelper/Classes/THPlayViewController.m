@@ -79,6 +79,7 @@ static CGFloat kTextFieldBottomPadding = 5;
     } else {
       self.title = @"Playing";
     }
+    self.view.backgroundColor = [UIColor whiteColor];
     self.navigationItem.hidesBackButton = YES;
     self.navigationItem.leftBarButtonItem =
         system_item(UIBarButtonSystemItemCancel, self, @selector(didTapBarItemCancel));
