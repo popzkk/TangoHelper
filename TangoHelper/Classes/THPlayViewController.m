@@ -135,7 +135,8 @@ static CGFloat kTextFieldBottomPadding = 5;
   if (_keyboard.hidden) {
     // When switching from other apps directly, the text field doesn't automatically become the
     // first responder. Seems it is a bug of iOS 10.
-    if (![_textField isFirstResponder]) {
+    // If we are presenting an alert, the text field shouldn't be the first responder.
+    if (!self.presentedViewController && ![_textField isFirstResponder]) {
       [_textField becomeFirstResponder];
     }
     CGRect kbRect =
@@ -179,13 +180,13 @@ static CGFloat kTextFieldBottomPadding = 5;
   [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = YES;
   [self prepareFrames];
-  if (_keyboard.hidden) {
-    [_textField becomeFirstResponder];
-  }
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
+  if (_keyboard.hidden && ![_textField isFirstResponder]) {
+    [_textField becomeFirstResponder];
+  }
   if (!_collection.count) {
     [self showAlert:alert_play_empty_playlist(^{
             [self.navigationController popViewControllerAnimated:YES];
