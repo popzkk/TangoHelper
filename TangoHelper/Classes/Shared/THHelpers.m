@@ -45,10 +45,10 @@ static NSString *kPlaylistExistsAlertTitle = @"Playlist '%@' already exists";
 static NSString *kRemoveRowAlertTitle = @"Remove \"%@\"?";
 static NSString *kRemoveSelectedAlertTitle = @"Remove the selected items?";
 static NSString *kSelectedOptionsActionSheetTitle = @"Next step with the selected content";
-static NSString *kSelectedOptionsActionSheetCreateActionTitle = @"Create a Playlist";
-static NSString *kSelectedOptionsActionSheetCopyActionTitle = @"Copy to Playlist(s)";
-static NSString *kSelectedOptionsActionSheetMoveActionTitle = @"Move to Playlist(s)";
 static NSString *kSelectedOptionsActionSheetPlayActionTitle = @"Directly Play";
+static NSString *kSelectedOptionsActionSheetCopyToDepotActionTitle = @"Copy to Depot";
+static NSString *kSelectedOptionsActionSheetCreateActionTitle = @"Create a Playlist";
+static NSString *kSelectedOptionsActionSheetCopyToPlaylistsActionTitle = @"Copy to Playlist(s)";
 static NSString *kMoreInfoAlertTitle = @"More Info";
 static NSString *kSelectionOptionsActionSheetSelectAllActionTitle = @"Select All";
 static NSString *kSelectionOptionsActionSheetClearActionTitle = @"Clear";
@@ -309,38 +309,22 @@ UIAlertController *alert_more_info(NSString *more_info) {
   return alert_super_basic(kMoreInfoAlertTitle, more_info, nil);
 }
 
-UIAlertController *action_sheet_selected_options_words(THAlertBasicAction create_block,
-                                                       THAlertBasicAction copy_block,
-                                                       THAlertBasicAction move_block,
-                                                       THAlertBasicAction play_block) {
+UIAlertController *action_sheet_selected_options(THAlertBasicAction play_block,
+                                                 THAlertBasicAction create_block,
+                                                 THAlertBasicAction copy_to_playlists_block,
+                                                 THAlertBasicAction copy_to_depot_block) {
   return action_sheet_basic(kSelectedOptionsActionSheetTitle, nil,
                             @[
-                              kSelectedOptionsActionSheetCreateActionTitle,
-                              kSelectedOptionsActionSheetCopyActionTitle,
-                              kSelectedOptionsActionSheetMoveActionTitle,
                               kSelectedOptionsActionSheetPlayActionTitle,
+                              kSelectedOptionsActionSheetCreateActionTitle,
+                              kSelectedOptionsActionSheetCopyToPlaylistsActionTitle,
+                              kSelectedOptionsActionSheetCopyToDepotActionTitle,
                             ],
                             @[
-                              create_block,
-                              copy_block,
-                              move_block,
                               play_block,
-                            ]);
-}
-
-UIAlertController *action_sheet_selected_options_playlists(THAlertBasicAction create_block,
-                                                           THAlertBasicAction copy_block,
-                                                           THAlertBasicAction play_block) {
-  return action_sheet_basic(kSelectedOptionsActionSheetTitle, nil,
-                            @[
-                              kSelectedOptionsActionSheetCreateActionTitle,
-                              kSelectedOptionsActionSheetCopyActionTitle,
-                              kSelectedOptionsActionSheetPlayActionTitle,
-                            ],
-                            @[
                               create_block,
-                              copy_block,
-                              play_block,
+                              copy_to_playlists_block,
+                              copy_to_depot_block,
                             ]);
 }
 

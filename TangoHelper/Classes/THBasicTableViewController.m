@@ -2,6 +2,8 @@
 
 #import "THPlaylistsViewController.h"
 #import "THPlayViewController.h"
+#import "Backend/THDepot.h"
+#import "Backend/THFileCenter.h"
 #import "Backend/THMetadata.h"
 #import "Backend/THPlaylist.h"
 #import "Shared/THHelpers.h"
@@ -342,16 +344,13 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     [self.navigationController popViewControllerAnimated:YES];
   } else if (self.tableView.editing) {
     THWordsCollection *collection = [_model mergedContentOfRows:selectedIndexSet];
-    __weak THBasicTableViewController *weakSelf = self;
-    NSArray<THPlaylist *> *excluded;
     id itemFromSelf = [self itemFromSelf];
-    if (itemFromSelf) {
-      if ([itemFromSelf isKindOfClass:[THPlaylist class]]) {
-        excluded = @[ itemFromSelf ];
-      }
-    } else {
-      excluded = [_model itemsAtRows:selectedIndexSet];
-    }
+    THAlertBasicAction play_block = ^{
+      [self.navigationController
+          pushViewController:[[THPlayViewController alloc] initWithCollection:collection]
+                    animated:YES];
+    };
+    __weak THBasicTableViewController *weakSelf = self;
     THAlertBasicAction create_block = ^{
       [self showAlert:alert_add_playlist(^(NSArray<UITextField *> *textFields) {
               weakSelf.lastTexts = texts_from_text_fields(textFields);
@@ -359,47 +358,36 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
             })
                  save:YES];
     };
-    THTableViewConfirmBlock copy_operation = ^(NSArray<THPlaylist *> *playlists) {
-      for (THPlaylist *playlist in playlists) {
-        [playlist addFromWordsCollection:collection];
+    THAlertBasicAction copy_to_playlists_block = ^{
+      NSArray<THPlaylist *> *excluded;
+      if (itemFromSelf) {
+        if ([itemFromSelf isKindOfClass:[THPlaylist class]]) {
+          excluded = @[ itemFromSelf ];
+        }
+      } else {
+        excluded = [_model itemsAtRows:selectedIndexSet];
       }
-    };
-    THAlertBasicAction copy_block = ^{
       [self.navigationController
           pushViewController:[[THPlaylistsViewController alloc]
                                  initWithExcluded:excluded
                                             title:@"Select Playlist(s) to copy to"
                                      searchString:nil
                                       cancelBlock:nil
-                                     confirmBlock:copy_operation]
+                                     confirmBlock:^(NSArray<THPlaylist *> *playlists) {
+                                       for (THPlaylist *playlist in playlists) {
+                                         [playlist addFromWordsCollection:collection];
+                                       }
+                                     }]
                     animated:YES];
     };
-    THAlertBasicAction play_block = ^{
-      [self.navigationController
-          pushViewController:[[THPlayViewController alloc] initWithCollection:collection]
-                    animated:YES];
+    THAlertBasicAction copy_to_depot_block = ^{
+      THDepot *depot = [[THFileCenter sharedInstance] depot];
+      if (itemFromSelf != depot) {
+        [depot addFromWordsCollection:collection];
+      }
     };
-    if (itemFromSelf) {
-      THTableViewConfirmBlock move_operation = ^(NSArray<THPlaylist *> *playlists) {
-        copy_operation(playlists);
-        [self.model remove:selectedIndexSet];
-      };
-      THAlertBasicAction move_block = ^{
-        [self.navigationController
-            pushViewController:[[THPlaylistsViewController alloc]
-                                   initWithExcluded:excluded
-                                              title:@"Select Playlist(s) to move to"
-                                       searchString:nil
-                                        cancelBlock:nil
-                                       confirmBlock:move_operation]
-                      animated:YES];
-      };
-      [self showAlert:action_sheet_selected_options_words(create_block, copy_block, move_block,
-                                                          play_block)];
-    } else {
-      [self
-          showAlert:action_sheet_selected_options_playlists(create_block, copy_block, play_block)];
-    }
+    [self showAlert:action_sheet_selected_options(play_block, create_block, copy_to_playlists_block,
+                                                  copy_to_depot_block)];
   } else {
     NSLog(@"WARNING: %@ should be implemented by subclasses", NSStringFromSelector(_cmd));
   }

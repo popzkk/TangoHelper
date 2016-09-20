@@ -35,13 +35,10 @@ UIAlertController *alert_playlist_exists(NSString *partial_name, THAlertBasicAct
 UIAlertController *alert_remove_item(NSString *name, THAlertBasicAction confirm_block);
 UIAlertController *alert_remove_selected(THAlertBasicAction confirm_block);
 UIAlertController *alert_more_info(NSString *more_info);
-UIAlertController *action_sheet_selected_options_words(THAlertBasicAction create_block,
-                                                       THAlertBasicAction copy_block,
-                                                       THAlertBasicAction move_block,
-                                                       THAlertBasicAction play_block);
-UIAlertController *action_sheet_selected_options_playlists(THAlertBasicAction create_block,
-                                                           THAlertBasicAction copy_block,
-                                                           THAlertBasicAction play_block);
+UIAlertController *action_sheet_selected_options(THAlertBasicAction play_block,
+                                                 THAlertBasicAction create_block,
+                                                 THAlertBasicAction copy_to_playlists_block,
+                                                 THAlertBasicAction copy_to_depot_block);
 UIAlertController *action_sheet_selection_options(THAlertBasicAction select_all_block,
                                                   THAlertBasicAction clear_block,
                                                   THAlertBasicAction invert_block);
