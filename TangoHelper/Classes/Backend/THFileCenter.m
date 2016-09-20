@@ -12,6 +12,8 @@
 
 - (void)updateWithFilename:(NSString *)filename;
 
+- (void)flush;
+
 @end
 
 #pragma mark - THFileCenter
@@ -75,12 +77,6 @@
 - (void)flushAll {
   for (THFileRW *fileRW in _openedFiles.allValues) {
     [fileRW flush];
-  }
-}
-
-- (void)flushAllWithThres:(NSUInteger)thres {
-  for (THFileRW *fileRW in _openedFiles.allValues) {
-    [fileRW flushWithThres:thres];
   }
 }
 

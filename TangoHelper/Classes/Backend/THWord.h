@@ -28,10 +28,6 @@
 
 + (instancetype)notFoundMarker;
 
-- (void)willPlay;
-
-- (void)didPass;
-
 - (instancetype)initWithExplanation:(NSString *)explanation;
 
 @end

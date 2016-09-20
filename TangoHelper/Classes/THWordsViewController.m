@@ -107,6 +107,7 @@ static CGFloat kWordHeight = 40;
       } else {
         self.navigationItem.hidesBackButton = YES;
         self.bottomItems = @[ self.barItemCancel, self.barItemPadding, self.barItemPlay ];
+        self.bottomItemsEditing = @[ self.barItemTrash, self.barItemPadding, self.barItemPlay ];
       }
     }
   }

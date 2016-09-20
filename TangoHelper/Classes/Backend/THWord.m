@@ -62,6 +62,14 @@
 
 @end
 
+@interface THWordObject()
+
+- (void)willPlay;
+
+- (void)didPass;
+
+@end
+
 @implementation THWordObject
 
 #pragma mark - public

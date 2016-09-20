@@ -3,6 +3,7 @@
 #import "../Backend/THFileRW.h"
 #import "../Backend/THPlaylist.h"
 #import "../Backend/THWord.h"
+#import "../Backend/THWordsManager.h"
 #import "../Shared/THHelpers.h"
 
 #pragma mark - THPlayConfig
@@ -124,7 +125,7 @@
 #pragma mark - private
 
 - (void)rightAnswer {
-  [_object didPass];
+  [[THWordsManager sharedInstance] didPassKey:_key];
   NSUInteger remaining = [_availableCounts objectForKey:_key].unsignedIntegerValue - 1;
   if (!remaining) {
     [_availableKeys removeObject:_key];
@@ -148,7 +149,7 @@
   }
   _key = _availableKeys[arc4random_uniform((int)_availableKeys.count)];
   _object = [_collection objectForKey:_key];
-  [_object willPlay];
+  [[THWordsManager sharedInstance] willPlayKey:_key];
   [_delegate nextWordWithExplanation:_object.explanation];
 }
 

@@ -16,8 +16,12 @@ typedef void (^THWordsManagerOverwriteAction)();
 
 - (void)willRemoveFileRW:(THFileRW *)fileRW;
 
-- (void)someFileRWDidAddObject:(THWordObject *)object forKey:(THWordKey *)key;
+- (void)fileRW:(THFileRW *)fileRW didAddObject:(THWordObject *)object forKey:(THWordKey *)key;
 
-- (void)someFileRWDidRemoveKey:(THWordKey *)key;
+- (void)fileRW:(THFileRW *)fileRW willRemoveKey:(THWordKey *)key;
+
+- (void)willPlayKey:(THWordKey *)key;
+
+- (void)didPassKey:(THWordKey *)key;
 
 @end

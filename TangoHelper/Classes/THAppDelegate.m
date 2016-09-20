@@ -23,11 +23,7 @@
 
 #endif  // ADMIN
 
-static NSTimeInterval thres = 30 * 60;
-
-@implementation THAppDelegate {
-  NSDate *_lastTimeStamp;
-}
+@implementation THAppDelegate
 
 - (BOOL)application:(UIApplication *)application
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -89,21 +85,17 @@ static NSTimeInterval thres = 30 * 60;
   [[THFileCenter sharedInstance] flushAll];
 }
 
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-  if (_lastTimeStamp && [_lastTimeStamp timeIntervalSinceNow] < -thres) {
-    [[THFileCenter sharedInstance] flushAll];
-  }
-  _lastTimeStamp = [NSDate date];
-}
-
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-  if (_lastTimeStamp && [_lastTimeStamp timeIntervalSinceNow] < -thres) {
-    [[THFileCenter sharedInstance] flushAll];
-  }
-  _lastTimeStamp = [NSDate date];
+#if (DEBUG)
+  NSLog(@"App did enter background");
+#endif
+  [[THFileCenter sharedInstance] flushAll];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {
+#if (DEBUG)
+  NSLog(@"App will terminate");
+#endif
   [[THFileCenter sharedInstance] flushAll];
 }
 

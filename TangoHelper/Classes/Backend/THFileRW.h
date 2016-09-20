@@ -45,9 +45,6 @@
 
 @property(nonatomic, readonly) THMetadata *metadata;
 
-- (void)flushWithThres:(NSUInteger)thres;
-
-// force writing immediately.
-- (void)flush;
+- (void)markDirty;
 
 @end

@@ -11,10 +11,9 @@
 
 @property(nonatomic, readonly) NSMutableDictionary<THWordKey *, THWordObject *> *transformedContent;
 
-// THWordkey.outputKey -> THWordObject.outputPropertyList
-@property(nonatomic, readonly) NSMutableDictionary<NSString *, NSDictionary *> *content;
-
 - (instancetype)initWithContent:(NSDictionary<NSString *, NSDictionary *> *)content;
+
+- (NSDictionary<NSString *, NSDictionary *> *)content;
 
 @end
 
@@ -27,27 +26,7 @@
     (NSDictionary<THWordKey *, THWordObject *> *)transformedContent {
   self = [super init];
   if (self) {
-    // we don't set _content here.
     _transformedContent = [NSMutableDictionary dictionaryWithDictionary:transformedContent];
-    _lastSearchResult = [NSMutableArray array];
-  }
-  return self;
-}
-
-- (instancetype)initWithContent:(NSDictionary<NSString *, NSDictionary *> *)content {
-  self = [super init];
-  if (self) {
-    _content = [NSMutableDictionary dictionaryWithDictionary:content];
-    _transformedContent = [NSMutableDictionary dictionaryWithCapacity:_content.count];
-    for (NSString *outputKey in _content) {
-      THWordKey *key = [[THWordKey alloc] initWithOutputKey:outputKey];
-      THWordObject *object = [[THWordsManager sharedInstance] objectForKey:key];
-      if (!object) {
-        object = [[THWordObject alloc] initWithPropertyList:[_content objectForKey:outputKey]];
-      }
-      [_transformedContent setObject:object forKey:key];
-    }
-    _lastSearchResult = [NSMutableArray array];
   }
   return self;
 }
@@ -73,7 +52,6 @@
     return NO;
   }
   [_transformedContent setObject:object forKey:key];
-  [_content setObject:object.outputPropertyList forKey:key.outputKey];
   return YES;
 }
 
@@ -82,7 +60,6 @@
     return NO;
   }
   [_transformedContent removeObjectForKey:key];
-  [_content removeObjectForKey:key.outputKey];
   return YES;
 }
 
@@ -145,11 +122,39 @@
   return [_lastSearchResult copy];
 }
 
+- (instancetype)initWithContent:(NSDictionary<NSString *, NSDictionary *> *)content {
+  self = [super init];
+  if (self) {
+    _transformedContent = [NSMutableDictionary dictionaryWithCapacity:content.count];
+    for (NSString *outputKey in content) {
+      THWordKey *key = [[THWordKey alloc] initWithOutputKey:outputKey];
+      THWordObject *object = [[THWordsManager sharedInstance] objectForKey:key];
+      if (!object) {
+        object = [[THWordObject alloc] initWithPropertyList:[content objectForKey:outputKey]];
+      }
+      [_transformedContent setObject:object forKey:key];
+    }
+    _lastSearchResult = [NSMutableArray array];
+  }
+  return self;
+}
+
+// THWordKey.outputKey -> THWordObject.outputPropertyList
+- (NSDictionary<NSString *, NSDictionary *> *)content {
+  NSMutableDictionary<NSString *, NSDictionary *> *content =
+      [NSMutableDictionary dictionaryWithCapacity:_transformedContent.count];
+  for (THWordKey *key in _transformedContent) {
+    [content setObject:[_transformedContent objectForKey:key].outputPropertyList
+                forKey:key.outputKey];
+  }
+  return content;
+}
+
 @end
 
-#pragma mark - THFileRW related
+#pragma mark - THFileRW
 
-static NSUInteger thres = 20;
+static NSUInteger thres = 10;
 
 @interface THMetadata ()
 
@@ -158,8 +163,6 @@ static NSUInteger thres = 20;
 - (void)flush;
 
 @end
-
-#pragma mark - THFileRW
 
 @interface THFileRW ()
 
@@ -179,7 +182,8 @@ static NSUInteger thres = 20;
 
 - (BOOL)addObject:(THWordObject *)object forKey:(THWordKey *)key {
   if ([super addObject:object forKey:key]) {
-    [[THWordsManager sharedInstance] someFileRWDidAddObject:object forKey:key];
+    [[THWordsManager sharedInstance] fileRW:self didAddObject:object forKey:key];
+    [_metadata setObject:[NSDate date] forKey:THMetadataKeyModified];
     ++self.diff;
     return YES;
   }
@@ -188,7 +192,9 @@ static NSUInteger thres = 20;
 
 - (BOOL)removeObjectForKey:(THWordKey *)key {
   if ([super removeObjectForKey:key]) {
-    [[THWordsManager sharedInstance] someFileRWDidRemoveKey:key];
+    // This is actually "didRemoveKey"...
+    [[THWordsManager sharedInstance] fileRW:self willRemoveKey:key];
+    [_metadata setObject:[NSDate date] forKey:THMetadataKeyModified];
     ++self.diff;
     return YES;
   }
@@ -202,19 +208,29 @@ static NSUInteger thres = 20;
   if (object) {
     return object;
   } else {
+    [_metadata setObject:[NSDate date] forKey:THMetadataKeyModified];
     ++self.diff;
     return nil;
   }
 }
 
+- (void)markDirty {
+  ++self.diff;
+}
+
+#pragma mark - private
+
+- (NSDictionary *)content {
+  return @{
+    @"metadata" : _metadata.outputPropertyList,
+    @"content" : [super content],
+  };
+}
+
 - (void)flushWithThres:(NSUInteger)thres {
   if ((thres == 0 && _metadata.dirty) || _diff > thres) {
-    NSLog(@"flush \"%@\"", _filename);
-    NSDictionary *dictionary = @{
-      @"metadata" : _metadata.outputPropertyList,
-      @"content" : self.content
-    };
-    if ([dictionary writeToFile:_path atomically:NO]) {
+    NSLog(@"flushing \"%@\"", _filename);
+    if ([[self content] writeToFile:_path atomically:NO]) {
       _diff = 0;
       [_metadata flush];
     } else {
@@ -226,8 +242,6 @@ static NSUInteger thres = 20;
 - (void)flush {
   [self flushWithThres:0];
 }
-
-#pragma mark - private
 
 - (void)setDiff:(NSUInteger)diff {
   if (_diff == diff) {

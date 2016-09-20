@@ -3,64 +3,84 @@
 #import "THFileRW.h"
 #import "THWord.h"
 
+@interface THWordObject ()
+
+- (void)willPlay;
+
+- (void)didPass;
+
+@end
+
 @implementation THWordsManager {
-  NSMutableDictionary<THWordKey *, THWordObject *> *_globalTransformedContent;
-  NSMutableDictionary<THWordKey *, NSNumber *> *_globalReferenceCount;
+  NSMutableDictionary<THWordKey *, NSMutableSet<THFileRW *> *> *_globalOwners;
 }
+
+#pragma mark - public
 
 + (instancetype)sharedInstance {
   static dispatch_once_t onceToken;
   static THWordsManager *instance = nil;
   dispatch_once(&onceToken, ^{
     instance = [[self alloc] init];
-    instance->_globalTransformedContent = [NSMutableDictionary dictionary];
-    instance->_globalReferenceCount = [NSMutableDictionary dictionary];
+    instance->_globalOwners = [NSMutableDictionary dictionary];
   });
   return instance;
 }
 
 - (THWordObject *)objectForKey:(THWordKey *)key {
-  return [_globalTransformedContent objectForKey:key];
+  return [[[_globalOwners objectForKey:key] anyObject] objectForKey:key];
 }
 
 - (void)didInitializeFileRW:(THFileRW *)fileRW {
   NSArray<THWordKey *> *keys = fileRW.allKeys;
   for (THWordKey *key in keys) {
-    [self someFileRWDidAddObject:[fileRW objectForKey:key] forKey:key];
+    [self fileRW:fileRW didAddObject:[fileRW objectForKey:key] forKey:key];
   }
 }
 
 - (void)willRemoveFileRW:(THFileRW *)fileRW {
   NSArray<THWordKey *> *keys = fileRW.allKeys;
   for (THWordKey *key in keys) {
-    [self someFileRWDidRemoveKey:key];
+    [self fileRW:fileRW willRemoveKey:key];
   }
 }
 
-- (void)someFileRWDidAddObject:(THWordObject *)object forKey:(THWordKey *)key {
+- (void)fileRW:(THFileRW *)fileRW didAddObject:(THWordObject *)object forKey:(THWordKey *)key {
 #if (DEBUG)
-  THWordObject *oldObj = [_globalTransformedContent objectForKey:key];
+  THWordObject *oldObj = [self objectForKey:key];
   if (oldObj && oldObj != object) {
     NSLog(@"Internal error: adding a globally existing object");
     return;
   }
 #endif
-  NSUInteger refCount = [_globalReferenceCount objectForKey:key].unsignedIntegerValue + 1;
-  if (refCount > 1) {
-    [_globalReferenceCount setObject:@(refCount) forKey:key];
+  NSMutableSet<THFileRW *> *owners = [_globalOwners objectForKey:key];
+  if (owners) {
+    [owners addObject:fileRW];
   } else {
-    [_globalTransformedContent setObject:object forKey:key];
-    [_globalReferenceCount setObject:@(1) forKey:key];
+    [_globalOwners setObject:[NSMutableSet setWithObject:fileRW] forKey:key];
   }
 }
 
-- (void)someFileRWDidRemoveKey:(THWordKey *)key {
-  NSUInteger refCount = [_globalReferenceCount objectForKey:key].unsignedIntegerValue - 1;
-  if (refCount) {
-    [_globalReferenceCount setObject:@(refCount) forKey:key];
-  } else {
-    [_globalReferenceCount removeObjectForKey:key];
-    [_globalTransformedContent removeObjectForKey:key];
+- (void)fileRW:(THFileRW *)fileRW willRemoveKey:(THWordKey *)key {
+  [[_globalOwners objectForKey:key] removeObject:fileRW];
+}
+
+- (void)willPlayKey:(THWordKey *)key {
+  [[self objectForKey:key] willPlay];
+  [self markOwnersDirtyForKey:key];
+}
+
+- (void)didPassKey:(THWordKey *)key {
+  [[self objectForKey:key] didPass];
+  [self markOwnersDirtyForKey:key];
+}
+
+#pragma mark - private
+
+- (void)markOwnersDirtyForKey:(THWordKey *)key {
+  NSSet *owners = [_globalOwners objectForKey:key];
+  for (THFileRW *fileRW in owners) {
+    [fileRW markDirty];
   }
 }
 
