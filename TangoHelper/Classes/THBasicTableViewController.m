@@ -55,6 +55,8 @@ static CGFloat kSearchBarHeight = 40;
     _searchController = [[UISearchController alloc] initWithSearchResultsController:nil];
     _searchController.searchResultsUpdater = self;
     _searchController.delegate = self;
+    _searchController.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
+    _searchController.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
     _searchController.searchBar.delegate = self;
 #if !(SEARCHBAR_IN_SECTION_HEADER)
     [_searchController.searchBar sizeToFit];
@@ -82,18 +84,14 @@ static CGFloat kSearchBarHeight = 40;
 
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-  self.navigationController.toolbarHidden = _searchString.length > 0;
   if (self.tableView.editing) {
     self.navigationItem.rightBarButtonItems = self.rightItemsEditing;
-    if (!self.navigationController.toolbarHidden) {
-      self.toolbarItems = self.bottomItemsEditing;
-    }
+    self.toolbarItems = self.bottomItemsEditing;
   } else {
     self.navigationItem.rightBarButtonItems = self.rightItems;
-    if (!self.navigationController.toolbarHidden) {
-      self.toolbarItems = self.bottomItems;
-    }
+    self.toolbarItems = self.bottomItems;
   }
+  self.navigationController.toolbarHidden = _searchString.length > 0;
   [_model reload];
   if (_searchString.length) {
     [_model filterContentWithString:_searchString ignoresEmptyString:YES];
