@@ -135,8 +135,10 @@ UIAlertController *alert_basic(NSString *title, NSString *message, THAlertBasicA
   return alert_basic_two_blocks(title, message, nil, block);
 }
 
-UIAlertController *alert_texts_two_blocks(NSString *title, NSString *message, NSArray *texts,
-                                          NSArray *placeholders, THAlertTextsAction cancel_block,
+UIAlertController *alert_texts_two_blocks(NSString *title, NSString *message,
+                                          NSArray<NSString *> *texts,
+                                          NSArray<NSString *> *placeholders,
+                                          THAlertTextsAction cancel_block,
                                           THAlertTextsAction confirm_block) {
   if (!cancel_block) {
     cancel_block = ^(NSArray<UITextField *> *array) {
@@ -181,8 +183,8 @@ UIAlertController *alert_texts_two_blocks(NSString *title, NSString *message, NS
   return alert;
 }
 
-UIAlertController *alert_texts(NSString *title, NSString *message, NSArray *texts,
-                               NSArray *placeholders, THAlertTextsAction block) {
+UIAlertController *alert_texts(NSString *title, NSString *message, NSArray<NSString *> *texts,
+                               NSArray<NSString *> *placeholders, THAlertTextsAction block) {
   return alert_texts_two_blocks(title, message, texts, placeholders, nil, block);
 }
 
