@@ -11,7 +11,7 @@
 + (NSString *)translateDate:(NSDate *)date {
   if (!date) {
     return @"Never";
-  } else if ([date isEqualToDate:[NSDate startDate]]) {
+  } else if ([date isEqualToDate:[self startDate]]) {
     return @"Before Kaikai implemented this feature";
   } else {
 #if (DEBUG)
@@ -29,30 +29,62 @@
   return [formatter stringFromDate:self];
 }
 
-- (NSString *)humanDiffWithDate:(NSDate *)date {
-  NSTimeInterval diff = [date timeIntervalSinceDate:self];
+- (NSString *)day {
   NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-  formatter.locale = [NSLocale currentLocale];
-  if (diff < 11) {
-    return @"Just now";
-  } else if (diff < 60) {
-    return [NSString stringWithFormat:@"%.0f seconds ago", diff];
-  } else if (diff < 60 * 60) {
-    return [NSString stringWithFormat:@"%.0f minutes ago", diff / 60];
-  } else if (diff < 60 * 60 * 24) {
-    return [NSString stringWithFormat:@"%.0f hours ago", diff / (60 * 60)];
-  } else if (diff < 60 * 60 * 24 * 2) {
-    return @"Yesterday";
-  } else if (diff < 60 * 60 * 24 * 3) {
-    return @"The day before yesterday";
-  } else if (diff < 60 * 60 * 24 * 11) {
-    return [NSString stringWithFormat:@"%.0f days ago", diff / (60 * 60 * 24)];
-  } else if ([[self year] isEqualToString:[date year]]) {
-    formatter.dateFormat = @"dd MMM";
+  formatter.dateFormat = @"dd";
+  return [formatter stringFromDate:self];
+}
+
+- (NSString *)month {
+  NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+  formatter.dateFormat = @"MM";
+  return [formatter stringFromDate:self];
+}
+
+- (NSString *)humanDiffWithDate:(NSDate *)date {
+  NSInteger thisYear = [[self year] integerValue];
+  NSInteger thatYear = [[date year] integerValue];
+  if (thisYear != thatYear) {
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [NSLocale currentLocale];
+    formatter.dateFormat = @"yyyy-MMM-dd";
     return [formatter stringFromDate:self];
   } else {
-    formatter.dateFormat = @"dd MMM yyyy";
-    return [formatter stringFromDate:self];
+    NSInteger thisMonth = [[self month] integerValue];
+    NSInteger thatMonth = [[date month] integerValue];
+    if (thisMonth != thatMonth) {
+      NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+      formatter.locale = [NSLocale currentLocale];
+      formatter.dateFormat = @"MMM-dd";
+      return [formatter stringFromDate:self];
+    } else {
+      NSInteger thisDay = [[self day] integerValue];
+      NSInteger thatDay = [[date day] integerValue];
+      if (thisDay != thatDay) {
+        NSInteger diffDay = thatDay - thisDay;
+        if (diffDay == 1) {
+          return @"Yesterday";
+        } else if (diffDay <= 11) {
+          return [NSString stringWithFormat:@"%ld days ago", (long)diffDay];
+        } else {
+          NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+          formatter.locale = [NSLocale currentLocale];
+          formatter.dateFormat = @"MMM-dd";
+          return [formatter stringFromDate:self];
+        }
+      } else {
+        NSTimeInterval diff = [date timeIntervalSinceDate:self];
+        if (diff < 11) {
+          return @"Just now";
+        } else if (diff < 60) {
+          return [NSString stringWithFormat:@"%.0f seconds ago", diff];
+        } else if (diff < 60 * 60) {
+          return [NSString stringWithFormat:@"%.0f minutes ago", diff / 60];
+        } else {
+          return [NSString stringWithFormat:@"%.0f hours ago", diff / (60 * 60)];
+        }
+      }
+    }
   }
 }
 

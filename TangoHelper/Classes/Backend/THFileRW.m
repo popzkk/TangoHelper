@@ -215,7 +215,8 @@ static NSUInteger thres = 10;
 }
 
 - (void)markDirty {
-  ++self.diff;
+  ++_diff;
+  [self flushWithThres:thres];
 }
 
 #pragma mark - private
