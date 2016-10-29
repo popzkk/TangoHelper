@@ -413,39 +413,21 @@ static NSString *ja_font_normal = @"PingFang-SC-Medium";
 static NSString *ja_font_bold = @"PingFang-SC-Semibold";
 static NSString *zh_font_normal = @"PingFang-SC-Medium";
 static NSString *zh_font_bold = @"PingFang-SC-Semibold";
-static NSString *ja_font_normal_fallback = @"STHeitiSC-Light";
-static NSString *ja_font_bold_fallback = @"STHeitiSC-Medium";
-static NSString *zh_font_normal_fallback = @"STHeitiSC-Light";
-static NSString *zh_font_bold_fallback = @"STHeitiSC-Medium";
-
-#define FONT_NAME_FALLBACK(x) x##_fallback
-
-#define FONT_NAME_RUNTIME(x)                                                        \
-  ({                                                                                \
-    NSString *y;                                                                    \
-    if ([[NSProcessInfo processInfo]                                                \
-            isOperatingSystemAtLeastVersion:(NSOperatingSystemVersion){9, 0, 0}]) { \
-      y = x;                                                                        \
-    } else {                                                                        \
-      y = FONT_NAME_FALLBACK(x);                                                    \
-    }                                                                               \
-    y;                                                                              \
-  })
 
 UIFont *ja_normal(CGFloat size) {
-  return [UIFont fontWithName:FONT_NAME_RUNTIME(ja_font_normal) size:size];
+  return [UIFont fontWithName:ja_font_normal size:size];
 }
 
 UIFont *ja_bold(CGFloat size) {
-  return [UIFont fontWithName:FONT_NAME_RUNTIME(ja_font_bold) size:size];
+  return [UIFont fontWithName:ja_font_bold size:size];
 }
 
 UIFont *zh_normal(CGFloat size) {
-  return [UIFont fontWithName:FONT_NAME_RUNTIME(zh_font_normal) size:size];
+  return [UIFont fontWithName:zh_font_normal size:size];
 }
 
 UIFont *zh_bold(CGFloat size) {
-  return [UIFont fontWithName:FONT_NAME_RUNTIME(zh_font_bold) size:size];
+  return [UIFont fontWithName:zh_font_bold size:size];
 }
 
 UIColor *blue_color() {
