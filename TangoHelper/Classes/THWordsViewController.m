@@ -199,13 +199,12 @@ static CGFloat kWordHeight = 40;
   if (self.tableView.editing || self.confirmBlock) {
     [super didTapBarItemPlay];
     return;
-  } else {
-    [self showAlert:alert_play(self.title, ^{
-            [self.navigationController
-                pushViewController:[[THPlayViewController alloc] initWithCollection:_collection]
-                          animated:YES];
-          })];
   }
+  [self showAlert:alert_play(self.title, ^{
+          [self.navigationController
+              pushViewController:[[THPlayViewController alloc] initWithCollection:_collection]
+                        animated:YES];
+        })];
 }
 
 - (BOOL)preSelectRow:(NSUInteger)row {
