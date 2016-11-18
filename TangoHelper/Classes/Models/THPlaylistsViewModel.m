@@ -30,7 +30,8 @@
 - (void)reload {
   _playlists = [[THFileCenter sharedInstance] playlists];
   [_playlists removeObjectsInArray:_excluded];
-  THPlaylist *specialPlaylist = [[THFileCenter sharedInstance] playlistWithPartialName:kSpecialPlaylistPartialName create:NO];
+  THPlaylist *specialPlaylist =
+      [[THFileCenter sharedInstance] playlistWithPartialName:kSpecialPlaylistPartialName create:NO];
   NSUInteger indexOfSpecialPlaylist = [_playlists indexOfObject:specialPlaylist];
   if (indexOfSpecialPlaylist != NSNotFound) {
     _specialPlaylistExisting = YES;
@@ -102,7 +103,8 @@
   }
 #endif
   NSString *partialName = texts.firstObject;
-  THPlaylist *playlist = [[THFileCenter sharedInstance] tryToCreatePlaylistWithPartialName:partialName];
+  THPlaylist *playlist =
+      [[THFileCenter sharedInstance] tryToCreatePlaylistWithPartialName:partialName];
   if (!playlist) {
     [_delegate globalCheckFailedWithHints:@[ partialName ] positiveAction:nil];
   } else {

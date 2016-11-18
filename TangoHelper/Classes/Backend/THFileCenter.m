@@ -5,7 +5,7 @@
 #import "THWord.h"
 #import "THWordsManager.h"
 
-NSString *const kSpecialPlaylistPartialName = @"You can speak English";
+NSString *kSpecialPlaylistPartialName = @"YouCanSpeakEnglish";
 
 @interface THFileRW ()
 

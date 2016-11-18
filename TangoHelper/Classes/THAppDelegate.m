@@ -63,9 +63,10 @@
   }
   exit(0);
    */
-  //[files enumerateObjectsUsingBlock:transformFileFormatBlock];
+  // [files enumerateObjectsUsingBlock:transformFileFormatBlock];
   exit(0);
 #endif  // ADMIN
+  // NSLog(@"%@", kSpecialPlaylistPartialName);
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   self.window.rootViewController = [[UINavigationController alloc]
       initWithRootViewController:[[THPlaylistsViewController alloc] init]];

@@ -5,7 +5,7 @@
 @class THWordKey;
 @class THWordObject;
 
-extern NSString *const kSpecialPlaylistPartialName;
+extern NSString *kSpecialPlaylistPartialName;
 
 @interface THFileCenter : NSObject
 
