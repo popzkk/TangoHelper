@@ -4,7 +4,7 @@
 #import "../Backend/THFileCenter.h"
 #import "../Backend/THPlaylist.h"
 
-#if _cplusplus
+#if __cplusplus
 extern "C" {
 #endif
 
@@ -473,6 +473,6 @@ UIAlertController *recover_dialog_texts(UIAlertController *alert, NSArray<NSStri
   return alert;
 }
 
-#if _cplusplus
+#if __cplusplus
 }  // Extern C
 #endif
