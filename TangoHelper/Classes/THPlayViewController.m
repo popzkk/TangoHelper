@@ -134,8 +134,8 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)sysKeyboardWillChangeFrame:(NSNotification *)notification {
   if (_keyboard.hidden) {
     // When switching from other apps directly, the text field doesn't automatically become the
-    // first responder. Seems it is a bug of iOS 10.
-    // If we are presenting an alert, the text field shouldn't be the first responder.
+    // first responder. Seems it is a bug of iOS 10. Manually make it to be the first responder if
+    // we are not presenting an alert.
     if (!self.presentedViewController && ![_textField isFirstResponder]) {
       [_textField becomeFirstResponder];
     }
@@ -188,7 +188,7 @@ static CGFloat kTextFieldBottomPadding = 5;
     [_textField becomeFirstResponder];
   }
   if (!_collection.count) {
-    [self showAlert:alert_play_empty_playlist(^{
+    [self showAlert:dialog_play_empty_playlist(^{
             [self.navigationController popViewControllerAnimated:YES];
           })];
   } else if (_result) {
@@ -241,11 +241,11 @@ static CGFloat kTextFieldBottomPadding = 5;
 }
 
 - (void)askForSecretWithCallback:(id)callback {
-  [self showAlert:alert_ask_for_secret(callback)];
+  [self showAlert:dialog_ask_for_secret(callback)];
 }
 
 - (void)showNotImplementedDialog {
-  [self showAlert:alert_not_implemented(nil)];
+  [self showAlert:dialog_not_implemented(nil)];
 }
 
 #pragma mark - THPlayViewModelDelegate
@@ -267,7 +267,7 @@ static CGFloat kTextFieldBottomPadding = 5;
   __weak THPlayViewController *weakSelf = self;
   THAlertBasicAction edit_block = ^{
     [self
-        showAlert:alert_edit_word(
+        showAlert:dialog_edit_word(
                       key.contentForDisplay, @[ key.input, key.extra, explanation ],
                       ^{
                         [weakSelf wrongAnswer:wrongAnswer forExplanation:explanation wordKey:key];
@@ -282,12 +282,12 @@ static CGFloat kTextFieldBottomPadding = 5;
                                                                          toKey:newKey
                                                                withExplanation:newExplanation];
                         if (newObj) {
-                          [weakSelf showAlert:alert_edit_word_conflicting(
+                          [weakSelf showAlert:dialog_edit_word_conflicting(
                                                   key.contentForDisplay, newKey.contentForDisplay,
                                                   newExplanation, newObj.explanation,
                                                   ^{
-                                                    recover_alert_texts(weakSelf.lastAlert,
-                                                                        weakSelf.lastTexts);
+                                                    recover_dialog_texts(weakSelf.lastAlert,
+                                                                         weakSelf.lastTexts);
                                                     [weakSelf showAlert:weakSelf.lastAlert];
                                                   },
                                                   ^{
@@ -310,8 +310,8 @@ static CGFloat kTextFieldBottomPadding = 5;
     // _model will remove the word for us!
     [_model commitWrongAnswerWithOption:THPlayOptionRemove wordKey:nil];
   };
-  [self showAlert:action_sheet_play_options(key.contentForDisplay, wrongAnswer, next_block,
-                                            typo_block, edit_block, remove_block)];
+  [self showAlert:sheet_play_options(key.contentForDisplay, wrongAnswer, next_block, typo_block,
+                                     edit_block, remove_block)];
 }
 
 - (void)playFinishedWithResult:(THPlayResult *)result {
@@ -322,7 +322,7 @@ static CGFloat kTextFieldBottomPadding = 5;
         initWithTransformedContent:[NSDictionary
                                        dictionaryWithObjects:[_collection objectsForKeys:keys]
                                                      forKeys:keys]];
-    [self showAlert:action_sheet_play_finished_mistakes(
+    [self showAlert:sheet_play_finished_mistakes(
                         ^{
                           [self.navigationController
                               pushViewController:[[THPlayViewController alloc]
@@ -344,7 +344,7 @@ static CGFloat kTextFieldBottomPadding = 5;
                           [self.navigationController popViewControllerAnimated:YES];
                         })];
   } else {
-    [self showAlert:alert_play_finished_no_mistakes(^{
+    [self showAlert:dialog_play_finished_no_mistakes(^{
             [self.navigationController popViewControllerAnimated:YES];
           })];
   }

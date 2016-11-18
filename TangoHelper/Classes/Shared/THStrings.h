@@ -1,5 +1,5 @@
 /**
- * Depot, Playlist(s) and Word are terms...
+ * Playlist(s) and Word are terms...
  */
 #ifndef THStrings_h
 #define THStrings_h
@@ -14,7 +14,6 @@ static NSString *kAdd = @"Add";
 static NSString *kNext = @"Next";
 static NSString *kNextJa = @"次へ";
 static NSString *kWrong = @"Wrong";
-static NSString *kBrowseDepot = @"Browse Depot";
 static NSString *kInfo = @"Info";
 
 #endif

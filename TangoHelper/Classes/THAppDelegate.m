@@ -9,7 +9,6 @@
 #import "Backend/THMetadata.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THFileRW.h"
-#import "Backend/THDepot.h"
 #import "Backend/THPlaylist.h"
 #import "Backend/THWord.h"
 
@@ -29,19 +28,12 @@
     didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 #if (ADMIN)
   NSString *path = [THFileCenter sharedInstance].directoryPath;
-  NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+  // NSArray *files = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:nil];
+  NSString *oldPath = [path stringByAppendingPathComponent:@"depot"];
+  NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:oldPath];
+  [[NSFileManager defaultManager] removeItemAtPath:oldPath error:nil];
+  [dict writeToFile:[path stringByAppendingPathComponent:@"depot.playlist"] atomically:YES];
   /*
-  id removeOtherFiles = ^(id obj, NSUInteger idx, BOOL *stop) {
-    NSString *filename = (NSString *)obj;
-    NSString *extension = filename.pathExtension;
-    if (![filename isEqualToString:@"depot"] && ![extension isEqualToString:@"playlist"]) {
-      NSLog(@"removing '%@'", filename);
-      [[NSFileManager defaultManager]
-          removeItemAtPath:[path stringByAppendingPathComponent:filename]
-                     error:nil];
-    }
-  };
-   */
   id transformFileFormatBlock = ^(id obj, NSUInteger idx, BOOL *stop) {
     NSString *filename = (NSString *)obj;
     NSString *fullPath = [path stringByAppendingPathComponent:filename];
@@ -60,7 +52,8 @@
     NSDictionary *file = @{@"metadata":metadata.outputPropertyList, @"content":newContent};
     [file writeToFile:fullPath atomically:YES];
   };
-
+   */
+  /*
   for (NSString *family in [[UIFont familyNames] sortedArrayUsingSelector:@selector(compare:)]) {
     NSLog(@"%@", family);
     for (NSString *name in
@@ -69,8 +62,8 @@
     }
   }
   exit(0);
-
-  [files enumerateObjectsUsingBlock:transformFileFormatBlock];
+   */
+  //[files enumerateObjectsUsingBlock:transformFileFormatBlock];
   exit(0);
 #endif  // ADMIN
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];

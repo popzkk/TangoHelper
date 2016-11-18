@@ -96,7 +96,8 @@
 #endif
   if (content) {
     NSString *partialName = texts.firstObject;
-    THPlaylist *playlist = try_to_create(partialName);
+    THPlaylist *playlist =
+        [[THFileCenter sharedInstance] tryToCreatePlaylistWithPartialName:partialName];
     if (!playlist) {
       [_delegate globalCheckFailedWithHints:@[ partialName ] positiveAction:nil];
     } else {
@@ -185,10 +186,7 @@
   THWordObject *object = [_collection editOldKey:oldKey toKey:key withExplanation:explanation];
   if (object) {
     [_delegate globalCheckFailedWithHints:@[
-      oldKey.contentForDisplay,
-      key.contentForDisplay,
-      explanation,
-      object.explanation
+      oldKey.contentForDisplay, key.contentForDisplay, explanation, object.explanation
     ]
                            positiveAction:^{
                              object.explanation = explanation;

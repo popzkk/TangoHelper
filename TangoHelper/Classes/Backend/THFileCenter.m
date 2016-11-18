@@ -1,10 +1,11 @@
 #import "THFileCenter.h"
 
 #import "THFileRW.h"
-#import "THDepot.h"
 #import "THPlaylist.h"
 #import "THWord.h"
 #import "THWordsManager.h"
+
+NSString *const kSpecialPlaylistPartialName = @"You can speak English";
 
 @interface THFileRW ()
 
@@ -38,10 +39,6 @@
   return _path;
 }
 
-- (THDepot *)depot {
-  return [self fileRWForClass:[THDepot class] filename:@"depot" create:YES];
-}
-
 - (NSMutableArray *)playlists {
   return [self filesWithExtension:@"playlist"];
 }
@@ -50,6 +47,14 @@
   return [self fileRWForClass:[THPlaylist class]
                      filename:[partialName stringByAppendingPathExtension:@"playlist"]
                        create:create];
+}
+
+- (THPlaylist *)tryToCreatePlaylistWithPartialName:(NSString *)partialName {
+  if ([self playlistWithPartialName:partialName create:NO]) {
+    return nil;
+  } else {
+    return [self playlistWithPartialName:partialName create:YES];
+  }
 }
 
 - (void)renamePlaylist:(THPlaylist *)playlist withPartialName:(NSString *)partialName {
@@ -79,17 +84,11 @@
     [fileRW flush];
   }
 }
-
+/*
 - (THFileRW *)secretFile {
   return [self fileRWForClass:[THFileRW class] filename:@"secret" create:YES];
 }
-
-- (NSMutableArray *)wordsFiles {
-  NSMutableArray *files = [self playlists];
-  [files addObject:[self depot]];
-  return files;
-}
-
+*/
 #pragma mark - private
 
 - (instancetype)init {

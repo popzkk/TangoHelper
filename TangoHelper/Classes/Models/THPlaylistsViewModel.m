@@ -7,6 +7,7 @@
 @implementation THPlaylistsViewModel {
   NSArray<THPlaylist *> *_excluded;
   NSMutableArray<THPlaylist *> *_playlists;
+  BOOL _specialPlaylistExisting;
 
   NSString *_searchString;
   NSMutableArray<THPlaylist *> *_outputPlaylists;
@@ -29,6 +30,17 @@
 - (void)reload {
   _playlists = [[THFileCenter sharedInstance] playlists];
   [_playlists removeObjectsInArray:_excluded];
+  THPlaylist *specialPlaylist = [[THFileCenter sharedInstance] playlistWithPartialName:kSpecialPlaylistPartialName create:NO];
+  NSUInteger indexOfSpecialPlaylist = [_playlists indexOfObject:specialPlaylist];
+  if (indexOfSpecialPlaylist != NSNotFound) {
+    _specialPlaylistExisting = YES;
+    for (NSUInteger i = indexOfSpecialPlaylist; i > 0; --i) {
+      _playlists[i] = _playlists[i - 1];
+    }
+    _playlists[0] = specialPlaylist;
+  } else {
+    _specialPlaylistExisting = NO;
+  }
   _outputPlaylists = _playlists;
 }
 
@@ -90,15 +102,19 @@
   }
 #endif
   NSString *partialName = texts.firstObject;
-  THPlaylist *playlist = try_to_create(partialName);
+  THPlaylist *playlist = [[THFileCenter sharedInstance] tryToCreatePlaylistWithPartialName:partialName];
   if (!playlist) {
     [_delegate globalCheckFailedWithHints:@[ partialName ] positiveAction:nil];
   } else {
     if (content) {
       [playlist addFromWordsCollection:content];
     }
-    [_playlists insertObject:playlist atIndex:0];
-    [_delegate modelDidAddAtRow:0];
+    NSUInteger rowToInsertAt = _specialPlaylistExisting ? 1 : 0;
+    if ([partialName isEqualToString:kSpecialPlaylistPartialName]) {
+      _specialPlaylistExisting = YES;
+    }
+    [_playlists insertObject:playlist atIndex:rowToInsertAt];
+    [_delegate modelDidAddAtRow:rowToInsertAt];
   }
 }
 
@@ -110,6 +126,11 @@
     return;
   }
 #endif
+  // Deny removing the special playlist.
+  if (_specialPlaylistExisting && [rows containsIndex:0]) {
+    [_delegate modelDidRemoveRows:nil];
+    return;
+  }
   if (rows.count > 1) {
     NSArray<THPlaylist *> *playlists = [_playlists objectsAtIndexes:rows];
     for (THPlaylist *playlist in playlists) {
@@ -144,10 +165,19 @@
   if ([playlist.partialName isEqualToString:partialName]) {
     return;
   }
+  // Deny renaming the special playlist.
+  if (_specialPlaylistExisting && row == 0) {
+    [_delegate modelDidModifyAtRow:NSNotFound];
+    return;
+  }
   if ([[THFileCenter sharedInstance] playlistWithPartialName:partialName create:NO]) {
     [_delegate globalCheckFailedWithHints:@[ partialName ] positiveAction:nil];
   } else {
     [[THFileCenter sharedInstance] renamePlaylist:playlist withPartialName:partialName];
+    if ([partialName isEqualToString:kSpecialPlaylistPartialName]) {
+      NSLog(@"Here");
+      _specialPlaylistExisting = YES;
+    }
     [_delegate modelDidModifyAtRow:row];
   }
 }

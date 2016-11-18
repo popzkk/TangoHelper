@@ -1,7 +1,6 @@
 #import "THPlaylistsViewController.h"
 
 #import "THWordsViewController.h"
-#import "Backend/THDepot.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THFileRW.h"
 #import "Backend/THPlaylist.h"
@@ -48,9 +47,7 @@ static CGFloat kPlaylistHeight = 60;
     if (!self.confirmBlock) {
       self.rightItems = @[ self.barItemEdit ];
       self.rightItemsEditing = @[ self.barItemDone, self.barItemAction ];
-      UIBarButtonItem *browserDepot =
-          custom_item(kBrowseDepot, UIBarButtonItemStylePlain, self, @selector(didTapBrowserDepot));
-      self.bottomItems = @[ browserDepot, self.barItemPadding, self.barItemAdd ];
+      self.bottomItems = @[ self.barItemPadding, self.barItemAdd, self.barItemPadding ];
       self.bottomItemsEditing = @[ self.barItemTrash, self.barItemPadding, self.barItemPlay ];
       self.title = @"Playlists";
     }
@@ -62,8 +59,8 @@ static CGFloat kPlaylistHeight = 60;
 
 - (void)globalCheckFailedWithHints:(NSArray<NSString *> *)hints
                     positiveAction:(THAlertBasicAction)positiveAction {
-  recover_alert_texts(self.lastAlert, self.lastTexts);
-  [self showAlert:alert_playlist_exists(hints.firstObject, ^{
+  recover_dialog_texts(self.lastAlert, self.lastTexts);
+  [self showAlert:dialog_playlist_exists(hints.firstObject, ^{
           [self showAlert:self.lastAlert];
         })];
 }
@@ -72,6 +69,22 @@ static CGFloat kPlaylistHeight = 60;
   [self.navigationController pushViewController:[[THWordsViewController alloc]
                                                     initWithCollection:[self.model itemAtRow:row]]
                                        animated:YES];
+}
+
+- (void)modelDidRemoveRows:(NSIndexSet *)rows {
+  if (rows) {
+    [super modelDidRemoveRows:rows];
+  } else {
+    [self showAlert:dialog_special_playlist_disallowed()];
+  }
+}
+
+- (void)modelDidModifyAtRow:(NSUInteger)row {
+  if (row != NSNotFound) {
+    [super modelDidModifyAtRow:row];
+  } else {
+    [self showAlert:dialog_special_playlist_disallowed()];
+  }
 }
 
 #pragma mark - UITableViewDelegate related
@@ -103,12 +116,11 @@ static CGFloat kPlaylistHeight = 60;
   __weak THPlaylistsViewController *weakSelf = self;
   return ^(UITableViewRowAction *action, NSIndexPath *indexPath) {
     NSUInteger row = indexPath.row;
-    [self showAlert:alert_rename_playlist(((THPlaylist *)[self.model itemAtRow:row]).partialName,
+    [self showAlert:dialog_rename_playlist(((THPlaylist *)[self.model itemAtRow:row]).partialName,
                                           ^(NSArray<UITextField *> *textFields) {
                                             weakSelf.lastTexts = texts_from_text_fields(textFields);
                                             [weakSelf.model modifyRow:row
-                                                            withTexts:weakSelf.lastTexts
-                                                          ];
+                                                            withTexts:weakSelf.lastTexts];
                                           })
                save:YES];
   };
@@ -118,18 +130,11 @@ static CGFloat kPlaylistHeight = 60;
 
 - (void)didTapBarItemAdd {
   __weak THPlaylistsViewController *weakSelf = self;
-  [self showAlert:alert_add_playlist(^(NSArray<UITextField *> *textFields) {
+  [self showAlert:dialog_add_playlist(^(NSArray<UITextField *> *textFields) {
           weakSelf.lastTexts = texts_from_text_fields(textFields);
           [weakSelf.model add:weakSelf.lastTexts];
         })
              save:YES];
-}
-
-- (void)didTapBrowserDepot {
-  [self.navigationController
-      pushViewController:[[THWordsViewController alloc]
-                             initWithCollection:[[THFileCenter sharedInstance] depot]]
-                animated:YES];
 }
 
 @end

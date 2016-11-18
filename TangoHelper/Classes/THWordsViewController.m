@@ -1,7 +1,6 @@
 #import "THWordsViewController.h"
 
 #import "THPlayViewController.h"
-#import "Backend/THDepot.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THPlaylist.h"
 #import "Backend/THWord.h"
@@ -9,7 +8,6 @@
 
 typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
   THWordsViewControllerSituationSimple = 0,
-  THWordsViewControllerSituationDepot,
   THWordsViewControllerSituationPlaylist,
   THWordsViewControllerSituationCollection,
 };
@@ -55,9 +53,7 @@ static CGFloat kWordHeight = 40;
                  confirmBlock:confirmBlock];
   if (self) {
     _collection = collection;
-    if ([_collection isKindOfClass:[THDepot class]]) {
-      _situation = THWordsViewControllerSituationDepot;
-    } else if ([_collection isKindOfClass:[THPlaylist class]]) {
+    if ([_collection isKindOfClass:[THPlaylist class]]) {
       _situation = THWordsViewControllerSituationPlaylist;
     } else if (self.confirmBlock) {
       _situation = THWordsViewControllerSituationSimple;
@@ -92,16 +88,10 @@ static CGFloat kWordHeight = 40;
       self.rightItems = @[ self.barItemEdit ];
       self.rightItemsEditing = @[ self.barItemDone, self.barItemAction ];
       self.bottomItemsEditing = @[
-        self.barItemTrash,
-        self.barItemPadding,
-        self.barItemAdd,
-        self.barItemPadding,
+        self.barItemTrash, self.barItemPadding, self.barItemAdd, self.barItemPadding,
         self.barItemPlay
       ];
-      if (_situation == THWordsViewControllerSituationDepot) {
-        _basicTitle = @"Depot";
-        self.bottomItems = @[ self.barItemPadding, self.barItemAdd, self.barItemPadding ];
-      } else if (_situation == THWordsViewControllerSituationPlaylist) {
+      if (_situation == THWordsViewControllerSituationPlaylist) {
         _basicTitle = ((THPlaylist *)collection).partialName;
         self.bottomItems = self.bottomItemsEditing;
       } else {
@@ -125,18 +115,18 @@ static CGFloat kWordHeight = 40;
 
 - (void)globalCheckFailedWithHints:(NSArray<NSString *> *)hints
                     positiveAction:(THAlertBasicAction)positiveAction {
-  recover_alert_texts(self.lastAlert, self.lastTexts);
+  recover_dialog_texts(self.lastAlert, self.lastTexts);
   THAlertBasicAction showLastAlertblock = ^{
     [self showAlert:self.lastAlert];
   };
   if (hints.count == 3) {
-    [self showAlert:alert_add_word_conflicting(hints[0], hints[1], hints[2], showLastAlertblock,
-                                               positiveAction)];
+    [self showAlert:dialog_add_word_conflicting(hints[0], hints[1], hints[2], showLastAlertblock,
+                                                positiveAction)];
   } else if (hints.count == 4) {
-    [self showAlert:alert_edit_word_conflicting(hints[0], hints[1], hints[2], hints[3],
-                                                showLastAlertblock, positiveAction)];
+    [self showAlert:dialog_edit_word_conflicting(hints[0], hints[1], hints[2], hints[3],
+                                                 showLastAlertblock, positiveAction)];
   } else if (hints.count == 1) {
-    [self showAlert:alert_playlist_exists(hints[0], showLastAlertblock)];
+    [self showAlert:dialog_playlist_exists(hints[0], showLastAlertblock)];
   } else {
     NSLog(@"Internal error: unknown global check feedback");
   }
@@ -161,15 +151,14 @@ static CGFloat kWordHeight = 40;
   __weak THWordsViewController *weakSelf = self;
   return ^(UITableViewRowAction *action, NSIndexPath *indexPath) {
     NSUInteger row = indexPath.row;
-    [self showAlert:alert_edit_word([self.tableView cellForRowAtIndexPath:indexPath].textLabel.text,
-                                    [self.model textsForModifyingRow:row], nil,
-                                    ^(NSArray<UITextField *> *textFields) {
-                                      weakSelf.lastTexts = texts_from_text_fields(textFields);
-                                      [weakSelf.model modifyRow:row
-                                                      withTexts:weakSelf.lastTexts
-                                                    ];
-                                    })
-               save:YES];
+    [self
+        showAlert:dialog_edit_word([self.tableView cellForRowAtIndexPath:indexPath].textLabel.text,
+                                   [self.model textsForModifyingRow:row], nil,
+                                   ^(NSArray<UITextField *> *textFields) {
+                                     weakSelf.lastTexts = texts_from_text_fields(textFields);
+                                     [weakSelf.model modifyRow:row withTexts:weakSelf.lastTexts];
+                                   })
+             save:YES];
   };
 }
 
@@ -177,7 +166,7 @@ static CGFloat kWordHeight = 40;
 
 - (void)didTapBarItemAdd {
   __weak THWordsViewController *weakSelf = self;
-  [self showAlert:alert_add_word(^(NSArray<UITextField *> *textFields) {
+  [self showAlert:dialog_add_word(^(NSArray<UITextField *> *textFields) {
           weakSelf.lastTexts = texts_from_text_fields(textFields);
           [weakSelf.model add:weakSelf.lastTexts];
         })
@@ -189,10 +178,14 @@ static CGFloat kWordHeight = 40;
     [super didTapBarItemTrash];
     return;
   }
-  [self showAlert:alert_remove_item(self.title, ^{
-          [[THFileCenter sharedInstance] removePlaylist:(THPlaylist *)_collection];
-          [self.navigationController popToRootViewControllerAnimated:YES];
-        })];
+  if ([((THPlaylist *)_collection).partialName isEqualToString:kSpecialPlaylistPartialName]) {
+    [self showAlert:dialog_special_playlist_disallowed()];
+  } else {
+    [self showAlert:dialog_remove_item(self.title, ^{
+            [[THFileCenter sharedInstance] removePlaylist:(THPlaylist *)_collection];
+            [self.navigationController popToRootViewControllerAnimated:YES];
+          })];
+  }
 }
 
 - (void)didTapBarItemPlay {
@@ -200,7 +193,7 @@ static CGFloat kWordHeight = 40;
     [super didTapBarItemPlay];
     return;
   }
-  [self showAlert:alert_play(self.title, ^{
+  [self showAlert:dialog_play(self.title, ^{
           [self.navigationController
               pushViewController:[[THPlayViewController alloc] initWithCollection:_collection]
                         animated:YES];

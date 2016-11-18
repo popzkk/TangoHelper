@@ -2,7 +2,6 @@
 
 #import "THPlaylistsViewController.h"
 #import "THPlayViewController.h"
-#import "Backend/THDepot.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THMetadata.h"
 #import "Backend/THPlaylist.h"
@@ -188,15 +187,15 @@ static CGFloat kSearchBarHeight = 40;
 #endif
 
 - (void)tableView:(UITableView *)tableView
-  willDisplayCell:(UITableViewCell *)cell
-forRowAtIndexPath:(NSIndexPath *)indexPath {
+      willDisplayCell:(UITableViewCell *)cell
+    forRowAtIndexPath:(NSIndexPath *)indexPath {
   if ([self preSelectRow:indexPath.row]) {
     cell.selected = YES;
   }
 }
 
 - (NSIndexPath *)tableView:(UITableView *)tableView
-willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
+    willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
   if ([self preSelectRow:indexPath.row]) {
     return nil;
   } else {
@@ -219,7 +218,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                    title:kRemove
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
                    NSUInteger row = indexPath.row;
-                   [self showAlert:alert_remove_item(
+                   [self showAlert:dialog_remove_item(
                                        [self.tableView cellForRowAtIndexPath:indexPath]
                                            .textLabel.text,
                                        ^{
@@ -238,7 +237,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
       rowActionWithStyle:UITableViewRowActionStyleNormal
                    title:kInfo
                  handler:^(UITableViewRowAction *action, NSIndexPath *indexPath) {
-                   [self showAlert:alert_more_info([_model infoOfRow:indexPath.row])];
+                   [self showAlert:dialog_more_info([_model infoOfRow:indexPath.row])];
                  }];
   info.backgroundColor = [UIColor brownColor];
 
@@ -319,7 +318,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     if (!selectIndexPaths.count) {
       return;
     }
-    [self showAlert:alert_remove_selected(^{
+    [self showAlert:dialog_remove_selected(^{
             [self.model remove:index_set_from_index_paths(selectIndexPaths)];
           })];
   } else {
@@ -350,7 +349,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
     };
     __weak THBasicTableViewController *weakSelf = self;
     THAlertBasicAction create_block = ^{
-      [self showAlert:alert_add_playlist(^(NSArray<UITextField *> *textFields) {
+      [self showAlert:dialog_add_playlist(^(NSArray<UITextField *> *textFields) {
               weakSelf.lastTexts = texts_from_text_fields(textFields);
               [weakSelf.model add:weakSelf.lastTexts content:collection];
             })
@@ -378,14 +377,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
                                      }]
                     animated:YES];
     };
-    THAlertBasicAction copy_to_depot_block = ^{
-      THDepot *depot = [[THFileCenter sharedInstance] depot];
-      if (itemFromSelf != depot) {
-        [depot addFromWordsCollection:collection];
-      }
-    };
-    [self showAlert:action_sheet_selected_options(play_block, create_block, copy_to_playlists_block,
-                                                  copy_to_depot_block)];
+    [self showAlert:sheet_selected_options(play_block, create_block, copy_to_playlists_block)];
   } else {
     NSLog(@"WARNING: %@ should be implemented by subclasses", NSStringFromSelector(_cmd));
   }
@@ -396,7 +388,7 @@ willDeselectRowAtIndexPath:(NSIndexPath *)indexPath {
 }
 
 - (void)didTapBarItemAction {
-  [self showAlert:action_sheet_selection_options(
+  [self showAlert:sheet_selection_options(
                       ^{
                         [self selectionSelectAll];
                       },

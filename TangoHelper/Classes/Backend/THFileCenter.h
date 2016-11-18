@@ -1,10 +1,11 @@
 #import <Foundation/Foundation.h>
 
 @class THFileRW;
-@class THDepot;
 @class THPlaylist;
 @class THWordKey;
 @class THWordObject;
+
+extern NSString *const kSpecialPlaylistPartialName;
 
 @interface THFileCenter : NSObject
 
@@ -14,11 +15,11 @@
 
 - (void)flushAll;
 
-- (THDepot *)depot;
-
 - (NSMutableArray<THPlaylist *> *)playlists;
 
 - (THPlaylist *)playlistWithPartialName:(NSString *)partialName create:(BOOL)create;
+
+- (THPlaylist *)tryToCreatePlaylistWithPartialName:(NSString *)partialName;
 
 // - (THPlaylist *)tmpPlaylist;
 
@@ -26,8 +27,6 @@
 
 - (void)removePlaylist:(THPlaylist *)playlist;
 
-- (THFileRW *)secretFile;
-
-- (NSMutableArray<THFileRW *> *)wordsFiles;
+// - (THFileRW *)secretFile;
 
 @end

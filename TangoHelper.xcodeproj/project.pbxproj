@@ -19,7 +19,6 @@
 		794500391D774D7C00A9C491 /* THPlayViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 79224C3B1D6DD28900493AB5 /* THPlayViewModel.m */; };
 		79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B361D3A7EBD00FF42AA /* THFileCenter.m */; };
 		79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B391D3A8F8500FF42AA /* THPlaylist.m */; };
-		79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3C1D3A90A000FF42AA /* THDepot.m */; };
 		79487B401D3C430F00FF42AA /* THHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 79487B3F1D3C430F00FF42AA /* THHelpers.m */; };
 		794FBCFC1D45D78500055E21 /* THKeyboard.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF21D45D78500055E21 /* THKeyboard.m */; };
 		794FBCFD1D45D78500055E21 /* THKeyboardCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 794FBCF41D45D78500055E21 /* THKeyboardCell.m */; };
@@ -59,8 +58,6 @@
 		79487B361D3A7EBD00FF42AA /* THFileCenter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THFileCenter.m; path = Classes/Backend/THFileCenter.m; sourceTree = "<group>"; };
 		79487B381D3A8F7400FF42AA /* THPlaylist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THPlaylist.h; path = Classes/Backend/THPlaylist.h; sourceTree = "<group>"; };
 		79487B391D3A8F8500FF42AA /* THPlaylist.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THPlaylist.m; path = Classes/Backend/THPlaylist.m; sourceTree = "<group>"; };
-		79487B3B1D3A909100FF42AA /* THDepot.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THDepot.h; path = Classes/Backend/THDepot.h; sourceTree = "<group>"; };
-		79487B3C1D3A90A000FF42AA /* THDepot.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THDepot.m; path = Classes/Backend/THDepot.m; sourceTree = "<group>"; };
 		79487B3E1D3BBFB000FF42AA /* THHelpers.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = THHelpers.h; path = Classes/Shared/THHelpers.h; sourceTree = "<group>"; };
 		79487B3F1D3C430F00FF42AA /* THHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = THHelpers.m; path = Classes/Shared/THHelpers.m; sourceTree = "<group>"; };
 		794FBCF11D45D78500055E21 /* THKeyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = THKeyboard.h; path = Classes/Keyboard/THKeyboard.h; sourceTree = "<group>"; };
@@ -200,8 +197,6 @@
 		79A762F61D287375009C0859 /* Backend */ = {
 			isa = PBXGroup;
 			children = (
-				79487B3B1D3A909100FF42AA /* THDepot.h */,
-				79487B3C1D3A90A000FF42AA /* THDepot.m */,
 				79487B351D3A7EAA00FF42AA /* THFileCenter.h */,
 				79487B361D3A7EBD00FF42AA /* THFileCenter.m */,
 				79A762FA1D28F517009C0859 /* THFileRW.h */,
@@ -298,7 +293,6 @@
 				794FBCFC1D45D78500055E21 /* THKeyboard.m in Sources */,
 				7941954A1D4D82E200918B38 /* THAppDelegate.m in Sources */,
 				79487B371D3A7EBD00FF42AA /* THFileCenter.m in Sources */,
-				79487B3D1D3A90A000FF42AA /* THDepot.m in Sources */,
 				79487B3A1D3A8F8500FF42AA /* THPlaylist.m in Sources */,
 				794FBCFE1D45D78500055E21 /* THKeyboardCellConfig.m in Sources */,
 				79487B401D3C430F00FF42AA /* THHelpers.m in Sources */,
