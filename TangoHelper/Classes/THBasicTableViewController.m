@@ -8,9 +8,6 @@
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
 
-// This feature has bugs!
-#define SEARCHBAR_IN_SECTION_HEADER 0
-
 static CGFloat kSearchBarHeight = 40;
 
 #pragma mark - THBasicTableViewController
@@ -57,10 +54,8 @@ static CGFloat kSearchBarHeight = 40;
     _searchController.searchBar.autocapitalizationType = UITextAutocapitalizationTypeNone;
     _searchController.searchBar.autocorrectionType = UITextAutocorrectionTypeNo;
     _searchController.searchBar.delegate = self;
-#if !(SEARCHBAR_IN_SECTION_HEADER)
     [_searchController.searchBar sizeToFit];
     self.tableView.tableHeaderView = _searchController.searchBar;
-#endif
     if (searchString.length) {
       _searchString = [searchString copy];
       _searchController.searchBar.text = _searchString;
@@ -113,9 +108,6 @@ static CGFloat kSearchBarHeight = 40;
 
 - (void)willPresentSearchController:(UISearchController *)searchController {
   _searchControllerWillDismiss = NO;
-#if (SEARCHBAR_IN_SECTION_HEADER)
-  [self.tableView scrollRectToVisible:CGRectMake(0, 0, 1, 1) animated:YES];
-#endif
 }
 
 - (void)willDismissSearchController:(UISearchController *)searchController {
@@ -178,13 +170,6 @@ static CGFloat kSearchBarHeight = 40;
 }
 
 #pragma mark - UITableViewDelegate
-
-#if (SEARCHBAR_IN_SECTION_HEADER)
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-  [_searchController.searchBar sizeToFit];
-  return _searchController.searchBar;
-}
-#endif
 
 - (void)tableView:(UITableView *)tableView
       willDisplayCell:(UITableViewCell *)cell

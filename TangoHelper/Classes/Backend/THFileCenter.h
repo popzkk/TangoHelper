@@ -5,6 +5,8 @@
 @class THWordKey;
 @class THWordObject;
 
+#define TH_ALLOW_REMOVING_PLAYLISTS 0
+
 extern NSString *kSpecialPlaylistPartialName;
 
 @interface THFileCenter : NSObject

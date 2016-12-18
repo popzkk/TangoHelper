@@ -246,6 +246,11 @@
 					79A7608B1D23058E009C0859 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = PNK26M7ANE;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};

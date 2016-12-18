@@ -178,14 +178,18 @@ static CGFloat kWordHeight = 40;
     [super didTapBarItemTrash];
     return;
   }
+#if (TH_ALLOW_REMOVING_PLAYLISTS)
   if ([((THPlaylist *)_collection).partialName isEqualToString:kSpecialPlaylistPartialName]) {
+#endif
     [self showAlert:dialog_special_playlist_disallowed()];
+#if (TH_ALLOW_REMOVING_PLAYLISTS)
   } else {
     [self showAlert:dialog_remove_item(self.title, ^{
             [[THFileCenter sharedInstance] removePlaylist:(THPlaylist *)_collection];
             [self.navigationController popToRootViewControllerAnimated:YES];
           })];
   }
+#endif
 }
 
 - (void)didTapBarItemPlay {

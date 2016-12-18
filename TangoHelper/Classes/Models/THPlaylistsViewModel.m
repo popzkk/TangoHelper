@@ -8,7 +8,6 @@
   NSArray<THPlaylist *> *_excluded;
   NSMutableArray<THPlaylist *> *_playlists;
   BOOL _specialPlaylistExisting;
-
   NSString *_searchString;
   NSMutableArray<THPlaylist *> *_outputPlaylists;
   NSMutableArray<NSNumber *> *_rowIndex;
@@ -129,8 +128,11 @@
   }
 #endif
   // Deny removing the special playlist.
+#if (TH_ALLOW_REMOVING_PLAYLISTS)
   if (_specialPlaylistExisting && [rows containsIndex:0]) {
+#endif
     [_delegate modelDidRemoveRows:nil];
+#if (TH_ALLOW_REMOVING_PLAYLISTS)
     return;
   }
   if (rows.count > 1) {
@@ -149,6 +151,7 @@
     }
   }
   [_delegate modelDidRemoveRows:rows];
+#endif
 }
 
 - (NSArray<NSString *> *)textsForModifyingRow:(NSUInteger)row {
@@ -177,7 +180,6 @@
   } else {
     [[THFileCenter sharedInstance] renamePlaylist:playlist withPartialName:partialName];
     if ([partialName isEqualToString:kSpecialPlaylistPartialName]) {
-      NSLog(@"Here");
       _specialPlaylistExisting = YES;
     }
     [_delegate modelDidModifyAtRow:row];
