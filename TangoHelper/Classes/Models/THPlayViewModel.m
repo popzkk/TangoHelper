@@ -15,6 +15,7 @@
   if (self) {
     _repeat = 1;
     _lazyAssert = NO;
+    _breakWrongAnswers = YES;
   }
   return self;
 }
@@ -23,6 +24,7 @@
   THPlayConfig *config = [[THPlayConfig alloc] init];
   config.repeat = _repeat;
   config.lazyAssert = _lazyAssert;
+  config.breakWrongAnswers = _breakWrongAnswers;
   return config;
 }
 
@@ -118,7 +120,13 @@
 
 - (void)finish {
   THPlayResult *result = [[THPlayResult alloc] init];
-  result.wrongWordKeys = _wrongWordKeys;
+  NSMutableSet *wrongWordKeys = _wrongWordKeys;
+  for (THWordKey *key in _wrongWordKeys) {
+    if (![_collection objectForKey:key]) {
+      [wrongWordKeys removeObject:key];
+    }
+  }
+  result.wrongWordKeys = wrongWordKeys;
   [_delegate playFinishedWithResult:result];
 }
 
@@ -147,7 +155,20 @@
     [self finish];
     return;
   }
-  _key = _availableKeys[arc4random_uniform((int)_availableKeys.count)];
+  if (_config.breakWrongAnswers) {
+    if (_availableKeys.count > 1) {
+      NSUInteger keyIndex = [_availableKeys indexOfObject:_key];
+      NSUInteger next = arc4random_uniform((int)_availableKeys.count - 1);
+      if (next >= keyIndex) {
+        ++next;
+      }
+      _key = _availableKeys[next];
+    } else {
+      _key = _availableKeys[0];
+    }
+  } else {
+    _key = _availableKeys[arc4random_uniform((int)_availableKeys.count)];
+  }
   _object = [_collection objectForKey:_key];
   [[THWordsManager sharedInstance] willPlayKey:_key];
   [_delegate nextWordWithExplanation:_object.explanation];

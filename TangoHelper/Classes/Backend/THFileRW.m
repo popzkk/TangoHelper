@@ -68,16 +68,20 @@
              withExplanation:(NSString *)explanation {
   BOOL sameKey = [key isEqual:oldKey];
   THWordObject *object = [[THWordsManager sharedInstance] objectForKey:key];
+  // If there is a conflict, simply return the conflicting object.
   if (object && !sameKey && ![explanation isEqualToString:object.explanation]) {
     return object;
   }
-  if (!object) {
-    object = [[THWordObject alloc] initWithExplanation:explanation];
-  }
+  // If the word is not changed, simple return nil.
   if (sameKey && [explanation isEqualToString:object.explanation]) {
     return nil;
   }
-  object.explanation = explanation;
+  // In this case, we have key != oldKey.
+  if (!object) {
+    object = [[THWordObject alloc] initWithExplanation:explanation];
+  } else {
+    object.explanation = explanation;
+  }
   if (!sameKey) {
     [self removeObjectForKey:oldKey];
     [self removeObjectForKey:key];

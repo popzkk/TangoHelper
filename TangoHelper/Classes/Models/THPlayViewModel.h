@@ -16,6 +16,8 @@ typedef NS_ENUM(NSUInteger, THPlayOption) {
 
 @property(nonatomic, assign) BOOL lazyAssert;
 
+@property(nonatomic, assign) BOOL breakWrongAnswers;
+
 @end
 
 @interface THPlayResult : NSObject
