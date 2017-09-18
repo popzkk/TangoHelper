@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>あたえる\与える</key>
+		<dict>
+			<key>explanation</key>
+			<string>给予 供给 授予 使遭到</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:41:39Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:09:52Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:09:39Z</date>
+			</dict>
+		</dict>
+		<key>うける\受ける</key>
+		<dict>
+			<key>explanation</key>
+			<string>承蒙 受到 得到 接受</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:30:18Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:56:37Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:09:57Z</date>
+				<key>Modified</key>
+				<date>2016-09-28T03:56:34Z</date>
+			</dict>
+		</dict>
+		<key>うごく\動く</key>
+		<dict>
+			<key>explanation</key>
+			<string>动 开动 发动；动摇；变动</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-03T13:52:55Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:08:10Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:06:56Z</date>
+			</dict>
+		</dict>
+		<key>えいり\営利</key>
+		<dict>
+			<key>explanation</key>
+			<string>营利 谋利</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:21:17Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:08:19Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:08:10Z</date>
+			</dict>
+		</dict>
+		<key>えさ\餌</key>
+		<dict>
+			<key>explanation</key>
+			<string>饵食 诱饵</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:40:06Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:52:05Z</date>
+				<key>Last Played</key>
+				<date>2016-09-28T03:52:02Z</date>
+			</dict>
+		</dict>
+		<key>かう\飼う</key>
+		<dict>
+			<key>explanation</key>
+			<string>养 饲养</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:12:52Z</date>
+				<key>Last Passed</key>
+				<date>2016-11-29T18:31:24Z</date>
+				<key>Last Played</key>
+				<date>2016-11-29T18:31:01Z</date>
+			</dict>
+		</dict>
+		<key>かぞえる\数える</key>
+		<dict>
+			<key>explanation</key>
+			<string>计算 数 列举 枚举</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:38:24Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:08:26Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:08:19Z</date>
+			</dict>
+		</dict>
+		<key>かつどう\活動</key>
+		<dict>
+			<key>explanation</key>
+			<string>活动 工作</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:09:36Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:52:38Z</date>
+				<key>Last Played</key>
+				<date>2016-09-28T03:52:25Z</date>
+			</dict>
+		</dict>
+		<key>かむ\噛/咬む</key>
+		<dict>
+			<key>explanation</key>
+			<string>咬 嚼</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:01:21Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:09:05Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:11:11Z</date>
+			</dict>
+		</dict>
+		<key>かんり\管理</key>
+		<dict>
+			<key>explanation</key>
+			<string>管理</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:20:12Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:55:11Z</date>
+				<key>Last Played</key>
+				<date>2016-09-28T03:55:09Z</date>
+			</dict>
+		</dict>
+		<key>がい\害</key>
+		<dict>
+			<key>explanation</key>
+			<string>害 损害</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:28:29Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:53:27Z</date>
+				<key>Last Played</key>
+				<date>2016-09-28T03:53:25Z</date>
+			</dict>
+		</dict>
+		<key>すくない\少ない</key>
+		<dict>
+			<key>explanation</key>
+			<string>少 不多</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:08:25Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:09:03Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:08:57Z</date>
+			</dict>
+		</dict>
+		<key>そしき\組織</key>
+		<dict>
+			<key>explanation</key>
+			<string>组织 组成 构成</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:27:50Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:56:40Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:10:17Z</date>
+			</dict>
+		</dict>
+		<key>そだてる\育てる</key>
+		<dict>
+			<key>explanation</key>
+			<string>抚育 培育 教育 培养</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T18:43:30Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:09:39Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:09:21Z</date>
+			</dict>
+		</dict>
+		<key>だんだん\団団</key>
+		<dict>
+			<key>explanation</key>
+			<string>团团、圆圆的样子 聚集</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:06:44Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:09:57Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:09:52Z</date>
+			</dict>
+		</dict>
+		<key>めずらしい\珍しい</key>
+		<dict>
+			<key>explanation</key>
+			<string>珍奇 稀奇 少见 新颖</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T07:57:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-09-28T03:53:36Z</date>
+				<key>Last Played</key>
+				<date>2016-09-28T03:53:32Z</date>
+			</dict>
+		</dict>
+		<key>もくてき\目的</key>
+		<dict>
+			<key>explanation</key>
+			<string>目的 目标</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T08:22:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-27T20:08:57Z</date>
+				<key>Last Played</key>
+				<date>2016-10-27T20:08:53Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-09-21T07:55:22Z</date>
+		<key>Last Finished</key>
+		<date>2016-09-28T03:56:40Z</date>
+		<key>Last Passed</key>
+		<date>2016-09-25T03:04:35Z</date>
+		<key>Last Played</key>
+		<date>2016-10-27T20:05:46Z</date>
+		<key>Modified</key>
+		<date>2016-09-28T03:56:34Z</date>
+	</dict>
+</dict>
+</plist>

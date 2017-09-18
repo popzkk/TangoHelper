@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>ウーロンちゃ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>乌龙茶</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:03:22Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:03:09Z</date>
+			</dict>
+		</dict>
+		<key>カラオケ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>卡拉ok</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:03:01Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:02:57Z</date>
+			</dict>
+		</dict>
+		<key>コラス\class</key>
+		<dict>
+			<key>explanation</key>
+			<string>班级</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:57:06Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:26Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:17Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:57:06Z</date>
+			</dict>
+		</dict>
+		<key>コラスック\classic</key>
+		<dict>
+			<key>explanation</key>
+			<string>古典音乐</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:57:22Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:02:53Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:02:46Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:57:22Z</date>
+			</dict>
+		</dict>
+		<key>コンピュータ\computer</key>
+		<dict>
+			<key>explanation</key>
+			<string>电脑</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:57:11Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:06:06Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:05:54Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:57:11Z</date>
+			</dict>
+		</dict>
+		<key>ゴルフ\golf</key>
+		<dict>
+			<key>explanation</key>
+			<string>高尔夫</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:56:54Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:05:25Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:05:22Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:56:54Z</date>
+			</dict>
+		</dict>
+		<key>シーズン\season</key>
+		<dict>
+			<key>explanation</key>
+			<string>季节</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:55:38Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:49Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:38Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:55:38Z</date>
+			</dict>
+		</dict>
+		<key>ジャスミンちゃ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>茉莉花茶</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:03:09Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:03:01Z</date>
+			</dict>
+		</dict>
+		<key>スペイン\Spain</key>
+		<dict>
+			<key>explanation</key>
+			<string>西班牙</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:55:23Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T09:59:37Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T09:59:31Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:55:23Z</date>
+			</dict>
+		</dict>
+		<key>スポーツ\sports</key>
+		<dict>
+			<key>explanation</key>
+			<string>体育</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:56:02Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:05:34Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:05:25Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:56:02Z</date>
+			</dict>
+		</dict>
+		<key>スープ\soup</key>
+		<dict>
+			<key>explanation</key>
+			<string>汤</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:55:48Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:17Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:13Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:55:48Z</date>
+			</dict>
+		</dict>
+		<key>ダック\duck</key>
+		<dict>
+			<key>explanation</key>
+			<string>鸭子</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:57:02Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:05:46Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:05:42Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:57:02Z</date>
+			</dict>
+		</dict>
+		<key>チョモランマ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>珠穆朗玛</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:05:54Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:05:46Z</date>
+			</dict>
+		</dict>
+		<key>ナシ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>梨</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:31Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:26Z</date>
+			</dict>
+		</dict>
+		<key>ニュース\news</key>
+		<dict>
+			<key>explanation</key>
+			<string>新闻</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:55:17Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:08Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:00Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:55:17Z</date>
+			</dict>
+		</dict>
+		<key>ハンサム\handsome</key>
+		<dict>
+			<key>explanation</key>
+			<string>英俊</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:56:43Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T09:59:31Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T09:59:20Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:56:43Z</date>
+			</dict>
+		</dict>
+		<key>バナナ\banana</key>
+		<dict>
+			<key>explanation</key>
+			<string>香蕉</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:56:12Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:02:57Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:02:53Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:56:12Z</date>
+			</dict>
+		</dict>
+		<key>ヒマワリ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>向日葵</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:13Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:08Z</date>
+			</dict>
+		</dict>
+		<key>ピアノ\piano</key>
+		<dict>
+			<key>explanation</key>
+			<string>钢琴</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:57:30Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:00Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T09:59:43Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:57:30Z</date>
+			</dict>
+		</dict>
+		<key>ミカン\</key>
+		<dict>
+			<key>explanation</key>
+			<string>橘子</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:00:38Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:00:31Z</date>
+			</dict>
+		</dict>
+		<key>ロック\rock</key>
+		<dict>
+			<key>explanation</key>
+			<string>摇滚</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-21T11:57:15Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-17T10:05:42Z</date>
+				<key>Last Played</key>
+				<date>2016-12-17T10:05:34Z</date>
+				<key>Modified</key>
+				<date>2016-09-21T11:57:15Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-02-28T16:20:00Z</date>
+		<key>Last Finished</key>
+		<date>2016-12-17T10:06:06Z</date>
+		<key>Last Played</key>
+		<date>2016-12-17T09:59:20Z</date>
+		<key>Modified</key>
+		<date>2016-09-21T11:57:30Z</date>
+	</dict>
+</dict>
+</plist>

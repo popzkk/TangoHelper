@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>かたがこる\肩が凝る</key>
+		<dict>
+			<key>explanation</key>
+			<string>肩膀发酸 紧张 拘束</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:00:57Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:46Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:40Z</date>
+			</dict>
+		</dict>
+		<key>さいこう\最高</key>
+		<dict>
+			<key>explanation</key>
+			<string>最高 最好 最佳</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:01:41Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:04Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:01Z</date>
+			</dict>
+		</dict>
+		<key>さけぶ\叫ぶ</key>
+		<dict>
+			<key>explanation</key>
+			<string>大声叫</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:06:10Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:15Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:03Z</date>
+			</dict>
+		</dict>
+		<key>すさまじい\凄まじい</key>
+		<dict>
+			<key>explanation</key>
+			<string>可怕的 恐怖的</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:51:16Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:36Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:30Z</date>
+			</dict>
+		</dict>
+		<key>そうけい\総計</key>
+		<dict>
+			<key>explanation</key>
+			<string>总计 总共</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T15:18:24Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:06Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:04Z</date>
+			</dict>
+		</dict>
+		<key>そんけい\尊敬</key>
+		<dict>
+			<key>explanation</key>
+			<string>尊敬 恭敬 敬仰</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T15:27:52Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:53Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:46Z</date>
+			</dict>
+		</dict>
+		<key>たいしょう\対称</key>
+		<dict>
+			<key>explanation</key>
+			<string>对称 相称 匀称</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:12:47Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:29Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:26Z</date>
+			</dict>
+		</dict>
+		<key>たんか\短歌</key>
+		<dict>
+			<key>explanation</key>
+			<string>短歌</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T15:24:18Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:01Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:51:59Z</date>
+			</dict>
+		</dict>
+		<key>ちょうみりょう\調味料</key>
+		<dict>
+			<key>explanation</key>
+			<string>调料</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T15:29:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:25Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:18Z</date>
+			</dict>
+		</dict>
+		<key>とりはだがたつ\鳥肌が立つ</key>
+		<dict>
+			<key>explanation</key>
+			<string>起鸡皮疙瘩</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:03:15Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:03Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:53Z</date>
+			</dict>
+		</dict>
+		<key>どうもん\同門</key>
+		<dict>
+			<key>explanation</key>
+			<string>同门</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:05:39Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:40Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:36Z</date>
+			</dict>
+		</dict>
+		<key>なでる\撫でる</key>
+		<dict>
+			<key>explanation</key>
+			<string>抚摸 拂</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:11:56Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:39Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:36Z</date>
+			</dict>
+		</dict>
+		<key>のこぎり\鋸</key>
+		<dict>
+			<key>explanation</key>
+			<string>锯 锯子</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:07:29Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:30Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:25Z</date>
+			</dict>
+		</dict>
+		<key>はいく\俳句</key>
+		<dict>
+			<key>explanation</key>
+			<string>俳句 俳诗</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T15:25:35Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:22Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:18Z</date>
+			</dict>
+		</dict>
+		<key>ひく\轢く</key>
+		<dict>
+			<key>explanation</key>
+			<string>(车)轧(人等)</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:10:38Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:26Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:25Z</date>
+			</dict>
+		</dict>
+		<key>ほうがく\方角</key>
+		<dict>
+			<key>explanation</key>
+			<string>方位 方向</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:53:36Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:18Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:06Z</date>
+			</dict>
+		</dict>
+		<key>ほうこう\方向</key>
+		<dict>
+			<key>explanation</key>
+			<string>方向</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:53:06Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:45Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:39Z</date>
+			</dict>
+		</dict>
+		<key>もんかせい\門下生</key>
+		<dict>
+			<key>explanation</key>
+			<string>门生 弟子</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:04:33Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:18Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:15Z</date>
+			</dict>
+		</dict>
+		<key>ゆうどく\有毒</key>
+		<dict>
+			<key>explanation</key>
+			<string>有毒</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:09:44Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:53:25Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:53:22Z</date>
+			</dict>
+		</dict>
+		<key>よじじゅくご\四字熟語</key>
+		<dict>
+			<key>explanation</key>
+			<string>成语</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:14:21Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-05T04:52:36Z</date>
+				<key>Last Played</key>
+				<date>2016-10-05T04:52:29Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-09-29T10:50:43Z</date>
+		<key>Last Finished</key>
+		<date>2016-10-05T04:53:45Z</date>
+		<key>Last Passed</key>
+		<date>2016-10-05T04:53:45Z</date>
+		<key>Last Played</key>
+		<date>2016-10-05T04:51:59Z</date>
+		<key>Modified</key>
+		<date>2016-10-02T04:14:21Z</date>
+	</dict>
+</dict>
+</plist>

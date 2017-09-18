@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>あらわす\表/现す</key>
+		<dict>
+			<key>explanation</key>
+			<string>表现 表示 表达</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:43:30Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:42:44Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:42:40Z</date>
+			</dict>
+		</dict>
+		<key>あらわれる\表/現れる</key>
+		<dict>
+			<key>explanation</key>
+			<string>出现 表现 出来 显现</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:46:19Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:44:34Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:44:31Z</date>
+				<key>Modified</key>
+				<date>2016-09-29T10:46:19Z</date>
+			</dict>
+		</dict>
+		<key>えんそく\遠足</key>
+		<dict>
+			<key>explanation</key>
+			<string>远足 郊游</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:47:45Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:38Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:35Z</date>
+			</dict>
+		</dict>
+		<key>かんずる\感ずる</key>
+		<dict>
+			<key>explanation</key>
+			<string>感到 觉得 感触</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:44:23Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:44:20Z</date>
+			</dict>
+		</dict>
+		<key>くさ\草</key>
+		<dict>
+			<key>explanation</key>
+			<string>草</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T06:51:20Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:27Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:25Z</date>
+			</dict>
+		</dict>
+		<key>さがる\下がる</key>
+		<dict>
+			<key>explanation</key>
+			<string>下降 降落 降低 下垂</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-27T17:10:41Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:44:20Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:44:17Z</date>
+			</dict>
+		</dict>
+		<key>しんじる\信じる</key>
+		<dict>
+			<key>explanation</key>
+			<string>相信 信赖 信仰</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-25T13:57:46Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:42Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:38Z</date>
+				<key>Modified</key>
+				<date>2016-09-25T23:08:58Z</date>
+			</dict>
+		</dict>
+		<key>じょうしょう\丞相</key>
+		<dict>
+			<key>explanation</key>
+			<string>丞相 大臣</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:48:22Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:42:51Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:42:46Z</date>
+			</dict>
+		</dict>
+		<key>すすめる\進める</key>
+		<dict>
+			<key>explanation</key>
+			<string>使前进 推进 提升 晋级</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-27T17:12:55Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:42:04Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:41:58Z</date>
+			</dict>
+		</dict>
+		<key>せいきゅう\請求</key>
+		<dict>
+			<key>explanation</key>
+			<string>请求 索求 要求</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:50Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:46Z</date>
+			</dict>
+		</dict>
+		<key>せいこう\成功</key>
+		<dict>
+			<key>explanation</key>
+			<string>成功 成就 胜利</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-03T19:27:14Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:42:46Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:42:44Z</date>
+			</dict>
+		</dict>
+		<key>たえる\耐える</key>
+		<dict>
+			<key>explanation</key>
+			<string>耐 抗 忍受</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T04:07:22Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:19Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:15Z</date>
+				<key>Modified</key>
+				<date>2016-09-29T10:42:06Z</date>
+			</dict>
+		</dict>
+		<key>ていしょく\定食</key>
+		<dict>
+			<key>explanation</key>
+			<string>客饭 套餐</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:07Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:00Z</date>
+			</dict>
+		</dict>
+		<key>てき\敵</key>
+		<dict>
+			<key>explanation</key>
+			<string>敌人 仇敌 对手</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:56Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:50Z</date>
+			</dict>
+		</dict>
+		<key>とうちゃく\到着</key>
+		<dict>
+			<key>explanation</key>
+			<string>到 到达 抵达</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-27T16:37:55Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:44:14Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:44:10Z</date>
+			</dict>
+		</dict>
+		<key>はかる\計る</key>
+		<dict>
+			<key>explanation</key>
+			<string>测定 测量；推测 揣测</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:49:59Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:44:17Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:44:14Z</date>
+			</dict>
+		</dict>
+		<key>まったく\全く</key>
+		<dict>
+			<key>explanation</key>
+			<string>完全 全然 实在 简直</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-27T23:26:36Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:46Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:42Z</date>
+			</dict>
+		</dict>
+		<key>ようきゅう\要求</key>
+		<dict>
+			<key>explanation</key>
+			<string>要求</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:44:10Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:44:07Z</date>
+			</dict>
+		</dict>
+		<key>りゅう\龍/竜</key>
+		<dict>
+			<key>explanation</key>
+			<string>龙</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:43:30Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:43:27Z</date>
+			</dict>
+		</dict>
+		<key>れきし\歴史</key>
+		<dict>
+			<key>explanation</key>
+			<string>历史</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-29T10:49:07Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-26T15:41:58Z</date>
+				<key>Last Played</key>
+				<date>2016-12-26T15:41:56Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-09-27T17:13:48Z</date>
+		<key>Last Finished</key>
+		<date>2016-12-26T15:44:34Z</date>
+		<key>Last Passed</key>
+		<date>2016-10-05T04:04:45Z</date>
+		<key>Last Played</key>
+		<date>2016-12-26T15:41:48Z</date>
+		<key>Modified</key>
+		<date>2016-09-29T10:49:59Z</date>
+	</dict>
+</dict>
+</plist>

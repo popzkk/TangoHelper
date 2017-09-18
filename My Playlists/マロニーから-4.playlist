@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>あいかわらず\相変わらず</key>
+		<dict>
+			<key>explanation</key>
+			<string>照旧 仍旧</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-10T18:14:19Z</date>
+				<key>Last Passed</key>
+				<date>2016-11-29T18:29:24Z</date>
+				<key>Last Played</key>
+				<date>2016-11-29T18:28:57Z</date>
+			</dict>
+		</dict>
+		<key>あらためる\改める</key>
+		<dict>
+			<key>explanation</key>
+			<string>改变 修正 改善</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-11T08:31:24Z</date>
+			</dict>
+		</dict>
+		<key>うでをくむ\腕を組む</key>
+		<dict>
+			<key>explanation</key>
+			<string>抱着胳膊 挽着胳膊</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-11T19:28:31Z</date>
+			</dict>
+		</dict>
+		<key>かなり\</key>
+		<dict>
+			<key>explanation</key>
+			<string>很 相当 颇</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-11T08:29:25Z</date>
+			</dict>
+		</dict>
+		<key>かゆい\痒い</key>
+		<dict>
+			<key>explanation</key>
+			<string>痒</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-09T18:31:35Z</date>
+			</dict>
+		</dict>
+		<key>からまる\絡まる</key>
+		<dict>
+			<key>explanation</key>
+			<string>缠绕 缠 纠缠</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-09T18:28:55Z</date>
+			</dict>
+		</dict>
+		<key>かわかす\乾かす</key>
+		<dict>
+			<key>explanation</key>
+			<string>晒干 晾干 弄干</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-11T08:27:24Z</date>
+			</dict>
+		</dict>
+		<key>きまぐれ\気~</key>
+		<dict>
+			<key>explanation</key>
+			<string>忽三忽四 心血来潮 反复无常</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-26T07:19:51Z</date>
+				<key>Modified</key>
+				<date>2016-10-26T07:19:51Z</date>
+			</dict>
+		</dict>
+		<key>けいようし\形容詞</key>
+		<dict>
+			<key>explanation</key>
+			<string>形容词</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-16T08:13:37Z</date>
+			</dict>
+		</dict>
+		<key>しゃべる\喋る</key>
+		<dict>
+			<key>explanation</key>
+			<string>说 讲 说出</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-23T22:21:59Z</date>
+			</dict>
+		</dict>
+		<key>すこしずつ\少しずつ</key>
+		<dict>
+			<key>explanation</key>
+			<string>一点一点地 慢慢地</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-10T11:16:49Z</date>
+			</dict>
+		</dict>
+		<key>ちゅうこく\忠告</key>
+		<dict>
+			<key>explanation</key>
+			<string>忠告 劝告</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-23T22:24:26Z</date>
+			</dict>
+		</dict>
+		<key>ちょうし\調子</key>
+		<dict>
+			<key>explanation</key>
+			<string>程度 情况 语调 口气</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-11T08:26:13Z</date>
+			</dict>
+		</dict>
+		<key>つく\着く</key>
+		<dict>
+			<key>explanation</key>
+			<string>到 到达 够着 寄到</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-25T17:55:44Z</date>
+			</dict>
+		</dict>
+		<key>つゆ\梅雨</key>
+		<dict>
+			<key>explanation</key>
+			<string>梅雨</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-09T18:27:36Z</date>
+				<key>Last Passed</key>
+				<date>2016-10-22T17:42:21Z</date>
+				<key>Last Played</key>
+				<date>2016-10-22T17:42:19Z</date>
+			</dict>
+		</dict>
+		<key>てれる\照れる</key>
+		<dict>
+			<key>explanation</key>
+			<string>害羞 羞怯</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-29T12:21:11Z</date>
+			</dict>
+		</dict>
+		<key>てをつなぐ\手を繋ぐ</key>
+		<dict>
+			<key>explanation</key>
+			<string>手拉手</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-23T14:59:33Z</date>
+				<key>Modified</key>
+				<date>2016-10-23T14:59:33Z</date>
+			</dict>
+		</dict>
+		<key>ふくし\副詞</key>
+		<dict>
+			<key>explanation</key>
+			<string>副词</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-11-16T08:14:18Z</date>
+			</dict>
+		</dict>
+		<key>ぶじ\無事</key>
+		<dict>
+			<key>explanation</key>
+			<string>平安 太平 健康 没毛病</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-24T06:51:56Z</date>
+			</dict>
+		</dict>
+		<key>わく\湧く</key>
+		<dict>
+			<key>explanation</key>
+			<string>涌出 冒出 (感情)涌现产生</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-25T17:58:46Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-10-09T18:33:43Z</date>
+		<key>Modified</key>
+		<date>2016-11-29T12:21:11Z</date>
+	</dict>
+</dict>
+</plist>

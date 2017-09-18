@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>アメリカ\America</key>
+		<dict>
+			<key>explanation</key>
+			<string>美国</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:50:31Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:39:18Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:39:02Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:50:31Z</date>
+			</dict>
+		</dict>
+		<key>エスカレーター\escalator</key>
+		<dict>
+			<key>explanation</key>
+			<string>自动扶梯</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-12-15T17:22:52Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:40:44Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:40:26Z</date>
+				<key>Modified</key>
+				<date>2016-12-15T17:22:52Z</date>
+			</dict>
+		</dict>
+		<key>カメラ\camera</key>
+		<dict>
+			<key>explanation</key>
+			<string>相机</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:51:35Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:38:26Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:38:22Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:51:35Z</date>
+			</dict>
+		</dict>
+		<key>コンビニ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>便利店</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:40:26Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:40:22Z</date>
+			</dict>
+		</dict>
+		<key>コート\coat</key>
+		<dict>
+			<key>explanation</key>
+			<string>大衣</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:49:47Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:40:16Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:40:13Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:49:47Z</date>
+			</dict>
+		</dict>
+		<key>シルク\silk</key>
+		<dict>
+			<key>explanation</key>
+			<string>丝绸</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:51:22Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:40:22Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:40:16Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:51:22Z</date>
+			</dict>
+		</dict>
+		<key>スイッチ\switch</key>
+		<dict>
+			<key>explanation</key>
+			<string>开关</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:50:17Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:41:37Z</date>
+				<key>Last Played</key>
+				<date>2016-12-31T13:05:19Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:50:17Z</date>
+			</dict>
+		</dict>
+		<key>デジカメ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>数码相机</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:38:11Z</date>
+				<key>Last Played</key>
+				<date>2016-12-31T13:04:50Z</date>
+			</dict>
+		</dict>
+		<key>ハンカチ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>手绢</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:41:32Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:41:25Z</date>
+			</dict>
+		</dict>
+		<key>パソコン\</key>
+		<dict>
+			<key>explanation</key>
+			<string>个人电脑</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:40:10Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:39:18Z</date>
+			</dict>
+		</dict>
+		<key>ビデオ\video</key>
+		<dict>
+			<key>explanation</key>
+			<string>影像 录像录像机</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:51:17Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:39:02Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:38:52Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:51:17Z</date>
+			</dict>
+		</dict>
+		<key>ビル\</key>
+		<dict>
+			<key>explanation</key>
+			<string>建筑</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:40:13Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:40:10Z</date>
+			</dict>
+		</dict>
+		<key>フランス\France</key>
+		<dict>
+			<key>explanation</key>
+			<string>法国</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:49:34Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:38:22Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:38:11Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:49:34Z</date>
+			</dict>
+		</dict>
+		<key>ベッド\bed</key>
+		<dict>
+			<key>explanation</key>
+			<string>床</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:50:03Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:38:48Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:38:26Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:50:03Z</date>
+			</dict>
+		</dict>
+		<key>ホテル\hotel</key>
+		<dict>
+			<key>explanation</key>
+			<string>宾馆</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T14:49:57Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-31T13:04:50Z</date>
+				<key>Last Played</key>
+				<date>2016-12-31T13:04:45Z</date>
+				<key>Modified</key>
+				<date>2016-09-20T14:49:57Z</date>
+			</dict>
+		</dict>
+		<key>マンション\</key>
+		<dict>
+			<key>explanation</key>
+			<string>(高级)公寓</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-02-28T16:20:00Z</date>
+				<key>Last Passed</key>
+				<date>2016-12-15T17:38:52Z</date>
+				<key>Last Played</key>
+				<date>2016-12-15T17:38:48Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-02-28T16:20:00Z</date>
+		<key>Last Finished</key>
+		<date>2016-12-15T17:41:37Z</date>
+		<key>Last Passed</key>
+		<date>2016-12-15T17:41:37Z</date>
+		<key>Last Played</key>
+		<date>2016-12-31T13:04:45Z</date>
+		<key>Modified</key>
+		<date>2016-12-15T17:22:52Z</date>
+	</dict>
+</dict>
+</plist>

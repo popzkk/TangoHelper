@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>content</key>
+	<dict>
+		<key>サボ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>怠工 偷懒 逃学</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-12T07:26:43Z</date>
+			</dict>
+		</dict>
+		<key>スタッフ\staff</key>
+		<dict>
+			<key>explanation</key>
+			<string>员工 干部 职员</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-22T09:01:13Z</date>
+			</dict>
+		</dict>
+		<key>スーパー\</key>
+		<dict>
+			<key>explanation</key>
+			<string>超市</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-22T09:19:21Z</date>
+			</dict>
+		</dict>
+		<key>テキスト\text</key>
+		<dict>
+			<key>explanation</key>
+			<string>原文 文本 教科书</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T07:33:21Z</date>
+			</dict>
+		</dict>
+		<key>ナンパ\</key>
+		<dict>
+			<key>explanation</key>
+			<string>搭讪 搭话</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-10-02T04:23:41Z</date>
+			</dict>
+		</dict>
+		<key>ファミリー\family</key>
+		<dict>
+			<key>explanation</key>
+			<string>家庭 家</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-22T09:11:34Z</date>
+			</dict>
+		</dict>
+		<key>フタッフ\stuff</key>
+		<dict>
+			<key>explanation</key>
+			<string>材料 原料</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-22T09:01:39Z</date>
+			</dict>
+		</dict>
+		<key>プリント\print</key>
+		<dict>
+			<key>explanation</key>
+			<string>印刷 印刷品</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-22T09:07:00Z</date>
+			</dict>
+		</dict>
+		<key>レバノン\lebanon</key>
+		<dict>
+			<key>explanation</key>
+			<string>黎巴嫩</string>
+			<key>metadata</key>
+			<dict>
+				<key>Created</key>
+				<date>2016-09-20T07:34:34Z</date>
+			</dict>
+		</dict>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>Created</key>
+		<date>2016-09-20T07:32:07Z</date>
+		<key>Modified</key>
+		<date>2016-10-12T07:26:43Z</date>
+	</dict>
+</dict>
+</plist>
