@@ -4,7 +4,7 @@
 #import "Shared/THHelpers.h"
 
 typedef void (^THTableViewConfirmBlock)(NSArray *);
-typedef void (^THTableViewCancelBlock)();
+typedef void (^THTableViewCancelBlock)(void);
 typedef void (^THTableViewRowActionHandler)(UITableViewRowAction *, NSIndexPath *);
 
 @interface NSIndexPath (THBaseTableViewController)
@@ -13,10 +13,12 @@ typedef void (^THTableViewRowActionHandler)(UITableViewRowAction *, NSIndexPath 
 
 @end
 
-@interface THBasicTableViewController
-    : UITableViewController<UISearchBarDelegate, UISearchControllerDelegate,
-                            UISearchResultsUpdating, UITableViewDataSource, UITableViewDelegate,
-                            THTableViewModelDelegate>
+@interface THBasicTableViewController : UITableViewController <UISearchBarDelegate,
+                                                               UISearchControllerDelegate,
+                                                               UISearchResultsUpdating,
+                                                               UITableViewDataSource,
+                                                               UITableViewDelegate,
+                                                               THTableViewModelDelegate>
 
 - (instancetype)initWithStyle:(UITableViewStyle)style
                         title:(NSString *)title

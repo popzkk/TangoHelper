@@ -1,12 +1,8 @@
 #import "THHelpers.h"
 
-#import "THStrings.h"
 #import "../Backend/THFileCenter.h"
 #import "../Backend/THPlaylist.h"
-
-#if __cplusplus
-extern "C" {
-#endif
+#import "THStrings.h"
 
 #pragma mark - UIBarButtonItems
 
@@ -139,10 +135,10 @@ UIAlertController *dialog_basic(NSString *title, NSString *message, THAlertBasic
 UIAlertController *dialog_texts_two_blocks(NSString *title, NSString *message,
                                            NSArray<NSString *> *texts,
                                            NSArray<NSString *> *placeholders,
-                                           THAlertTextsAction cancel_block,
+                                           THAlertBasicAction cancel_block,
                                            THAlertTextsAction confirm_block) {
   if (!cancel_block) {
-    cancel_block = ^(NSArray<UITextField *> *array) {
+    cancel_block = ^() {
     };
   }
   if (!confirm_block) {
@@ -174,7 +170,7 @@ UIAlertController *dialog_texts_two_blocks(NSString *title, NSString *message,
                                             for (UITextField *textField in alert.textFields) {
                                               textField.text = @"";
                                             }
-                                            cancel_block(alert.textFields);
+                                            cancel_block();
                                           }]];
   [alert addAction:[UIAlertAction actionWithTitle:kConfirm
                                             style:UIAlertActionStyleDefault
@@ -228,7 +224,7 @@ UIAlertController *sheet_basic(NSString *title, NSString *message,
 }
 
 UIAlertController *dialog_word(NSString *title, NSString *message, NSArray<NSString *> *texts,
-                               THAlertTextsAction cancel_block, THAlertTextsAction confirm_block) {
+                               THAlertBasicAction cancel_block, THAlertTextsAction confirm_block) {
   if (!texts) {
     texts = @[
       @"",
@@ -472,7 +468,3 @@ UIAlertController *recover_dialog_texts(UIAlertController *alert, NSArray<NSStri
   }
   return alert;
 }
-
-#if __cplusplus
-}  // Extern C
-#endif

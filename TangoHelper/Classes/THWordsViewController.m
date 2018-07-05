@@ -1,10 +1,10 @@
 #import "THWordsViewController.h"
 
-#import "THPlayViewController.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THPlaylist.h"
 #import "Backend/THWord.h"
 #import "Shared/THStrings.h"
+#import "THPlayViewController.h"
 
 typedef NS_ENUM(NSUInteger, THWordsViewControllerSituation) {
   THWordsViewControllerSituationSimple = 0,

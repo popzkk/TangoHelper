@@ -4,7 +4,7 @@
 @class THWordKey;
 @class THWordObject;
 
-typedef void (^THWordsManagerOverwriteAction)();
+typedef void (^THWordsManagerOverwriteAction)(void);
 
 @interface THWordsManager : NSObject
 

@@ -10,7 +10,7 @@ typedef NS_ENUM(NSUInteger, THPlayOption) {
   THPlayOptionRemove,
 };
 
-@interface THPlayConfig : NSObject<NSCopying>
+@interface THPlayConfig : NSObject <NSCopying>
 
 @property(nonatomic, assign) NSUInteger repeat;
 

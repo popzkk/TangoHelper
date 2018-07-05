@@ -1,6 +1,5 @@
 #import "THPlayViewController.h"
 
-#import "THWordsViewController.h"
 #import "Backend/THFileRW.h"
 #import "Backend/THPlaylist.h"
 #import "Backend/THWord.h"
@@ -9,19 +8,22 @@
 #import "Models/THPlayViewModel.h"
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
+#import "THWordsViewController.h"
 
 typedef void (^THPlayViewTextsOperation)(NSArray<NSString *> *);
 
 static CGFloat kTextViewFontSize = 27;
 static CGFloat kTextFieldFontSize = 16;
 
-static CGFloat kPadding = 13;
-static CGFloat kTextFieldTopPadding = 5;
+static CGFloat kHorizontalPadding = 16;
+static CGFloat kVerticalPadding = 16;
 static CGFloat kTextFieldHeight = 28;
 static CGFloat kTextFieldBottomPadding = 5;
 
 // Declear these properties here so we can use 'weakSelf.xxx'. Any better way?
-@interface THPlayViewController ()<UITextFieldDelegate, THKeyboardDelegate, THPlayViewModelDelegate>
+@interface THPlayViewController () <UITextFieldDelegate,
+                                    THKeyboardDelegate,
+                                    THPlayViewModelDelegate>
 
 @property(nonatomic) THWordsCollection *collection;
 
@@ -104,21 +106,19 @@ static CGFloat kTextFieldBottomPadding = 5;
 #pragma mark - private
 
 - (void)prepareFrames {
-  CGRect frame = self.view.bounds;
-  CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
-  // height for the text view.
-  CGFloat textViewHeight = frame.size.height / 2 - kPadding - navBarHeight;
-  CGFloat x = frame.origin.x + kPadding;
-  CGFloat y = frame.origin.y + navBarHeight + kPadding;
-  CGFloat width = frame.size.width - 2 * kPadding;
-
-  _textView.frame = CGRectMake(x, y += kPadding, width, textViewHeight);
-  y += textViewHeight;
-
-  _textField.frame = CGRectMake(x, y += kTextFieldTopPadding, width, kTextFieldHeight);
-  y += kTextFieldHeight + kTextFieldBottomPadding;
-
-  _keyboard.frame = CGRectMake(x, y, width, frame.size.height - y - kPadding);
+  CGRect frame = UIEdgeInsetsInsetRect(self.view.bounds, self.view.safeAreaInsets);
+  frame = CGRectInset(frame, kHorizontalPadding, 0);
+  CGRect slice;
+  CGRectDivide(frame, &slice, &frame, self.navigationController.navigationBar.frame.size.height,
+               CGRectMinYEdge);
+  CGFloat keyboardKeight = frame.size.width / 5 * 4;
+  CGRectDivide(frame, &slice, &frame, keyboardKeight, CGRectMaxYEdge);
+  _keyboard.frame = slice;
+  CGRectDivide(frame, &slice, &frame, kVerticalPadding, CGRectMaxYEdge);
+  CGRectDivide(frame, &slice, &frame, kTextFieldHeight, CGRectMaxYEdge);
+  _textField.frame = slice;
+  CGRectDivide(frame, &slice, &frame, kVerticalPadding, CGRectMaxYEdge);
+  _textView.frame = frame;
 }
 
 - (void)didTapBarItemKeyboard {
@@ -179,11 +179,11 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
   self.navigationController.toolbarHidden = YES;
-  [self prepareFrames];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
+  [self prepareFrames];
   if (_keyboard.hidden && ![_textField isFirstResponder]) {
     [_textField becomeFirstResponder];
   }
@@ -258,13 +258,13 @@ static CGFloat kTextFieldBottomPadding = 5;
 - (void)wrongAnswer:(NSString *)wrongAnswer
      forExplanation:(NSString *)explanation
             wordKey:(THWordKey *)key {
+  __weak THPlayViewController *weakSelf = self;
   THAlertBasicAction next_block = ^{
-    [_model commitWrongAnswerWithOption:THPlayOptionNext wordKey:nil];
+    [weakSelf.model commitWrongAnswerWithOption:THPlayOptionNext wordKey:nil];
   };
   THAlertBasicAction typo_block = ^{
-    [_model commitWrongAnswerWithOption:THPlayOptionTypo wordKey:nil];
+    [weakSelf.model commitWrongAnswerWithOption:THPlayOptionTypo wordKey:nil];
   };
-  __weak THPlayViewController *weakSelf = self;
   THAlertBasicAction edit_block = ^{
     [self
         showAlert:dialog_edit_word(
@@ -308,7 +308,7 @@ static CGFloat kTextFieldBottomPadding = 5;
   };
   THAlertBasicAction remove_block = ^{
     // _model will remove the word for us!
-    [_model commitWrongAnswerWithOption:THPlayOptionRemove wordKey:nil];
+    [weakSelf.model commitWrongAnswerWithOption:THPlayOptionRemove wordKey:nil];
   };
   [self showAlert:sheet_play_options(key.contentForDisplay, wrongAnswer, next_block, typo_block,
                                      edit_block, remove_block)];

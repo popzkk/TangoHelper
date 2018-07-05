@@ -1,12 +1,12 @@
 #import "THBasicTableViewController.h"
 
-#import "THPlaylistsViewController.h"
-#import "THPlayViewController.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THMetadata.h"
 #import "Backend/THPlaylist.h"
 #import "Shared/THHelpers.h"
 #import "Shared/THStrings.h"
+#import "THPlayViewController.h"
+#import "THPlaylistsViewController.h"
 
 static CGFloat kSearchBarHeight = 40;
 

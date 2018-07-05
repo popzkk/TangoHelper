@@ -5,7 +5,7 @@
 @class THWordKey;
 @class THWordsCollection;
 
-@interface THWordsViewController : THBasicTableViewController<THWordsViewModelDelegate>
+@interface THWordsViewController : THBasicTableViewController <THWordsViewModelDelegate>
 
 - (instancetype)initWithCollection:(THWordsCollection *)collection;
 

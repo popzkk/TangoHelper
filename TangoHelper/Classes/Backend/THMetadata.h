@@ -21,7 +21,7 @@ typedef NS_ENUM(NSUInteger, THMetadataKey) {
 
 @end
 
-@interface THMetadata : NSObject<THPropertyList>
+@interface THMetadata : NSObject <THPropertyList>
 
 @property(nonatomic, readonly) BOOL dirty;
 

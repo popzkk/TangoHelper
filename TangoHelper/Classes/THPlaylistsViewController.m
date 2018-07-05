@@ -1,11 +1,11 @@
 #import "THPlaylistsViewController.h"
 
-#import "THWordsViewController.h"
 #import "Backend/THFileCenter.h"
 #import "Backend/THFileRW.h"
 #import "Backend/THPlaylist.h"
 #import "Models/THPlaylistsViewModel.h"
 #import "Shared/THStrings.h"
+#import "THWordsViewController.h"
 
 static NSString *kCellIdentifier = @"PlaylistsViewCell";
 static UITableViewCellStyle kCellStyle = UITableViewCellStyleSubtitle;
@@ -116,12 +116,12 @@ static CGFloat kPlaylistHeight = 60;
   __weak THPlaylistsViewController *weakSelf = self;
   return ^(UITableViewRowAction *action, NSIndexPath *indexPath) {
     NSUInteger row = indexPath.row;
-    [self showAlert:dialog_rename_playlist(((THPlaylist *)[self.model itemAtRow:row]).partialName,
-                                          ^(NSArray<UITextField *> *textFields) {
-                                            weakSelf.lastTexts = texts_from_text_fields(textFields);
-                                            [weakSelf.model modifyRow:row
-                                                            withTexts:weakSelf.lastTexts];
-                                          })
+    [self showAlert:dialog_rename_playlist(
+                        ((THPlaylist *)[self.model itemAtRow:row]).partialName,
+                        ^(NSArray<UITextField *> *textFields) {
+                          weakSelf.lastTexts = texts_from_text_fields(textFields);
+                          [weakSelf.model modifyRow:row withTexts:weakSelf.lastTexts];
+                        })
                save:YES];
   };
 }

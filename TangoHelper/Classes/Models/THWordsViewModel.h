@@ -9,7 +9,7 @@
 
 @end
 
-@interface THWordsViewModel : NSObject<THTableViewModel>
+@interface THWordsViewModel : NSObject <THTableViewModel>
 
 - (instancetype)initWithCollection:(THWordsCollection *)collection;
 

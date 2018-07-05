@@ -2,7 +2,7 @@
 
 @class THMetadata;
 
-@interface THWordKey : NSObject<NSCopying>
+@interface THWordKey : NSObject <NSCopying>
 
 // The string the user recites with (e.g. kana of Japanese).
 @property(nonatomic, readonly) NSString *input;
@@ -20,7 +20,7 @@
 
 @end
 
-@interface THWordObject : NSObject<THPropertyList>
+@interface THWordObject : NSObject <THPropertyList>
 
 @property(nonatomic, readonly) THMetadata *metadata;
 

@@ -62,7 +62,7 @@
 
 @end
 
-@interface THWordObject()
+@interface THWordObject ()
 
 - (void)willPlay;
 
